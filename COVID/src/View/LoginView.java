@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.sql.SQLException;
+
+import Controller.*;
 
 public class LoginView extends JFrame implements ActionListener{
     private Container container = getContentPane();
@@ -16,7 +19,7 @@ public class LoginView extends JFrame implements ActionListener{
     private JButton loginButton = new JButton("LOGIN");
     private JButton resetButton = new JButton("RESET");
     private JCheckBox checkShowPassword = new JCheckBox("Show password");
-    private JButton register = new JButton("GUI_LOGIN.Register");
+    private JButton register = new JButton("Register");
 
     public LoginView() {
         setTitle("Login Form");
@@ -107,8 +110,17 @@ public class LoginView extends JFrame implements ActionListener{
             String passwordtext = String.valueOf(password.getPassword());
 
             //This need to be rewritten
-            String sql = "SELECT TYPE FROM ACCOUNT WHERE USERNAME=? AND PASSWORD =?";
-
+            boolean check = false;
+            try {
+                check = LoginController.checkManagerExist();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            if (check == true){
+                //Page transition here
+            } else {
+                //Create account for admin
+            }
         }
         if (e.getSource() == resetButton) {
             username.setText("username");

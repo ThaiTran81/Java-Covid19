@@ -25,11 +25,10 @@ public class LoginController {
         return -1;
     }
 
-    public boolean checkManagerExist(int type) throws SQLException {
-        String sql = "SELECT * FROM ACCOUNT WHERE TYPE=?";
+    public static boolean checkManagerExist() throws SQLException {
+        String sql = "SELECT * FROM ACCOUNT WHERE TYPE=0";
         try(Connection conn = ConnectToDBController.getSqlConnection();
             PreparedStatement ppstmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);){
-            ppstmt.setInt(1, type);
 
             ResultSet rs = ppstmt.executeQuery();
             int rows = 0;
