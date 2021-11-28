@@ -34,7 +34,6 @@ public class LoginController {
             int rows = 0;
             if (rs.last()) {
                 rows = rs.getRow();
-                // Move to beginning
                 rs.beforeFirst();
             }
             if (rows == 0)

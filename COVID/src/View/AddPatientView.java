@@ -156,10 +156,7 @@ public class AddPatientView extends JFrame implements ActionListener {
         res.setBounds(500, 550, 500, 25);
         container.add(res);
 
-        String url = "jdbc:sqlserver://localhost:1433;database=QLC19";
-        String username = "sa";
-        String password = "123456";
-        try (Connection conn = DriverManager.getConnection(url, username, password); Statement stmt = conn.createStatement()){
+        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); Statement stmt = conn.createStatement()){
             String sql = "select * from PROVINCE";
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -241,10 +238,7 @@ public class AddPatientView extends JFrame implements ActionListener {
             username.setText("");
         }
         if (e.getSource() == province){
-            String url = "jdbc:sqlserver://localhost:1433;database=QLC19";
-            String username = "sa";
-            String password = "123456";
-            try (Connection conn = DriverManager.getConnection(url, username, password)){
+            try (Connection conn = Controller.ConnectToDBController.getSqlConnection()){
                 String sql = "select * from PROVINCE WHERE NAME=?";
                 PreparedStatement prepStmt = conn.prepareStatement(sql);
                 prepStmt.setString(1, (String) province.getSelectedItem());
@@ -257,7 +251,7 @@ public class AddPatientView extends JFrame implements ActionListener {
                 ex.printStackTrace();
             }
 
-            try (Connection conn = DriverManager.getConnection(url, username, password)){
+            try (Connection conn = Controller.ConnectToDBController.getSqlConnection()){
                 String sql = "select * from DISTRICT WHERE ID_PROVINCE=?";
                 PreparedStatement prepStmt = conn.prepareStatement(sql);
                 prepStmt.setInt(1, id_pro);
@@ -273,10 +267,7 @@ public class AddPatientView extends JFrame implements ActionListener {
             }
         }
         if (e.getSource() == district){
-            String url = "jdbc:sqlserver://localhost:1433;database=QLC19";
-            String username = "sa";
-            String password = "123456";
-            try (Connection conn = DriverManager.getConnection(url, username, password)){
+            try (Connection conn = Controller.ConnectToDBController.getSqlConnection()){
                 String sql = "select * from DISTRICT WHERE ID_PROVINCE=? AND NAME=?";
                 PreparedStatement prepStmt = conn.prepareStatement(sql);
                 prepStmt.setInt(1, id_pro);
@@ -290,7 +281,7 @@ public class AddPatientView extends JFrame implements ActionListener {
                 ex.printStackTrace();
             }
 
-            try (Connection conn = DriverManager.getConnection(url, username, password)){
+            try (Connection conn = Controller.ConnectToDBController.getSqlConnection()){
                 String sql = "select * from VILLAGE WHERE ID_PROVINCE=? AND ID_DISTRICT=?";
                 PreparedStatement prepStmt = conn.prepareStatement(sql);
                 prepStmt.setInt(1, id_pro);

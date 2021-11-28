@@ -109,18 +109,6 @@ public class LoginView extends JFrame implements ActionListener{
             String usernametext = username.getText();
             String passwordtext = String.valueOf(password.getPassword());
 
-            //This need to be rewritten
-            boolean check = false;
-            try {
-                check = LoginController.checkManagerExist();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            if (check == true){
-                //Page transition here
-            } else {
-                //Create account for admin
-            }
         }
         if (e.getSource() == resetButton) {
             username.setText("username");

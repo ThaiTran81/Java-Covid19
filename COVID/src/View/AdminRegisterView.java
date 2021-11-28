@@ -23,8 +23,8 @@ public class AdminRegisterView extends JFrame implements ActionListener {
     private JLabel res = new JLabel("");
 
     AdminRegisterView(){
-        setTitle("GUI_LOGIN.Register");
-        setBounds(300, 90, 500, 500);
+        setTitle("Admin Register");
+        setBounds(300, 90, 500, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
         setVisible(true);
@@ -99,8 +99,11 @@ public class AdminRegisterView extends JFrame implements ActionListener {
             if(!temp.equals(temp1)){
                 res.setText("Password does not match!");
             }
-
-            //Do something here
+            else{
+                Controller.AdminRegisterController.register(username.getText(), temp);
+                this.dispose();
+                new LoginView();
+            }
         }
         if (e.getSource() == reset){
             res.setText("");

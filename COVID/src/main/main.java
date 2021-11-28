@@ -8,7 +8,7 @@ public class main {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new View.LoginView();
+                new ConnectToDBView();
             }
         });
     }

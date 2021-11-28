@@ -1,6 +1,7 @@
 package View;
 
-import Controller.ConnectToDBController;
+import Controller.*;
+import Model.*;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.Container;
@@ -13,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.SQLException;
 
-class ConnectToDBView extends JFrame implements ActionListener{
+public class ConnectToDBView extends JFrame implements ActionListener{
     private Container c;
     private JLabel title;
     private JLabel server;
@@ -53,7 +54,7 @@ class ConnectToDBView extends JFrame implements ActionListener{
         server.setLocation(100, 100);
         c.add(server);
 
-        tserver = new JTextField();
+        tserver = new JTextField("localhost");
         tserver.setFont(new Font("Arial", Font.PLAIN, 15));
         tserver.setSize(250, 30);
         tserver.setLocation(200, 100);
@@ -65,7 +66,7 @@ class ConnectToDBView extends JFrame implements ActionListener{
         db.setLocation(100, 150);
         c.add(db);
 
-        tdb = new JTextField();
+        tdb = new JTextField("QLC19");
         tdb.setFont(new Font("Arial", Font.PLAIN, 15));
         tdb.setSize(150, 30);
         tdb.setLocation(200, 150);
@@ -77,7 +78,7 @@ class ConnectToDBView extends JFrame implements ActionListener{
         usr.setLocation(100, 200);
         c.add(usr);
 
-        tusr = new JTextField();
+        tusr = new JTextField("sa");
         tusr.setFont(new Font("Arial", Font.PLAIN, 15));
         tusr.setSize(150, 30);
         tusr.setLocation(200, 200);
@@ -89,7 +90,7 @@ class ConnectToDBView extends JFrame implements ActionListener{
         pwd.setLocation(100, 250);
         c.add(pwd);
 
-        tpwd = new JTextField();
+        tpwd = new JTextField("123456");
         tpwd.setFont(new Font("Arial", Font.PLAIN, 15));
         tpwd.setSize(150, 30);
         tpwd.setLocation(200, 250);
@@ -101,7 +102,7 @@ class ConnectToDBView extends JFrame implements ActionListener{
         port.setLocation(100, 300);
         c.add(port);
 
-        tport = new JTextField();
+        tport = new JTextField("1433");
         tport.setFont(new Font("Arial", Font.PLAIN, 15));
         tport.setSize(150, 30);
         tport.setLocation(200, 300);
@@ -147,7 +148,21 @@ class ConnectToDBView extends JFrame implements ActionListener{
                 ConnectToDBController.getSqlConnection(server, data, user, pass, Integer.parseInt(prt));
                 this.monitor.setText("Connect successfully!!!!!");
                 this.dispose();
-//                LoginForm tab = new Tab();
+
+                //This need to be rewritten
+                boolean check = false;
+                try {
+                    check = LoginController.checkManagerExist();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                if (check == true){
+                    //Page transition here
+                    new LoginView();
+                } else {
+                    //Create account for admin
+                    new AdminRegisterView();
+                }
             } catch (SQLException | NumberFormatException ex) {
                 this.monitor.setText("Connection failed!!! try again");
             }
