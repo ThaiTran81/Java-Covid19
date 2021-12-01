@@ -4,13 +4,15 @@ package com.cv19.view.manager;
 import com.cv19.view.body.Form_manage;
 import com.cv19.view.body.HomeForm;
 import com.cv19.view.event.EventMenu;
+import com.cv19.view.model.Model_Menu;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-
+import com.cv19.view.model.Model_Menu;
 /**
  *
  * @author ThaiTran
@@ -20,7 +22,7 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         initComponents();
         setBackground(new Color(0,0,0,0));
-        
+        menu.addItemToMenu(new Model_Menu("exit", "THOÁT", Model_Menu.MenuType.EXIT));
         // add listen 
         addMouseListener(new MouseAdapter() {
         public void mousePressed(MouseEvent e) {
@@ -117,6 +119,9 @@ public class Main extends javax.swing.JFrame {
                 }
                 if (index == 1){
                     showForm(new Form_manage());
+                }
+                if (index == 6){
+
                 }
             }
             
