@@ -35,6 +35,12 @@ public class AddPatientView extends JFrame implements ActionListener {
     private JComboBox district = new JComboBox();
     private JComboBox village = new JComboBox();
 
+    private JLabel qualabel = new JLabel("Quarantine");
+    private JTextField quatext = new JTextField();
+    private JLabel banklabel = new JLabel("BANK ID");
+    private JTextField banktx = new JTextField();
+//    private JLabel
+
     private int id_pro;
     private int id_dic;
     private int id_vil;

@@ -19,7 +19,7 @@ public class LoginView extends JFrame implements ActionListener{
     private JButton loginButton = new JButton("LOGIN");
     private JButton resetButton = new JButton("RESET");
     private JCheckBox checkShowPassword = new JCheckBox("Show password");
-    private JButton register = new JButton("Register");
+//    private JButton register = new JButton("Register");
 
     public LoginView() {
         setTitle("Login Form");
@@ -94,9 +94,9 @@ public class LoginView extends JFrame implements ActionListener{
         container.add(resetButton);
         resetButton.addActionListener(this);
 
-        register.setBounds(230, 300, 100, 30);
-        container.add(register);
-        register.addActionListener(this);
+//        register.setBounds(230, 300, 100, 30);
+//        container.add(register);
+//        register.addActionListener(this);
 
         checkShowPassword.setBounds(150, 250, 150, 30);
         container.add(checkShowPassword);
@@ -129,8 +129,8 @@ public class LoginView extends JFrame implements ActionListener{
         if (e.getSource() == password) {
             password.setText("");
         }
-        if (e.getSource() == register) {
-
-        }
+//        if (e.getSource() == register) {
+//
+//        }
     }
 }

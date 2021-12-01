@@ -5,7 +5,7 @@ public class AddPatientController {
                                     String Phone, String dob,
                                     String gender, String province,
                                     String district, String village,
-                                    int ID_Qua, String ID_bank){
+                                    String ID_Qua, String ID_bank){
         //Write later
         return 0;
     }
