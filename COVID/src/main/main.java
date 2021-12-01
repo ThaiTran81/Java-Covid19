@@ -9,7 +9,7 @@ public class main {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                UserMainFrame m = new UserMainFrame();
+                new ConnectToDBView();
             }
         });
     }

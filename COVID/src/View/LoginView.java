@@ -1,5 +1,5 @@
 package View;
-
+import Controller.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,6 +9,8 @@ import java.awt.event.FocusEvent;
 import java.sql.SQLException;
 
 import Controller.*;
+import Model.LoginModel;
+import View.User.UserMainFrame;
 
 public class LoginView extends JFrame implements ActionListener{
     private Container container = getContentPane();
@@ -24,6 +26,7 @@ public class LoginView extends JFrame implements ActionListener{
     public LoginView() {
         setTitle("Login Form");
         setBounds(10, 10, 370, 600);
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         setResizable(false);
@@ -108,7 +111,16 @@ public class LoginView extends JFrame implements ActionListener{
         if (e.getSource() == loginButton) {
             String usernametext = username.getText();
             String passwordtext = String.valueOf(password.getPassword());
-
+            LoginModel user = new LoginModel();
+            try {
+                user = LoginController.Login(usernametext, passwordtext);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            if(user.getType() == 2){
+                this.dispose();
+                new UserMainFrame();
+            }
         }
         if (e.getSource() == resetButton) {
             username.setText("username");

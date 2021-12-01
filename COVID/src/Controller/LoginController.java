@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.LoginModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.sql.Connection;
@@ -8,7 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LoginController {
-    public int Login(String username, String password) throws SQLException {
+    static public LoginModel Login(String username, String password) throws SQLException {
+        LoginModel user = new LoginModel();
         String sql = "SELECT * FROM ACCOUNT WHERE USERNAME=? AND PASSWORD=?";
         try(Connection conn = ConnectToDBController.getSqlConnection(); PreparedStatement ppstmt = conn.prepareStatement(sql);){
             ppstmt.setString(1, username);
@@ -16,13 +18,15 @@ public class LoginController {
 
             ResultSet rs = ppstmt.executeQuery();
             if (rs.next()) {
-                int type = rs.getInt("type");
-                return type;
+                user.setUsername(rs.getString("USERNAME"));
+                user.setPassword(rs.getString("PASSWORD"));
+                user.setType( rs.getInt("TYPE"));
+                return user;
             }
         } catch (SQLServerException throwables) {
             throwables.printStackTrace();
         }
-        return -1;
+        return null;
     }
 
     public static boolean checkManagerExist() throws SQLException {
