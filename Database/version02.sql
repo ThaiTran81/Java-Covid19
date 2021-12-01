@@ -4,18 +4,18 @@ GO
 -- 1.2.1 Hiển thị danh sách người liên quan Covid-19
 SELECT *
 FROM dbo.PROFILE
-WHERE GENDER <> N'N'
+WHERE GENDER is not null
 
 -- 1.2.1 Xem chi tiết thông tin của người liên quan bao gồm danh sách người liên đới.
 SELECT p1.*, p2.FULLNAME 'Danh sách người liên đới'
 FROM dbo.PROFILE p1 JOIN dbo.RELATE r ON p1.ID = r.USERNAME1 JOIN dbo.PROFILE p2 ON r.USERNAME2 = p2.ID
-WHERE p1.GENDER <> N'N'
+WHERE p1.GENDER is not null
 
 UNION
 
 SELECT p1.*, p2.FULLNAME 'Danh sách người liên đới'
 FROM dbo.PROFILE p1 JOIN dbo.RELATE r ON p1.ID = r.USERNAME2 JOIN dbo.PROFILE p2 ON r.USERNAME1 = p2.ID
-WHERE p1.GENDER <> N'N'
+WHERE p1.GENDER is not null
 
 -- 1.2.1 Sắp xếp theo tên
 SELECT *
