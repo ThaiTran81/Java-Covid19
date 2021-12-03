@@ -2,15 +2,15 @@ package Model;
 
 import java.sql.Date;
 
-public class PaymentHistory {
+public class PaymentHistoryModel {
     private String username;
     private java.sql.Date date;
     private String pay;
 
-    public PaymentHistory() {
+    public PaymentHistoryModel() {
     }
 
-    public PaymentHistory(String username, Date date, String pay) {
+    public PaymentHistoryModel(String username, Date date, String pay) {
         this.username = username;
         this.date = date;
         this.pay = pay;

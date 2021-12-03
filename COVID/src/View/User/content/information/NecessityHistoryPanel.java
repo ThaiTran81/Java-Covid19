@@ -1,7 +1,7 @@
 package View.User.content.information;
 
+import Model.NecessityHistoryModel;
 import Model.PaymentHistoryModel;
-import Model.f_historyModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,14 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
-public class PaymentHistoryPanel extends JPanel {
-    Vector<PaymentHistoryModel> lst = new Vector<>();
+public class NecessityHistoryPanel extends JPanel {
+    Vector<NecessityHistoryModel> lst = new Vector<>();
 
     Font content_title_font = new Font("Title",Font.BOLD,40);
 
-    public PaymentHistoryPanel() {}
-    public PaymentHistoryPanel(String id_value) {
-        JLabel title = new JLabel("Lịch sử thanh toán");
+    public NecessityHistoryPanel() {}
+    public NecessityHistoryPanel(String id_value) {
+        JLabel title = new JLabel("Lịch sử tiêu thụ gói Nhu yếu phẩm");
         title.setFont(content_title_font);
 
         JPanel none = new JPanel();
@@ -38,19 +38,18 @@ public class PaymentHistoryPanel extends JPanel {
             this.add(new JLabel("Không có lịch sử."));
         }
 
-        String[] columns = {"Ngày thanh toán","Số tiền thanh toán"};
+        String[] columns = {"Ngày thanh toán","Tên sản phẩm","Đơn Giá","Số lượng","Tổng cộng"};
         JTable table = new JTable(data, columns);
         JScrollPane sp = new JScrollPane(table);
-        sp.setBounds(10,10,400,200);
+        sp.setBounds(10,10,700,200);
 
         this.add(sp);
     }
 
     public void setData(String id_value) {
-        String sql = "SELECT *\n" +
-                "FROM PAYMENT_HISTORY\n" +
-                "WHERE USER_ID = ?\n" +
-                "ORDER BY DATE";
+        String sql = "SELECT B.ID_USER, B.DATE, N.NAME, N.PRICE, C.QUANTITY, N.PRICE*C.QUANTITY\n" +
+                "FROM BILL B JOIN CONSUME C ON B.ID_BILL = C.ID_BILL JOIN NECESSITIES N ON C.ID_NECESSITIES = N.ID_NECESSITIES\n" +
+                "WHERE B.ID_USER = ?";
         try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
             pre.setString(1, id_value);
             ResultSet rs = pre.executeQuery();
@@ -58,8 +57,11 @@ public class PaymentHistoryPanel extends JPanel {
             while (rs.next()) {
                 String id = rs.getString(1);
                 java.sql.Date date = rs.getDate(2);
-                String pay = rs.getString(3);
-                lst.add(new PaymentHistoryModel(id, date, pay));
+                String name = rs.getString(3);
+                String price = rs.getString(4);
+                int quantity = rs.getInt(5);
+                String total = rs.getString(6);
+                lst.add(new NecessityHistoryModel(id, date, name, price, quantity, total));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -70,12 +72,15 @@ public class PaymentHistoryPanel extends JPanel {
         if (this.lst == null) {
             return null;
         }
-        String[][] data = new String[lst.size()][2];
+        String[][] data = new String[lst.size()][5];
         int i = 0;
 
-        for (PaymentHistoryModel f: lst) {
+        for (NecessityHistoryModel f: lst) {
             data[i][0] = f.getDate().toString();
-            data[i][1] = f.getPay();
+            data[i][1] = f.getName();
+            data[i][2] = f.getPrice();
+            data[i][3] = String.valueOf(f.getQuantity());
+            data[i][4] = f.getTotal();
             i++;
         }
 
