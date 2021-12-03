@@ -36,7 +36,7 @@ public class PersonalInformationPanel extends JPanel {
         quaratine.setFont(text_font);
 
         String sql = "SELECT *\n" +
-                "FROM PROFILE P JOIN F_HISTORY F ON P.ID = F.[USER_ID]\n" +
+                "FROM PROFILE P JOIN F_HISTORY F ON P.ID = F.[USER_ID] JOIN QUARATINE Q ON Q.ID_QUARATINE = P.ID_QUARATINE\n" +
                 "WHERE P.ID = ? and F.F_DATE >= ALL (\n" +
                 "SELECT F1.F_DATE\n" +
                 "FROM PROFILE P1 JOIN F_HISTORY F1 ON P1.ID = F1.[USER_ID]\n" +
@@ -53,7 +53,7 @@ public class PersonalInformationPanel extends JPanel {
                 dob.setText("Năm sinh: " + rs.getString(4));
                 address.setText("Địa chỉ nơi ở: " + rs.getString(8) + ", " + rs.getString(7) + ", " + rs.getString(6));
                 status.setText("Trạng thái hiện tại: " + rs.getString(12));
-                quaratine.setText("Nơi đang điều trị: " + rs.getString(6));
+                quaratine.setText("Nơi đang điều trị: " + rs.getString(15));
             }
         } catch (SQLException ex){
             ex.printStackTrace();

@@ -2,6 +2,7 @@ package View.User;
 
 import View.User.content.ContentPanel;
 import View.User.content.home.HomePanel;
+import View.User.content.information.CheckDebtPanel;
 import View.User.content.information.InformationButton;
 import View.User.content.information.InformationPanel;
 import View.User.content.information.PersonalInformationPanel;
@@ -132,9 +133,13 @@ public class MainFrame extends JFrame implements ActionListener {
         personal_information_button = new InformationButton("Xem thông tin cá nhân");
         personal_information_button.addActionListener(this);
         managed_history_button = new InformationButton("Lịch sử được quản lý");
+        managed_history_button.addActionListener(this);
         necessity_history_button = new InformationButton("Lịch sử tiêu thụ gói Nhu yếu phẩm");
+        necessity_history_button.addActionListener(this);
         check_debt_button = new InformationButton("Xem dư nợ");
+        check_debt_button.addActionListener(this);
         payment_history_button = new InformationButton("Lịch sử thanh toán");
+        payment_history_button.addActionListener(this);
 
         JPanel information_content_panel1 = new JPanel();
         information_content_panel1.add(personal_information_button);
@@ -183,7 +188,7 @@ public class MainFrame extends JFrame implements ActionListener {
             switchPanel(payment_panel);
         }
         if (e.getSource() == check_debt_button) {
-            switchPanel(payment_panel);
+            switchPanel(new CheckDebtPanel(getId()));
         }
         if (e.getSource() == payment_history_button) {
             switchPanel(payment_panel);
