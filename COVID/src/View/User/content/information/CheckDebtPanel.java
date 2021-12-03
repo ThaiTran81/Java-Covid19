@@ -37,8 +37,8 @@ public class CheckDebtPanel extends JPanel {
 
         JPanel none = new JPanel();
         none.setPreferredSize(new Dimension(700,50));
-        none.setBackground(Color.blue);
-        none.setOpaque(false);
+        none.setBackground(Color.white);
+        none.setOpaque(true);
         JPanel ct = new JPanel();
         ct.setLayout(new GridLayout(6,1,0,0));
         ct.setBackground(Color.yellow);

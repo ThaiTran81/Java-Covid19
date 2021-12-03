@@ -2,10 +2,7 @@ package View.User;
 
 import View.User.content.ContentPanel;
 import View.User.content.home.HomePanel;
-import View.User.content.information.CheckDebtPanel;
-import View.User.content.information.InformationButton;
-import View.User.content.information.InformationPanel;
-import View.User.content.information.PersonalInformationPanel;
+import View.User.content.information.*;
 import View.User.content.necessity.NecessityPanel;
 import View.User.content.payment.PaymentPanel;
 import View.User.sidebar.SideBarButton;
@@ -182,7 +179,7 @@ public class MainFrame extends JFrame implements ActionListener {
             switchPanel(new PersonalInformationPanel(getId()));
         }
         if (e.getSource() == managed_history_button) {
-            switchPanel(payment_panel);
+            switchPanel(new ManagedHistoryPanel(getId()));
         }
         if (e.getSource() == necessity_history_button) {
             switchPanel(payment_panel);
