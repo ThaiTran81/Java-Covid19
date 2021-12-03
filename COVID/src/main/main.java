@@ -2,15 +2,18 @@ package main;
 
 import javax.swing.*;
 import View.*;
-import View.User.UserMainFrame;
+import View.User.MainFrame;
+import View.User.*;
+
+import java.awt.*;
 
 public class main {
     public static void main(String args[]){
-        SwingUtilities.invokeLater(new Runnable() {
+        EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-//                new ConnectToDBView();
-                new UserMainFrame();
+                new ConnectToDBView();
+//                new MainFrame();
             }
         });
     }

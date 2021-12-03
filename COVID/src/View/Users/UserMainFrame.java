@@ -1,4 +1,6 @@
-package View.User;
+package View.Users;
+
+import View.Users.information.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -14,9 +16,12 @@ public class UserMainFrame extends JFrame implements ActionListener {
     private JPanel sidebarPanel;
     private JPanel contentPanel;
     private JPanel homePanel;
-    private JPanel informationPanel;
+//    private JPanel informationPanel;
+//    private InformationPanel in = new InformationPanel();
     private JPanel necessityPanel;
     private JPanel paymentPanel;
+
+//    PersonalInformation personalInformationPanel = new PersonalInformation();
 
 //    GradientPanel content_background = new GradientPanel(new Color(255,140,0), new Color(255,169,0), 0);
 //    GradientPanel sidebar_background = new GradientPanel(new Color(0,255,0), new Color(173,255,47), 3);
@@ -46,8 +51,8 @@ public class UserMainFrame extends JFrame implements ActionListener {
 
         main_layer = new JLayeredPane();
         main_layer.setBounds(0,0,2000,1000);
-        main_layer.add(contentPanel);
         main_layer.add(sidebarPanel);
+        main_layer.add(contentPanel);
 
         this.add(main_layer);
         this.setVisible(true);
@@ -92,12 +97,12 @@ public class UserMainFrame extends JFrame implements ActionListener {
         information_button.setBorder(new EmptyBorder(0,15,0,0));
         information_button.setFocusable(false);
         information_button.setFont(sidebar_font);
-        information_button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                switchPanel(informationPanel);
-            }
-        });
+//        information_button.addActionListener(new ActionListener() {
+//            @Override
+////            public void actionPerformed(ActionEvent e) {
+////                switchPanel();
+////            }
+//        });
 
         JButton necessity_button = new JButton("    Necessity");
         necessity_button.setIcon(new ImageIcon("src\\com\\cv19\\icon\\necessity_icon.png"));
@@ -136,7 +141,7 @@ public class UserMainFrame extends JFrame implements ActionListener {
         sidebarPanel.add(sidebar);
     }
 
-    private JPanel personalInformationPanel;
+//    private JPanel personalInformationPanel;
     private JPanel managedHistoryPanel;
     private JPanel necessityHistoryPanel;
     private JPanel checkDebtPanel;
@@ -144,15 +149,15 @@ public class UserMainFrame extends JFrame implements ActionListener {
 
     public void addContent() {
         homePanel = new JPanel();
-        informationPanel = new JPanel();
+//        informationPanel = new JPanel();
         necessityPanel = new JPanel();
         paymentPanel = new JPanel();
         contentPanel.add(homePanel);
 
-        informationPanel.setLayout(new GridLayout(4,1,0,0));
-        informationPanel.setBackground(Color.blue);
-        informationPanel.setPreferredSize(new Dimension(760,600));
-        informationPanel.setOpaque(true);
+//        informationPanel.setLayout(new GridLayout(4,1,0,0));
+//        informationPanel.setBackground(Color.blue);
+//        informationPanel.setPreferredSize(new Dimension(760,600));
+//        informationPanel.setOpaque(false);
 
         JPanel information_title = new JPanel();
         JLabel information_text_title = new JLabel("Information");
@@ -226,10 +231,10 @@ public class UserMainFrame extends JFrame implements ActionListener {
         information_content_panel3.add(payment_history_button);
 
         homePanel.add(new JLabel("Home"));
-        informationPanel.add(information_title);
-        informationPanel.add(information_content_panel1);
-        informationPanel.add(information_content_panel2);
-        informationPanel.add(information_content_panel3);
+//        informationPanel.add(information_title);
+//        informationPanel.add(information_content_panel1);
+//        informationPanel.add(information_content_panel2);
+//        informationPanel.add(information_content_panel3);
         necessityPanel.add(new JLabel("Necessity"));
         paymentPanel.add(new JLabel("Payment"));
     }
@@ -273,15 +278,15 @@ public class UserMainFrame extends JFrame implements ActionListener {
         ct.add(status);
         ct.add(quaratine);
 
-        personalInformationPanel = new JPanel();
-        personalInformationPanel.setBackground(Color.blue);
-        personalInformationPanel.setPreferredSize(new Dimension(760,600));
-        personalInformationPanel.setOpaque(false);
-        personalInformationPanel.add(title);
-        personalInformationPanel.add(none);
-        personalInformationPanel.add(ct);
-
-        switchPanel(personalInformationPanel);
+//        personalInformationPanel = new JPanel();
+//        personalInformationPanel.setBackground(Color.blue);
+//        personalInformationPanel.setPreferredSize(new Dimension(760,600));
+//        personalInformationPanel.setOpaque(false);
+//        personalInformationPanel.add(title);
+//        personalInformationPanel.add(none);
+//        personalInformationPanel.add(ct);
+//
+//        switchPanel(personalInformationPanel);
     }
 
     public void switchToManagedHistoryPanel() {
@@ -355,6 +360,20 @@ public class UserMainFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+//        if (e.getSource() == in.personal_information_button) {
+//            switchPanel(personalInformationPanel);
+//        }
+//        if (e.getSource() == in.managed_history_button) {
+//            switchToManagedHistoryPanel();
+//        }
+//        if (e.getSource() == in.necessity_history_button) {
+//            switchToNecessityHistoryPanel();
+//        }
+//        if (e.getSource() == in.check_debt_button) {
+//            switchToCheckDebtPanel();
+//        }
+//        if (e.getSource() == in.payment_history_button) {
+//            switchToPaymentHistoryPanel();
+//        }
     }
 }

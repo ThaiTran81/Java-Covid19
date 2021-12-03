@@ -10,7 +10,8 @@ import java.sql.SQLException;
 
 import Controller.*;
 import Model.LoginModel;
-import View.User.UserMainFrame;
+import View.User.MainFrame;
+import View.Users.UserMainFrame;
 
 public class LoginView extends JFrame implements ActionListener{
     private Container container = getContentPane();
@@ -119,7 +120,7 @@ public class LoginView extends JFrame implements ActionListener{
             }
             if(user.getType() == 2){
                 this.dispose();
-                new UserMainFrame();
+                new MainFrame(usernametext);
             }
         }
         if (e.getSource() == resetButton) {

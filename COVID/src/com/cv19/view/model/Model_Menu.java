@@ -3,7 +3,7 @@ package com.cv19.view.model;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-public class Model_Menu {
+public class                   Model_Menu {
 
     private String icon;
     private String name;
