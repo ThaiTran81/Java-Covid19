@@ -188,7 +188,7 @@ public class MainFrame extends JFrame implements ActionListener {
             switchPanel(new CheckDebtPanel(getId()));
         }
         if (e.getSource() == payment_history_button) {
-            switchPanel(payment_panel);
+            switchPanel(new PaymentHistoryPanel(getId()));
         }
     }
 }

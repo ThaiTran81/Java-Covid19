@@ -1,5 +1,6 @@
 package View.User.content.information;
 
+import Model.PaymentHistory;
 import Model.f_historyModel;
 
 import javax.swing.*;
@@ -10,14 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
-public class ManagedHistoryPanel extends JPanel {
-    Vector<f_historyModel> lst = new Vector<>();
+public class PaymentHistoryPanel extends JPanel {
+    Vector<PaymentHistory> lst = new Vector<>();
 
     Font content_title_font = new Font("Title",Font.BOLD,40);
 
-    public ManagedHistoryPanel() {}
-    public ManagedHistoryPanel(String id_value) {
-        JLabel title = new JLabel("Lịch sử được quản lý");
+    public PaymentHistoryPanel() {}
+    public PaymentHistoryPanel(String id_value) {
+        JLabel title = new JLabel("Lịch sử thanh toán");
         title.setFont(content_title_font);
 
         JPanel none = new JPanel();
@@ -37,7 +38,7 @@ public class ManagedHistoryPanel extends JPanel {
             this.add(new JLabel("Không có lịch sử."));
         }
 
-        String[] columns = {"Trạng thái","Ngày thay đổi"};
+        String[] columns = {"Ngày thanh toán","Số tiền thanh toán"};
         JTable table = new JTable(data, columns);
         JScrollPane sp = new JScrollPane(table);
         sp.setBounds(10,10,400,200);
@@ -47,18 +48,18 @@ public class ManagedHistoryPanel extends JPanel {
 
     public void setData(String id_value) {
         String sql = "SELECT *\n" +
-                "FROM F_HISTORY\n" +
+                "FROM PAYMENT_HISTORY\n" +
                 "WHERE USER_ID = ?\n" +
-                "ORDER BY F_DATE";
+                "ORDER BY DATE";
         try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
             pre.setString(1, id_value);
             ResultSet rs = pre.executeQuery();
 
             while (rs.next()) {
                 String id = rs.getString(1);
-                String f_kind = rs.getString(2);
-                java.sql.Date date = rs.getDate(3);
-                lst.add(new f_historyModel(id, f_kind, date));
+                java.sql.Date date = rs.getDate(2);
+                String pay = rs.getString(3);
+                lst.add(new PaymentHistory(id, date, pay));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -72,9 +73,9 @@ public class ManagedHistoryPanel extends JPanel {
         String[][] data = new String[lst.size()][2];
         int i = 0;
 
-        for (f_historyModel f: lst) {
-            data[i][0] = f.getF_kind();
-            data[i][1] = f.getDate().toString();
+        for (PaymentHistory f: lst) {
+            data[i][0] = f.getDate().toString();
+            data[i][1] = f.getPay();
             i++;
         }
 
