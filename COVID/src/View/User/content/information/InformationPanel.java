@@ -12,6 +12,6 @@ public class InformationPanel extends JPanel {
         this.setLayout(new GridLayout(5,1,0,0));
         this.setBackground(Color.blue);
         this.setPreferredSize(new Dimension(760,600));
-        this.setOpaque(true);
+        this.setOpaque(false);
     }
 }

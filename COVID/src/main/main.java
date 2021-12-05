@@ -1,9 +1,6 @@
 package main;
 
-import javax.swing.*;
-import View.*;
-import View.User.MainFrame;
-import View.User.*;
+import View.ConnectToDBView;
 
 import java.awt.*;
 
@@ -13,7 +10,7 @@ public class main {
             @Override
             public void run() {
                 new ConnectToDBView();
-//                new MainFrame();
+//                new MainFrame("189393343");
             }
         });
     }

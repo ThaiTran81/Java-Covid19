@@ -7,6 +7,7 @@ public class NecessityHistoryModel {
     private java.sql.Date date;
     private String name;
     private String price;
+    private int time_limit;
     private int quantity;
     private String total;
 
@@ -20,6 +21,14 @@ public class NecessityHistoryModel {
         this.price = price;
         this.quantity = quantity;
         this.total = total;
+    }
+
+    public NecessityHistoryModel(String username, Date date, String name, int time_limit, int quantity) {
+        this.username = username;
+        this.date = date;
+        this.name = name;
+        this.time_limit = time_limit;
+        this.quantity = quantity;
     }
 
 
@@ -69,5 +78,13 @@ public class NecessityHistoryModel {
 
     public void setTotal(String total) {
         this.total = total;
+    }
+
+    public int getTime_limit() {
+        return time_limit;
+    }
+
+    public void setTime_limit(int time_limit) {
+        this.time_limit = time_limit;
     }
 }
