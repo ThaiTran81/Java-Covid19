@@ -13,7 +13,7 @@ public class CheckDebtPanel extends JPanel {
 
     public CheckDebtPanel() {}
     public CheckDebtPanel(String id_value) {
-        JLabel title = new JLabel("Thông tin cá nhân");
+        JLabel title = new JLabel("Thông tin dư nợ");
         title.setFont(content_title_font);
 
         JLabel debt = new JLabel();

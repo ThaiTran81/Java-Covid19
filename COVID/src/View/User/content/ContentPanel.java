@@ -1,6 +1,6 @@
 package View.User.content;
 
-import View.User.content.home.HomePanel;
+import View.User.content.account.AcountPanel;
 import View.User.content.information.InformationPanel;
 import View.User.content.necessity.NecessityPanel;
 import View.User.content.payment.PaymentPanel;

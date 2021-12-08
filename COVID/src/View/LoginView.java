@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import Controller.*;
 import Model.LoginModel;
 import View.User.MainFrame;
-import View.Users.UserMainFrame;
 
 public class LoginView extends JFrame implements ActionListener{
     private Container container = getContentPane();

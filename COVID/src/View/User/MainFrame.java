@@ -1,7 +1,8 @@
 package View.User;
 
 import View.User.content.ContentPanel;
-import View.User.content.home.HomePanel;
+import View.User.content.account.AcountPanel;
+import View.User.content.account.AcountPanel;
 import View.User.content.information.*;
 import View.User.content.necessity.NecessityPanel;
 import View.User.content.necessity.NecessityTablePanel;
@@ -57,51 +58,55 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     private SideBarPanel side_bar;
-    private SideBarButton home_button;
     private SideBarButton information_button;
     private SideBarButton necessity_button;
     private SideBarButton payment_button;
+    private SideBarButton account_button;
+    private SideBarButton logout_button;
 
     public void addSidebar() {
         side_bar = new SideBarPanel();
 
         JToolBar sidebar = new JToolBar(JToolBar.VERTICAL);
-        sidebar.setLayout(new GridLayout(4,1,0,0));
+        sidebar.setLayout(new GridLayout(5,1,0,0));
         sidebar.setFloatable(false);
         sidebar.setOpaque(false);
 
-        home_button = new SideBarButton("    Home", "src\\com\\cv19\\icon\\home_icon.png");
-        home_button.addActionListener(this);
         information_button = new SideBarButton("    Thông tin", "src\\com\\cv19\\icon\\information_icon.png");
         information_button.addActionListener(this);
         necessity_button = new SideBarButton("    Nhu yếu phẩm", "src\\com\\cv19\\icon\\necessity_icon.png");
         necessity_button.addActionListener(this);
         payment_button = new SideBarButton("    Thanh toán", "src\\com\\cv19\\icon\\payment_icon.png");
         payment_button.addActionListener(this);
+        account_button = new SideBarButton("    Đổi mật khẩu", "src\\com\\cv19\\icon\\password_icon.png");
+        account_button.addActionListener(this);
+        logout_button = new SideBarButton("    Đăng xuất", "src\\com\\cv19\\icon\\logout_icon.png");
+        logout_button.addActionListener(this);
 
-        sidebar.add(home_button);
         sidebar.add(information_button);
         sidebar.add(necessity_button);
         sidebar.add(payment_button);
+        sidebar.add(account_button);
+        sidebar.add(logout_button);
 
         side_bar.add(sidebar);
         sidebar_layer.add(side_bar);
     }
 
     private ContentPanel content;
-    private HomePanel home_panel;
+    private AcountPanel account_panel;
     private InformationPanel information_panel;
     private NecessityPanel necessity_panel;
     private PaymentPanel payment_panel;
 
     public void addContent() {
-        home_panel = new HomePanel();
+        account_panel = new AcountPanel();
         information_panel = new InformationPanel();
         necessity_panel = new NecessityPanel();
         payment_panel = new PaymentPanel();
 
         content = new ContentPanel();
-        content.add(home_panel);
+//        content.add(account_panel);
 
         content_layer.add(content);
     }
@@ -236,9 +241,6 @@ public class MainFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == home_button) {
-            switchPanel(home_panel);
-        }
         if (e.getSource() == information_button) {
             showInformationPanel();
             switchPanel(information_panel);
@@ -249,6 +251,12 @@ public class MainFrame extends JFrame implements ActionListener {
         }
         if (e.getSource() == payment_button) {
             switchPanel(payment_panel);
+        }
+        if (e.getSource() == account_button) {
+            switchPanel(account_panel);
+        }
+        if (e.getSource() == logout_button) {
+
         }
         if (e.getSource() == personal_information_button) {
             switchPanel(new PersonalInformationPanel(getId()));
