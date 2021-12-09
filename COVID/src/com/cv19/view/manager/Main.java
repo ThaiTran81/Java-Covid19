@@ -1,18 +1,20 @@
 
 package com.cv19.view.manager;
 
-import com.cv19.view.body.Form_manage;
+import com.cv19.view.body.AddForm;
 import com.cv19.view.body.HomeForm;
+import com.cv19.view.body.ManageForm;
+import com.cv19.view.body.MyProfileForm;
+import com.cv19.view.body.NecessityForm;
+import com.cv19.view.body.OutBalanceForm;
 import com.cv19.view.event.EventMenu;
-import com.cv19.view.model.Model_Menu;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import com.cv19.view.model.Model_Menu;
+
 /**
  *
  * @author ThaiTran
@@ -22,7 +24,7 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         initComponents();
         setBackground(new Color(0,0,0,0));
-        menu.addItemToMenu(new Model_Menu("exit", "THOÁT", Model_Menu.MenuType.EXIT));
+        
         // add listen 
         addMouseListener(new MouseAdapter() {
         public void mousePressed(MouseEvent e) {
@@ -118,10 +120,22 @@ public class Main extends javax.swing.JFrame {
                     showForm(new HomeForm());
                 }
                 if (index == 1){
-                    showForm(new Form_manage());
+                    showForm(new AddForm());
                 }
-                if (index == 6){
-
+                if(index ==2){
+                    showForm(new ManageForm());
+                }
+                if(index==3){
+                    showForm(new NecessityForm());
+                }
+                if(index==4){
+                    showForm(new OutBalanceForm());
+                }
+                if(index ==5){
+                    showForm(new MyProfileForm());
+                }
+                if(index == 6){
+                    Main.this.dispose();
                 }
             }
             

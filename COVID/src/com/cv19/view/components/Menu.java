@@ -69,13 +69,13 @@ public class Menu extends PanelBorder {
         );
     }// </editor-fold>//GEN-END:initComponents
     void init() {
-//        listMenu.addItem(new Model_Menu("1", "THỐNG KÊ CA MẮC", Model_Menu.MenuType.MENU));
-//        listMenu.addItem(new Model_Menu("2", "THÊM", Model_Menu.MenuType.MENU));
-//        listMenu.addItem(new Model_Menu("3", "QUẢN LÝ CA MẮC", Model_Menu.MenuType.MENU));
-//        listMenu.addItem(new Model_Menu("4", "NHU YẾU PHẨM", Model_Menu.MenuType.MENU));
-//        listMenu.addItem(new Model_Menu("5", "THỐNG KÊ DƯ NỢ", Model_Menu.MenuType.MENU));
-//        listMenu.addItem(new Model_Menu("6", "THÔNG TIN CỦA TÔI", Model_Menu.MenuType.MENU));
-//        listMenu.addItem(new Model_Menu("exit", "THOÁT", Model_Menu.MenuType.EXIT));
+        listMenu.addItem(new Model_Menu("1", "THỐNG KÊ CA MẮC", Model_Menu.MenuType.MENU));
+        listMenu.addItem(new Model_Menu("2", "THÊM", Model_Menu.MenuType.MENU));
+        listMenu.addItem(new Model_Menu("3", "QUẢN LÝ CA MẮC", Model_Menu.MenuType.MENU));
+        listMenu.addItem(new Model_Menu("4", "NHU YẾU PHẨM", Model_Menu.MenuType.MENU));
+        listMenu.addItem(new Model_Menu("5", "THỐNG KÊ DƯ NỢ", Model_Menu.MenuType.MENU));
+        listMenu.addItem(new Model_Menu("6", "THÔNG TIN CỦA TÔI", Model_Menu.MenuType.MENU));
+        listMenu.addItem(new Model_Menu("exit", "THOÁT", Model_Menu.MenuType.EXIT));
 
     }
 
@@ -90,7 +90,4 @@ public class Menu extends PanelBorder {
     private com.cv19.swing.ListMenu<String> listMenu;
     private com.cv19.view.components.Profile profile;
     // End of variables declaration//GEN-END:variables
-    public void addItemToMenu(Model_Menu mMenu){
-        listMenu.addItem(mMenu);
-    }
 }

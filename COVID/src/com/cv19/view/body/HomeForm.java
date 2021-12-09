@@ -4,6 +4,8 @@
  */
 package com.cv19.view.body;
 
+import java.awt.Color;
+
 /**
  *
  * @author ThaiTran
@@ -15,8 +17,24 @@ public class HomeForm extends javax.swing.JPanel {
      */
     public HomeForm() {
         initComponents();
+        init();
     }
 
+    void init(){
+        statusTotal.setIcon("virus");
+        statusTotal.setLbTitle("TỔNG NHIỄM");
+        statusTotal.setLbNum("100");
+        
+        statusHealth.setIcon("healthy");
+        statusHealth.setLbTitle("KHỎI BỆNH");
+        statusHealth.setLbNum("100");
+        statusHealth.setColor(new Color(159,219,8));
+        
+        statusDeath.setIcon("death");
+        statusDeath.setLbTitle("TỬ VONG");
+        statusDeath.setLbNum("0");
+        statusDeath.setColor(new Color(138,148,166));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,28 +44,128 @@ public class HomeForm extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        panelStatus = new javax.swing.JPanel();
+        statusTotal = new com.cv19.view.components.StatusPan();
+        statusHealth = new com.cv19.view.components.StatusPan();
+        statusDeath = new com.cv19.view.components.StatusPan();
+        lbTitle = new javax.swing.JLabel();
+        panelFilter = new javax.swing.JPanel();
+        comboVillage = new javax.swing.JComboBox<>();
+        comboDistrict = new javax.swing.JComboBox<>();
+        comboCity = new javax.swing.JComboBox<>();
+        panelDate = new javax.swing.JPanel();
+        comboDay = new javax.swing.JComboBox<>();
+        comboMonth = new javax.swing.JComboBox<>();
+        comboYear = new javax.swing.JComboBox<>();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        scTable = new javax.swing.JScrollPane();
+        table = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("SansSerif", 1, 24)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("jLabel1");
+        panelStatus.setBackground(new java.awt.Color(255, 255, 255));
+        panelStatus.setLayout(new java.awt.GridLayout(1, 3, 15, 0));
+        panelStatus.add(statusTotal);
+        panelStatus.add(statusHealth);
+        panelStatus.add(statusDeath);
+
+        lbTitle.setFont(new java.awt.Font("SansSerif", 1, 24)); // NOI18N
+        lbTitle.setForeground(new java.awt.Color(138, 148, 166));
+        lbTitle.setText("TỔNG QUAN");
+
+        panelFilter.setLayout(new java.awt.GridLayout(1, 5, 5, 0));
+
+        panelFilter.add(comboVillage);
+
+        panelFilter.add(comboDistrict);
+
+        panelFilter.add(comboCity);
+
+        panelDate.setLayout(new java.awt.GridLayout(1, 3));
+
+        panelDate.add(comboDay);
+
+        panelDate.add(comboMonth);
+
+        panelDate.add(comboYear);
+
+        panelFilter.add(panelDate);
+
+        panelFilter.add(jComboBox1);
+
+        table.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Ngày", "Số ca nhiễm", "Số F0", "Số F1", "Số F2", "Số F3", "Số chuyển trạng thái", "Khỏi bệnh"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        scTable.setViewportView(table);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(panelFilter, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelStatus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 933, Short.MAX_VALUE)
+                    .addComponent(lbTitle, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scTable))
+                .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lbTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(panelFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(scTable, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JComboBox<String> comboCity;
+    private javax.swing.JComboBox<String> comboDay;
+    private javax.swing.JComboBox<String> comboDistrict;
+    private javax.swing.JComboBox<String> comboMonth;
+    private javax.swing.JComboBox<String> comboVillage;
+    private javax.swing.JComboBox<String> comboYear;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel lbTitle;
+    private javax.swing.JPanel panelDate;
+    private javax.swing.JPanel panelFilter;
+    private javax.swing.JPanel panelStatus;
+    private javax.swing.JScrollPane scTable;
+    private com.cv19.view.components.StatusPan statusDeath;
+    private com.cv19.view.components.StatusPan statusHealth;
+    private com.cv19.view.components.StatusPan statusTotal;
+    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }
