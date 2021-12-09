@@ -1,21 +1,30 @@
 package View.User;
 
+import Model.NecessityHistoryModel;
 import View.User.content.ContentPanel;
 import View.User.content.account.AcountPanel;
 import View.User.content.account.AcountPanel;
 import View.User.content.information.*;
 import View.User.content.necessity.NecessityPanel;
+import View.User.content.necessity.NecessityPurchasePanel;
+import View.User.content.necessity.NecessityPurchaseTablePanel;
 import View.User.content.necessity.NecessityTablePanel;
 import View.User.content.payment.PaymentPanel;
 import View.User.sidebar.SideBarButton;
 import View.User.sidebar.SideBarPanel;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
 
 public class MainFrame extends JFrame implements ActionListener {
     private JLayeredPane main_layer;
@@ -100,13 +109,12 @@ public class MainFrame extends JFrame implements ActionListener {
     private PaymentPanel payment_panel;
 
     public void addContent() {
-        account_panel = new AcountPanel();
+        account_panel = new AcountPanel(getId());
         information_panel = new InformationPanel();
         necessity_panel = new NecessityPanel();
-        payment_panel = new PaymentPanel();
+        payment_panel = new PaymentPanel(getId());
 
         content = new ContentPanel();
-//        content.add(account_panel);
 
         content_layer.add(content);
     }
@@ -172,6 +180,8 @@ public class MainFrame extends JFrame implements ActionListener {
     private JComboBox filter_combo_box;
     private JComboBox sort_combo_box;
     private NecessityTablePanel necessity_table_panel;
+    private JButton purchase_button = new JButton("Mua hàng");
+    private NecessityPurchasePanel necessity_purchase_panel = new NecessityPurchasePanel(getId());
 
     public void showNecessityPanel() {
         necessity_panel.removeAll();
@@ -179,7 +189,7 @@ public class MainFrame extends JFrame implements ActionListener {
         JPanel necessity_title = new JPanel();
         necessity_title.setBackground(Color.white);
         necessity_title.setPreferredSize(new Dimension(720,100));
-        JLabel necessity_text_title = new JLabel("Mua nhu yếu phẩm");
+        JLabel necessity_text_title = new JLabel("Xem nhu yếu phẩm");
         necessity_text_title.setFont(content_title_font);
         necessity_title.add(necessity_text_title);
 
@@ -209,6 +219,7 @@ public class MainFrame extends JFrame implements ActionListener {
         search_button.setFocusable(false);
         search_button.setPreferredSize(new Dimension(70,30));
         search_button.setFont(text_font);
+        search_button.addActionListener(this);
 
         JLabel filter_label = new JLabel("Loại: ");
         String[] necessity_type = {"Tất cả", "Thực phẩm ăn liền", "Rau củ", "Đồ uống", "Sữa", "Tắm gội", "Đồ gia dụng"};
@@ -234,9 +245,345 @@ public class MainFrame extends JFrame implements ActionListener {
         necessity_content.setBackground(Color.white);
         necessity_content.add(necessity_table_panel);
 
+        purchase_button.setFocusable(false);
+        purchase_button.addActionListener(this);
+
         necessity_panel.add(necessity_title);
         necessity_panel.add(task_bar_panel);
         necessity_panel.add(necessity_content);
+        necessity_panel.add(purchase_button);
+    }
+
+    private NecessityPurchaseTablePanel necessity_purchase_table_panel;
+    private JTextField quantity_field = new JTextField("Số lượng");
+    private JButton add_button = new JButton("Thêm");
+    private JButton buy_button = new JButton("Mua");
+
+    public void showPurchasePanel() {
+        necessity_purchase_panel.removeAll();
+
+        JLabel title = new JLabel("Mua nhu yếu phẩm");
+        title.setFont(content_title_font);
+
+        JPanel none = new JPanel();
+        none.setPreferredSize(new Dimension(700,20));
+        none.setBackground(Color.white);
+        none.setOpaque(true);
+
+        JLabel add_title = new JLabel("      Thêm sản phẩm");
+        add_title.setHorizontalAlignment(SwingConstants.LEFT);
+        add_title.setPreferredSize(new Dimension(350,50));
+        add_title.setFont(text_font);
+
+        JLabel keyword_title = new JLabel("Tìm từ khóa");
+        keyword_title.setHorizontalAlignment(SwingConstants.LEFT);
+        keyword_title.setPreferredSize(new Dimension(150,20));
+
+        search_bar.setPreferredSize(new Dimension(135,30));
+        search_bar.setForeground(new Color(153, 153, 153));
+        search_bar.addActionListener(this);
+        search_bar.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                super.focusGained(e);
+                if (search_bar.getText().equals("Tìm kiếm")) {
+                    search_bar.setText("");
+                    search_bar.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e);
+                if (search_bar.getText().trim().equals("") || search_bar.getText().equals("Tìm kiếm")) {
+                    search_bar.setText("Tìm kiếm");
+                    search_bar.setForeground(new Color(153, 153, 153));
+                }
+            }
+        });
+
+        JLabel filter_label = new JLabel("Chọn loại sản phẩm: ");
+        filter_label.setHorizontalAlignment(SwingConstants.LEFT);
+        filter_label.setPreferredSize(new Dimension(150,20));
+        String[] necessity_type = {"Tất cả", "Thực phẩm ăn liền", "Rau củ", "Đồ uống", "Sữa", "Tắm gội", "Đồ gia dụng"};
+        filter_combo_box = new JComboBox(necessity_type);
+
+        quantity_field.setPreferredSize(new Dimension(180,30));
+        quantity_field.setForeground(new Color(153, 153, 153));
+        quantity_field.addActionListener(this);
+        quantity_field.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                super.focusGained(e);
+                if (quantity_field.getText().equals("Tìm kiếm")) {
+                    quantity_field.setText("");
+                    quantity_field.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e);
+                if (quantity_field.getText().trim().equals("") || quantity_field.getText().equals("Tìm kiếm")) {
+                    quantity_field.setText("Tìm kiếm");
+                    quantity_field.setForeground(new Color(153, 153, 153));
+                }
+            }
+        });
+
+        necessity_purchase_table_panel = new NecessityPurchaseTablePanel(getId());
+
+        JPanel add_necessity_panel = new JPanel();
+        add_necessity_panel.setBorder(new LineBorder(Color.black,1));
+        add_necessity_panel.add(add_title);
+        add_necessity_panel.add(keyword_title);
+        add_necessity_panel.add(search_bar);
+        add_necessity_panel.add(filter_label);
+        add_necessity_panel.add(filter_combo_box);
+        add_necessity_panel.add(quantity_field);
+        add_necessity_panel.add(add_button);
+        add_necessity_panel.add(necessity_purchase_table_panel);
+
+        JLabel cart_title = new JLabel("      Giỏ hàng");
+        cart_title.setHorizontalAlignment(SwingConstants.LEFT);
+        cart_title.setPreferredSize(new Dimension(350,50));
+        cart_title.setFont(text_font);
+
+        String[][] data = new String[3][3];
+        for (int i = 0; i < data.length; i++) {
+            data[i][0] = "";
+            data[i][1] = "";
+            data[i][2] = "";
+        }
+        String[] columns = {"Tên sản phẩm", "Số lượng", "Đơn Giá"};
+        JTable table = new JTable(data, columns);
+        JScrollPane sp = new JScrollPane(table);
+        sp.setPreferredSize(new Dimension(320,200));
+
+        JPanel cart_table_panel = new JPanel();
+        cart_table_panel.setBackground(Color.white);
+        cart_table_panel.setOpaque(false);
+        cart_table_panel.setPreferredSize(new Dimension(690,210));
+        cart_table_panel.add(sp);
+
+        JLabel total_price = new JLabel("Tổng số tiền: 0000.00");
+        total_price.setHorizontalAlignment(SwingConstants.LEFT);
+        total_price.setPreferredSize(new Dimension(250,30));
+        total_price.setFont(text_font);
+
+        buy_button.addActionListener(this);
+
+        JPanel cart_panel = new JPanel();
+        cart_panel.setBorder(new LineBorder(Color.black,1));
+        cart_panel.add(cart_title);
+        cart_panel.add(cart_table_panel);
+        cart_panel.add(total_price);
+        cart_panel.add(buy_button);
+
+        JPanel ct = new JPanel();
+        ct.setLayout(new GridLayout(1,2,0,10));
+        ct.setBorder(new LineBorder(Color.black,1));
+        ct.setBackground(Color.yellow);
+        ct.setOpaque(true);
+        ct.setPreferredSize(new Dimension(700,400));
+        ct.add(add_necessity_panel);
+        ct.add(cart_panel);
+
+        necessity_purchase_panel.add(title);
+        necessity_purchase_panel.add(none);
+        necessity_purchase_panel.add(ct);
+    }
+
+    private JTextField cost_field = new JTextField("Số tiền thanh toán");
+    private JButton payment_accept_button = new JButton("Thanh toán");
+
+    public void showPaymentPanel() {
+        payment_panel.removeAll();
+
+        JPanel payment_title = new JPanel();
+        payment_title.setBackground(Color.white);
+        payment_title.setPreferredSize(new Dimension(720,100));
+        JLabel payment_text_title = new JLabel("Thanh toán");
+        payment_text_title.setFont(content_title_font);
+        payment_title.add(payment_text_title);
+
+        JLabel debt = new JLabel();
+        debt.setText("Số tiền cần thanh toán:");
+        debt.setFont(new Font("Text",Font.BOLD,20));
+
+        JLabel cost = new JLabel();
+        cost.setText("Nhập số tiền thanh toán (tối thiểu 20%):");
+        cost.setFont(new Font("Text",Font.BOLD,20));
+
+        String money = "";
+
+        String sql = "SELECT *\n" +
+                "FROM DEBT\n" +
+                "WHERE [USER_ID] = ?";
+        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+            pre.setString(1, getId());
+            ResultSet rs = pre.executeQuery();
+
+            if (rs.next()) {
+                money = rs.getString(2);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        if (money != "") {
+            debt.setText("Số tiền cần thanh toán: " + money);
+            double m = Double.parseDouble(money)/5;
+            cost.setText("Nhập số tiền thanh toán (tối thiểu " + (int)m + ".0000):");
+        }
+
+        cost_field.setPreferredSize(new Dimension(180,30));
+        cost_field.setForeground(new Color(153, 153, 153));
+        cost_field.addActionListener(this);
+        cost_field.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                super.focusGained(e);
+                if (cost_field.getText().equals("Số tiền thanh toán")) {
+                    cost_field.setText("");
+                    cost_field.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e);
+                if (cost_field.getText().trim().equals("") || cost_field.getText().equals("Số tiền thanh toán")) {
+                    cost_field.setText("Số tiền thanh toán");
+                    cost_field.setForeground(new Color(153, 153, 153));
+                }
+            }
+        });
+
+        payment_accept_button.setFocusable(false);
+        payment_accept_button.setPreferredSize(new Dimension(120,30));
+        payment_accept_button.setFont(text_font);
+        payment_accept_button.addActionListener(this);
+
+        JPanel task_bar_panel = new JPanel();
+        task_bar_panel.setBackground(Color.white);
+        task_bar_panel.add(cost_field);
+        task_bar_panel.add(payment_accept_button);
+
+        JPanel none = new JPanel();
+        none.setPreferredSize(new Dimension(700,50));
+        none.setBackground(Color.white);
+        none.setOpaque(true);
+        JPanel ct = new JPanel();
+        ct.setLayout(new GridLayout(6,1,0,0));
+        ct.setBackground(Color.yellow);
+        ct.setOpaque(false);
+        ct.setPreferredSize(new Dimension(600,250));
+        ct.add(debt);
+        ct.add(cost);
+        ct.add(task_bar_panel);
+
+        payment_panel.add(payment_title);
+        payment_panel.add(none);
+        payment_panel.add(ct);
+    }
+
+    private JTextField old_password_field = new JTextField("");
+    private JTextField new_password_field = new JTextField("");
+    private JTextField retype_new_password_field = new JTextField("");
+    private JButton change_password_button = new JButton("Change");
+
+    public void showAccountPanel() {
+        account_panel.removeAll();
+
+        JPanel account_title = new JPanel();
+        account_title.setBackground(Color.white);
+        account_title.setPreferredSize(new Dimension(720,100));
+        JLabel acount_text_title = new JLabel("Đổi mật khẩu");
+        acount_text_title.setFont(content_title_font);
+        account_title.add(acount_text_title);
+
+        JLabel old_password = new JLabel();
+        old_password.setText("Mật khẩu cũ:");
+        old_password.setFont(new Font("Text",Font.BOLD,20));
+
+        JLabel new_password = new JLabel();
+        new_password.setText("Mật khẩu mới:");
+        new_password.setFont(new Font("Text",Font.BOLD,20));
+
+        JLabel retype_new_password = new JLabel();
+        retype_new_password.setText("Nhập lại mật khẩu mới:");
+        retype_new_password.setFont(new Font("Text",Font.BOLD,20));
+
+        String confirm_password = "";
+
+        String sql = "SELECT *\n" +
+                "FROM ACCOUNT\n" +
+                "WHERE USERNAME = ?";
+        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+            pre.setString(1, getId());
+            ResultSet rs = pre.executeQuery();
+
+            if (rs.next()) {
+                confirm_password = rs.getString(2);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        old_password_field.setPreferredSize(new Dimension(180,30));
+        old_password_field.setForeground(new Color(153, 153, 153));
+        old_password_field.addActionListener(this);
+
+        new_password_field.setPreferredSize(new Dimension(180,30));
+        new_password_field.setForeground(new Color(153, 153, 153));
+        new_password_field.addActionListener(this);
+
+        retype_new_password_field.setPreferredSize(new Dimension(180,30));
+        retype_new_password_field.setForeground(new Color(153, 153, 153));
+        retype_new_password_field.addActionListener(this);
+
+        change_password_button.setFocusable(false);
+        change_password_button.setPreferredSize(new Dimension(120,30));
+        change_password_button.setFont(text_font);
+        change_password_button.addActionListener(this);
+
+        JPanel form_panel_1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        form_panel_1.setBackground(Color.white);
+        form_panel_1.add(old_password);
+        form_panel_1.add(old_password_field);
+
+        JPanel form_panel_2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        form_panel_2.setBackground(Color.white);
+        form_panel_2.add(new_password);
+        form_panel_2.add(new_password_field);
+
+        JPanel form_panel_3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        form_panel_3.setBackground(Color.white);
+        form_panel_3.add(retype_new_password);
+        form_panel_3.add(retype_new_password_field);
+
+        JPanel form_panel_4 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        form_panel_4.setBackground(Color.white);
+        form_panel_4.add(change_password_button);
+
+        JPanel none = new JPanel();
+        none.setPreferredSize(new Dimension(700,50));
+        none.setBackground(Color.white);
+        none.setOpaque(true);
+        JPanel ct = new JPanel();
+        ct.setLayout(new GridLayout(6,1,0,0));
+        ct.setBackground(Color.WHITE);
+        ct.setOpaque(true);
+        ct.setPreferredSize(new Dimension(600,500));
+        ct.add(form_panel_1);
+        ct.add(form_panel_2);
+        ct.add(form_panel_3);
+        ct.add(form_panel_4);
+
+        account_panel.add(account_title);
+        account_panel.add(none);
+        account_panel.add(ct);
     }
 
     @Override
@@ -250,9 +597,11 @@ public class MainFrame extends JFrame implements ActionListener {
             switchPanel(necessity_panel);
         }
         if (e.getSource() == payment_button) {
+            showPaymentPanel();
             switchPanel(payment_panel);
         }
         if (e.getSource() == account_button) {
+            showAccountPanel();
             switchPanel(account_panel);
         }
         if (e.getSource() == logout_button) {
@@ -275,6 +624,42 @@ public class MainFrame extends JFrame implements ActionListener {
         }
         if (e.getSource() == search_bar) {
             search_bar.setText("");
+        }
+        if (e.getSource() == purchase_button) {
+            showPurchasePanel();
+            switchPanel(necessity_purchase_panel);
+        }
+        if (e.getSource() == cost_field) {
+            cost_field.setText("");
+        }
+        if (e.getSource() == payment_accept_button) {
+            String cost = cost_field.getText();
+            String id_bank = "";
+            String balance = "";
+            String sql = "SELECT PM.*\n" +
+                    "FROM PROFILE P JOIN PAYMENT PM ON P.ID_BANK = PM.ID_BANK\n" +
+                    "WHERE ID = ?";
+            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                pre.setString(1, getId());
+                ResultSet rs = pre.executeQuery();
+
+                if (rs.next()) {
+                    id_bank = rs.getString(1);
+                    balance = rs.getString(2);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            Double nb = Double.parseDouble(balance) - Double.parseDouble(cost);
+            System.out.println(nb);
+            sql = "UPDATE PAYMENT SET BALANCE = ? WHERE ID_BANK = ?";
+            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                pre.setDouble(1, nb);
+                pre.setString(2, getId());
+                pre.execute();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }
