@@ -154,6 +154,17 @@ public class profileModel {
 
     }
 
+    public String toString() {
+        return
+                "fullname: " + fullname + '\n' +
+                        "phone: " + phone + '\n' +
+                        "dob: " + dob + '\n' +
+                        "gender: " + gender + '\n' +
+                        "province: " + province + '\n' +
+                        "district: " + district + '\n' +
+                        "village: " + village + '\n';
+    }
+
     public String getStatus() {
         return status;
     }

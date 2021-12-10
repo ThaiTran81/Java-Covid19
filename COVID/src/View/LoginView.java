@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 import Controller.*;
 import Model.LoginModel;
+import View.Admin.AdminMainFrame;
 import View.User.MainFrame;
 
 public class LoginView extends JFrame implements ActionListener{
@@ -120,6 +121,10 @@ public class LoginView extends JFrame implements ActionListener{
             if(user.getType() == 2){
                 this.dispose();
                 new MainFrame(usernametext);
+            }
+            if(user.getType() == 0){
+                this.dispose();
+                new AdminMainFrame();
             }
         }
         if (e.getSource() == resetButton) {
