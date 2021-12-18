@@ -32,16 +32,19 @@ class RegisterQuarantine extends JPanel implements ActionListener {
         add.setFont(new Font("Arial", Font.PLAIN, 15));
         add.setBounds(100, 80, 100, 20);
         add.addActionListener(this);
+        add.setToolTipText("Add new quarantine");
         add(add);
 
         modify.setFont(new Font("Arial", Font.PLAIN, 15));
         modify.setBounds(300, 80, 100, 20);
         modify.addActionListener(this);
+        modify.setToolTipText("Modify quarantine");
         add(modify);
 
         delete.setFont(new Font("Arial", Font.PLAIN, 15));
         delete.setBounds(500, 80, 100, 20);
         delete.addActionListener(this);
+        delete.setToolTipText("Delete a specific quarantine");
         add(delete);
     }
 
@@ -328,11 +331,13 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
         sub.setFont(new Font("Arial", Font.PLAIN, 15));
         sub.setBounds(150, 350, 100, 20);
         sub.addActionListener(this);
+        sub.setToolTipText("Submit all what you've typed");
         add(sub);
 
         reset.setFont(new Font("Arial", Font.PLAIN, 15));
         reset.setBounds(270, 350, 100, 20);
         reset.addActionListener(this);
+        reset.setToolTipText("Clear all what you've typed");
         add(reset);
 
         result.setFont(new Font("Arial", Font.PLAIN, 15));

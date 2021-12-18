@@ -1,5 +1,7 @@
 package View.Admin;
 
+import View.LoginView;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -12,7 +14,7 @@ public class AdminMainFrame extends JFrame implements ActionListener {
     private Container container = getLayeredPane();
     private JPanel Sidebar = new JPanel();
 
-    private JButton CreateAccountBtn = new JButton("Create Account");
+    private JButton CreateAccountBtn = new JButton("Create Manager");
     private JButton ManageBtn = new JButton("Manager");
     private JButton QuarantineBtn = new JButton("Quarantine");
     private JButton Logout = new JButton("Logout");
@@ -164,7 +166,8 @@ public class AdminMainFrame extends JFrame implements ActionListener {
             container.add(rq);
         }
         if (e.getSource() == Logout){
-
+            this.dispose();
+            new LoginView();
         }
     }
 }

@@ -23,6 +23,9 @@ public class ConnectToDBController {
             ds.setDatabaseName(sql.db);
             ds.setServerName(sql.sv);
             ds.setPortNumber(sql.prt);
+            ds.setEncrypt(true);
+            ds.setIntegratedSecurity(true);
+            ds.setTrustServerCertificate(true);
             conn = ds.getConnection();
             return conn;
         }

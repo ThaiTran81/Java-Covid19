@@ -4,6 +4,7 @@ import Model.HistoryModel;
 import Model.profileModel;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -50,13 +51,17 @@ public class ManageManager extends JPanel implements ActionListener {
         add(mtx);
 
         sub.setFont(new Font("Arial", Font.PLAIN, 15));
-        sub.setBounds(20, 400, 100, 20);
+        sub.setBounds(20, 350, 100, 20);
         sub.addActionListener(this);
+        sub.setBorder(new RoundBtn(15));
+        sub.setToolTipText("view the history of this manager");
         add(sub);
 
         delete.setFont(new Font("Arial", Font.PLAIN, 15));
-        delete.setBounds(120, 400, 100, 20);
+        delete.setBounds(120, 350, 100, 20);
+        delete.setBorder(new RoundBtn(15));
         delete.addActionListener(this);
+        delete.setToolTipText("delete this manager");
         add(delete);
 
         result.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -79,14 +84,14 @@ public class ManageManager extends JPanel implements ActionListener {
     }
     void view(Vector<HistoryModel> list){
         Vector<String> columnNames = new Vector<String>();
-        columnNames.addElement("USER ID");
+//        columnNames.addElement("USER ID");
         columnNames.addElement("WHEN");
         columnNames.addElement("ACTION");
 
         Vector<Vector> Rowdata = new Vector<Vector>();
         for (HistoryModel h : list){
             Vector<String> temp = new Vector<String>();
-            temp.add(h.getUser_id());
+//            temp.add(h.getUser_id());
             temp.add(h.getTime().toString());
             temp.add(h.getMsg());
             Rowdata.add(temp);
@@ -165,5 +170,22 @@ public class ManageManager extends JPanel implements ActionListener {
                 }
             }
         }
+    }
+}
+
+class RoundBtn implements Border
+{
+    private int r;
+    RoundBtn(int r) {
+        this.r = r;
+    }
+    public Insets getBorderInsets(Component c) {
+        return new Insets(this.r+1, this.r+1, this.r+2, this.r);
+    }
+    public boolean isBorderOpaque() {
+        return true;
+    }
+    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+        g.drawRoundRect(x, y, width-1, height-1, r, r);
     }
 }

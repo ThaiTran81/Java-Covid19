@@ -156,13 +156,13 @@ public class profileModel {
 
     public String toString() {
         return
-                "fullname: " + fullname + '\n' +
-                        "phone: " + phone + '\n' +
-                        "dob: " + dob + '\n' +
-                        "gender: " + gender + '\n' +
-                        "province: " + province + '\n' +
-                        "district: " + district + '\n' +
-                        "village: " + village + '\n';
+                "Fullname: " + fullname + '\n' +
+                        "Phone: " + phone + '\n' +
+                        "DoB: " + dob + '\n' +
+                        "Gender: " + gender + '\n' +
+                        "Province: " + province + '\n' +
+                        "District: " + district + '\n' +
+                        "Village: " + village + '\n';
     }
 
     public String getStatus() {

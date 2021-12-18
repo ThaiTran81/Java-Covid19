@@ -57,6 +57,7 @@ public class RegisterManager extends JPanel implements ActionListener {
 
         fullname.setFont(new Font("Arial", Font.PLAIN, 15));
         fullname.setBounds(150, 100, 190, 20);
+        fullname.setToolTipText("Type manager's full name");
         add(fullname);
 
         usernameLabel.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -65,6 +66,7 @@ public class RegisterManager extends JPanel implements ActionListener {
 
         username.setFont(new Font("Arial", Font.PLAIN, 15));
         username.setBounds(150, 150, 190, 20);
+        username.setToolTipText("Type the username for manager");
         add(username);
 
         passwordLabel.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -73,6 +75,7 @@ public class RegisterManager extends JPanel implements ActionListener {
 
         password.setFont(new Font("Arial", Font.PLAIN, 20));
         password.setBounds(150, 200,190,20);
+        username.setToolTipText("Set password for this account");
         add(password);
 
         repeatpasswordLabel.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -81,6 +84,7 @@ public class RegisterManager extends JPanel implements ActionListener {
 
         repeatpassword.setFont(new Font("Arial", Font.PLAIN, 20));
         repeatpassword.setBounds(150, 250,190,20);
+        repeatpassword.setToolTipText("Repeat the password you just typed");
         add(repeatpassword);
 
         phoneLabel.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -89,6 +93,7 @@ public class RegisterManager extends JPanel implements ActionListener {
 
         phone.setFont(new Font("Arial", Font.PLAIN, 20));
         phone.setBounds(150, 300,190,20);
+        phone.setToolTipText("The phone number of the manager");
         add(phone);
 
         doblabel.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -97,6 +102,7 @@ public class RegisterManager extends JPanel implements ActionListener {
 
         dob.setFont(new Font("Arial", Font.PLAIN, 20));
         dob.setBounds(150, 350,190,20);
+        dob.setToolTipText("Date of Birth of the manager");
         add(dob);
 
         genderLabel.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -116,6 +122,7 @@ public class RegisterManager extends JPanel implements ActionListener {
 
         acept.setFont(new Font("Arial", Font.PLAIN, 15));
         acept.setBounds(100, 600, 250, 20);
+        acept.setToolTipText("Do you agree the terms and concepts");
         add(acept);
 
         prolabel.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -148,11 +155,13 @@ public class RegisterManager extends JPanel implements ActionListener {
         sub.setFont(new Font("Arial", Font.PLAIN, 15));
         sub.setBounds(400, 600, 100, 20);
         sub.addActionListener(this);
+        sub.setToolTipText("submit for creating");
         add(sub);
 
         reset.setFont(new Font("Arial", Font.PLAIN, 15));
         reset.setBounds(550, 600, 100, 20);
         reset.addActionListener(this);
+        reset.setToolTipText("Clear all what you've typed");
         add(reset);
 
         result.setFont(new Font("Arial", Font.PLAIN, 15));
