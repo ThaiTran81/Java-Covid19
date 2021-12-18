@@ -145,11 +145,13 @@ class AddQuarantine extends JPanel implements ActionListener {
         sub.setFont(new Font("Arial", Font.PLAIN, 15));
         sub.setBounds(150, 300, 100, 20);
         sub.addActionListener(this);
+        sub.setToolTipText("submit to create new quarantine");
         add(sub);
 
         reset.setFont(new Font("Arial", Font.PLAIN, 15));
         reset.setBounds(270, 300, 100, 20);
         reset.addActionListener(this);
+        reset.setToolTipText("Clear all what you've typed");
         add(reset);
 
         result.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -417,9 +419,9 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
                     pre.setString(1, (String) quatx.getSelectedItem());
                     pre.setInt(2, Integer.parseInt(captx.getText()));
                     if (activatetx.getSelectedItem().equals("Open")){
-                        pre.setInt(3, 1);
-                    } else if (activatetx.getSelectedItem().equals("Closed")){
                         pre.setInt(3, 0);
+                    } else if (activatetx.getSelectedItem().equals("Closed")){
+                        pre.setInt(3, 1);
                     }
 
                     pre.setInt(4, qua.getId());
@@ -476,6 +478,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
         sub.setFont(new Font("Arial", Font.PLAIN, 15));
         sub.setBounds(150, 350, 100, 20);
         sub.addActionListener(this);
+        sub.setToolTipText("Delete this quarantine");
         add(sub);
 
         result.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -484,7 +487,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
         result.setEditable(false);
         add(result);
 
-        String sql = "select * from QUARATINE WHERE IS_DELETED=1";
+        String sql = "select * from QUARATINE WHERE IS_DELETED=0";
         try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); Statement stm = conn.createStatement()){
             ResultSet rs = stm.executeQuery(sql);
             quatx.removeAll();

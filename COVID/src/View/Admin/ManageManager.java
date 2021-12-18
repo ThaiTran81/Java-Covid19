@@ -66,6 +66,7 @@ public class ManageManager extends JPanel implements ActionListener {
 
         result.setFont(new Font("Arial", Font.PLAIN, 15));
         result.setBounds(20, 150, 200, 250);
+        result.setEditable(false);
         add(result);
 
         String sql = "  SELECT C.*" +
