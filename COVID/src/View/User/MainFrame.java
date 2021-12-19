@@ -1,5 +1,6 @@
 package View.User;
 
+import Controller.CovidDAO;
 import Model.NecessityHistoryModel;
 import View.User.content.ContentPanel;
 import View.User.content.account.AcountPanel;
@@ -420,7 +421,7 @@ public class MainFrame extends JFrame implements ActionListener {
         String sql = "SELECT *\n" +
                 "FROM DEBT\n" +
                 "WHERE [USER_ID] = ?";
-        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+        try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
             pre.setString(1, getId());
             ResultSet rs = pre.executeQuery();
 
@@ -520,7 +521,7 @@ public class MainFrame extends JFrame implements ActionListener {
         String sql = "SELECT *\n" +
                 "FROM ACCOUNT\n" +
                 "WHERE USERNAME = ?";
-        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+        try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
             pre.setString(1, getId());
             ResultSet rs = pre.executeQuery();
 
@@ -639,7 +640,7 @@ public class MainFrame extends JFrame implements ActionListener {
             String sql = "SELECT PM.*\n" +
                     "FROM PROFILE P JOIN PAYMENT PM ON P.ID_BANK = PM.ID_BANK\n" +
                     "WHERE ID = ?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                 pre.setString(1, getId());
                 ResultSet rs = pre.executeQuery();
 
@@ -653,7 +654,7 @@ public class MainFrame extends JFrame implements ActionListener {
             Double nb = Double.parseDouble(balance) - Double.parseDouble(cost);
             System.out.println(nb);
             sql = "UPDATE PAYMENT SET BALANCE = ? WHERE ID_BANK = ?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                 pre.setDouble(1, nb);
                 pre.setString(2, getId());
                 pre.execute();

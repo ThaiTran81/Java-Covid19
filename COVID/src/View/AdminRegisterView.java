@@ -1,128 +1,203 @@
 package View;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+
+import Model.profileModel;
+import com.cv19.view.event.EventAdRegisterCallBack;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 public class AdminRegisterView extends JFrame implements ActionListener {
-    private Container container = getContentPane();
-    private JLabel title = new JLabel("Admin Registration");
 
-    private JLabel usernameLabel = new JLabel("Username");
-    private JTextField username = new JTextField();
-    private JLabel passwordLabel = new JLabel("Password");
-    private JPasswordField password = new JPasswordField();
-    private JLabel repeatpasswordLabel = new JLabel("Confirm");
-    private JPasswordField repeatpassword = new JPasswordField();
+    private JCheckBox cbShowPass;
+    private JButton btnRegis;
+    private JButton btnCancel;
+    private JLabel lbEmpty;
+    private JLabel lbConfirmPass;
+    private JLabel lbHeader;
+    private JLabel lbName;
+    private JLabel lbPass;
+    private JPanel panelHeader;
+    private JPanel panelMain;
+    private JPasswordField txtConfirmPass;
+    private JTextField txtName;
+    private JPasswordField txtPass;
+    private EventAdRegisterCallBack callback;
 
-    private JCheckBox acept = new JCheckBox("Accept Terms and Conditions");
-    private JButton sub = new JButton("Submit");
-    private JButton reset = new JButton("Reset");
-    private JCheckBox showpassword = new JCheckBox("Show password");
-
-    private JLabel res = new JLabel("");
-
-    AdminRegisterView(){
-        setTitle("Admin Register");
-        setBounds(300, 90, 500, 600);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
-        setVisible(true);
-
-        container.setLayout(null);
-        title.setFont(new Font("Arial", Font.BOLD, 30));
-        title.setBounds(130, 50, 300, 30);
-        container.add(title);
-
-        usernameLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        usernameLabel.setBounds(100, 150, 100, 20);
-        container.add(usernameLabel);
-
-        username.setFont(new Font("Arial", Font.PLAIN, 15));
-        username.setBounds(200, 150, 190, 20);
-        container.add(username);
-
-        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        passwordLabel.setBounds(100, 200,100,20);
-        container.add(passwordLabel);
-
-        password.setFont(new Font("Arial", Font.PLAIN, 20));
-        password.setBounds(200, 200,190,20);
-        container.add(password);
-
-        repeatpasswordLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        repeatpasswordLabel.setBounds(100, 250,100,20);
-        container.add(repeatpasswordLabel);
-
-        repeatpassword.setFont(new Font("Arial", Font.PLAIN, 20));
-        repeatpassword.setBounds(200, 250,190,20);
-        container.add(repeatpassword);
-
-        acept.setFont(new Font("Arial", Font.PLAIN, 15));
-        acept.setBounds(150, 300, 250, 20);
-        container.add(acept);
-
-        sub.setFont(new Font("Arial", Font.PLAIN, 15));
-        sub.setBounds(150, 400, 100, 20);
-        sub.addActionListener(this);
-        container.add(sub);
-
-        reset.setFont(new Font("Arial", Font.PLAIN, 15));
-        reset.setBounds(270, 400, 100, 20);
-        reset.addActionListener(this);
-        container.add(reset);
-
-        res.setFont(new Font("Arial", Font.PLAIN, 20));
-        res.setBounds(100, 450, 500, 25);
-        container.add(res);
-
-        showpassword.setBounds(150,350,150,30);
-        container.add(showpassword);
-        showpassword.addActionListener(this);
+    public AdminRegisterView(EventAdRegisterCallBack callback) {
+        this.callback = callback;
+        initComponents();
     }
-    public void actionPerformed(ActionEvent e){
-        if (e.getSource() == sub){
-            if(acept.isSelected()){
-                res.setText("Success :)");
-            } else {
-                res.setText("Accept the terms and conditions please!");
-            }
 
-            String temp = String.valueOf(password.getPassword());
-            String temp1 = String.valueOf(repeatpassword.getPassword());
-            if(temp.equals("")) {
-                res.setText("Type password please!");
+    private void initComponents() {
+
+        panelHeader = new JPanel();
+        lbHeader = new JLabel();
+        panelMain = new JPanel();
+        lbName = new JLabel();
+        txtName = new JTextField();
+        lbPass = new JLabel();
+        txtPass = new JPasswordField();
+        lbConfirmPass = new JLabel();
+        txtConfirmPass = new JPasswordField();
+        lbEmpty = new JLabel();
+        cbShowPass = new JCheckBox();
+        btnCancel = new JButton();
+        btnRegis = new JButton();
+
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+
+        lbHeader.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        lbHeader.setText("ADMIN REGISTRATION");
+        panelHeader.add(lbHeader);
+
+        getContentPane().add(panelHeader);
+
+        panelMain.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panelMain.setLayout(new java.awt.GridLayout(5, 2, 0, 10));
+
+        lbName.setText("USERNAME");
+        panelMain.add(lbName);
+
+        txtName.setMargin(new java.awt.Insets(5, 10, 5, 10));
+        panelMain.add(txtName);
+
+        lbPass.setText("PASSWORD");
+        panelMain.add(lbPass);
+
+        txtPass.setMargin(new java.awt.Insets(5, 10, 5, 10));
+        panelMain.add(txtPass);
+
+        lbConfirmPass.setText("CONFIRM PASSWORD");
+        panelMain.add(lbConfirmPass);
+
+        txtConfirmPass.setMargin(new java.awt.Insets(5, 10, 5, 10));
+        txtConfirmPass.addActionListener(this);
+        panelMain.add(txtConfirmPass);
+        panelMain.add(lbEmpty);
+
+        cbShowPass.addItemListener(eventShowpass());
+        cbShowPass.setText("Show password");
+        panelMain.add(cbShowPass);
+
+        btnCancel.addActionListener(this);
+        btnCancel.setText("Cancel");
+        panelMain.add(btnCancel);
+
+        btnRegis.addActionListener(this);
+        btnRegis.setText("Register");
+        panelMain.add(btnRegis);
+
+        getContentPane().add(panelMain);
+
+        pack();
+        setLocationRelativeTo(null);
+    }
+
+    ItemListener eventShowpass() {
+        ItemListener event = new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (cbShowPass.isSelected()) {
+                    txtPass.setEchoChar((char) 0);
+                } else {
+                    txtPass.setEchoChar('•');
+                }
             }
-            if(temp1.equals("")) {
-                res.setText("Confirm password please!");
-            }
-            if(!temp.equals(temp1)){
-                res.setText("Password does not match!");
-            }
-            else{
-                Controller.AdminRegisterController.register(username.getText(), temp);
-                this.dispose();
-                new LoginView();
-            }
+        };
+        return event;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnCancel) {
+            this.dispose();
         }
-        if (e.getSource() == reset){
-            res.setText("");
-            acept.setSelected(false);
-            password.setText("");
-            repeatpassword.setText("");
-            username.setText("");
+        if (e.getSource() == btnRegis) {
+            register();
         }
-        if (e.getSource() == showpassword){
-            if (showpassword.isSelected()){
-                password.setEchoChar((char)0);
-            } else {
-                password.setEchoChar('*');
+    }
+
+    void register() {
+        String username = txtName.getText();
+        String password = String.valueOf(txtPass.getPassword());
+        String rePassword = String.valueOf(txtConfirmPass.getPassword());
+
+        if (username.isBlank() || password.isBlank() || rePassword.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ các trường", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            if(!password.equals(rePassword)){
+                JOptionPane.showMessageDialog(null, "Mật khẩu xác nhận không khớp", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                return;
             }
-            if (showpassword.isSelected()){
-                repeatpassword.setEchoChar((char)0);
-            } else {
-                repeatpassword.setEchoChar('*');
-            }
+            profileModel model = new profileModel();
+            model.setUsername(username);
+            model.setPassword(password);
+            model.setType(0);
+            callback.register(model);
         }
     }
 }
+
+//    public void actionPerformed(ActionEvent e){
+//        if (e.getSource() == sub){
+//            if(acept.isSelected()){
+//                res.setText("Success :)");
+//            } else {
+//                res.setText("Accept the terms and conditions please!");
+//            }
+//
+//            String temp = String.valueOf(password.getPassword());
+//            String temp1 = String.valueOf(repeatpassword.getPassword());
+//            if(temp.equals("")) {
+//                res.setText("Type password please!");
+//            }
+//            if(temp1.equals("")) {
+//                res.setText("Confirm password please!");
+//            }
+//            if(!temp.equals(temp1)){
+//                res.setText("Password does not match!");
+//            }
+//            else{
+//                Controller.AdminRegisterController.register(username.getText(), temp);
+//                this.dispose();
+//                new LoginView();
+//            }
+//        }
+//        if (e.getSource() == reset){
+//            res.setText("");
+//            acept.setSelected(false);
+//            password.setText("");
+//            repeatpassword.setText("");
+//            username.setText("");
+//        }
+//        if (e.getSource() == showpassword){
+//            if (showpassword.isSelected()){
+//                password.setEchoChar((char)0);
+//            } else {
+//                password.setEchoChar('*');
+//            }
+//            if (showpassword.isSelected()){
+//                repeatpassword.setEchoChar((char)0);
+//            } else {
+//                repeatpassword.setEchoChar('*');
+//            }
+//        }
+//    }
+//}

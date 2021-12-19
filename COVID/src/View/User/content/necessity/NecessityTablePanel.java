@@ -1,5 +1,6 @@
 package View.User.content.necessity;
 
+import Controller.CovidDAO;
 import Model.NecessityHistoryModel;
 import Model.NecessityModel;
 import Model.f_historyModel;
@@ -43,7 +44,7 @@ public class NecessityTablePanel extends JPanel {
         String sql = "SELECT B.ID_USER, B.DATE, N.NAME, N.TIME_LIMIT, C.QUANTITY\n" +
                 "FROM BILL B JOIN CONSUME C ON B.ID_BILL = C.ID_BILL JOIN NECESSITIES N ON C.ID_NECESSITIES = N.ID_NECESSITIES\n" +
                 "WHERE B.ID_USER = ?";
-        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+        try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
             pre.setString(1, id_value);
             ResultSet rs = pre.executeQuery();
 
@@ -65,7 +66,7 @@ public class NecessityTablePanel extends JPanel {
     public void setData() {
         String sql = "SELECT *\n" +
                 "FROM NECESSITIES";
-        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+        try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
             ResultSet rs = pre.executeQuery();
 
             while (rs.next()) {

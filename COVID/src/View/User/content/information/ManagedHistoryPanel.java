@@ -1,5 +1,6 @@
 package View.User.content.information;
 
+import Controller.CovidDAO;
 import Model.f_historyModel;
 
 import javax.swing.*;
@@ -50,7 +51,7 @@ public class ManagedHistoryPanel extends JPanel {
                 "FROM F_HISTORY\n" +
                 "WHERE USER_ID = ?\n" +
                 "ORDER BY F_DATE";
-        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+        try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
             pre.setString(1, id_value);
             ResultSet rs = pre.executeQuery();
 

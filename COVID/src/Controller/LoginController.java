@@ -1,52 +1,55 @@
 package Controller;
 
-import Model.LoginModel;
+import Model.profileModel;
+import View.Admin.AdminMainFrame;
+import View.LoginView;
+import com.cv19.view.event.EventLoginCallBack;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LoginController {
-    static public LoginModel Login(String username, String password) throws SQLException {
-        LoginModel user = new LoginModel();
-        String sql = "SELECT * FROM ACCOUNT WHERE USERNAME=? AND PASSWORD=?";
-        try(Connection conn = ConnectToDBController.getSqlConnection(); PreparedStatement ppstmt = conn.prepareStatement(sql);){
-            ppstmt.setString(1, username);
-            ppstmt.setString(2, password);
 
-            ResultSet rs = ppstmt.executeQuery();
+    private profileModel user;
+    private LoginView loginView;
+    private EventLoginCallBack callback;
+
+    public LoginController() {
+        user = new profileModel();
+        loginView = new LoginView(new EventLoginCallBack() {
+            @Override
+            public void authorize(String username, String password) {
+                Login(username, password);
+            }
+        });
+        loginView.setVisible(true);
+    }
+
+    public void Login(String username, String password) {
+
+        try {
+            ResultSet rs = new CovidDAO().authAccount(username, password);
             if (rs.next()) {
                 user.setUsername(rs.getString("USERNAME"));
                 user.setPassword(rs.getString("PASSWORD"));
-                user.setType( rs.getInt("TYPE"));
-                return user;
+                user.setType(rs.getInt("TYPE"));
+                System.out.println(user.getType());
+                if (user.getType() == 0) {
+                    loginView.dispose();
+                    new AdminMainFrame();
+                }
             }
-        } catch (SQLServerException throwables) {
-            throwables.printStackTrace();
+
+        } catch (SQLServerException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
     }
 
-    public static boolean checkManagerExist() throws SQLException {
-        String sql = "SELECT * FROM ACCOUNT WHERE TYPE=0";
-        try(Connection conn = ConnectToDBController.getSqlConnection();
-            PreparedStatement ppstmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);){
-
-            ResultSet rs = ppstmt.executeQuery();
-            int rows = 0;
-            if (rs.last()) {
-                rows = rs.getRow();
-                rs.beforeFirst();
-            }
-            if (rows == 0)
-                return false;
-            else if (rows > 0)
-                return true;
-        } catch (SQLServerException throwables) {
-            throwables.printStackTrace();
-        }
-        return false;
-    }
 }

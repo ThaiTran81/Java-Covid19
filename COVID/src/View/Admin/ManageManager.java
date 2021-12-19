@@ -1,5 +1,6 @@
 package View.Admin;
 
+import Controller.CovidDAO;
 import Model.HistoryModel;
 import Model.profileModel;
 
@@ -72,7 +73,7 @@ public class ManageManager extends JPanel implements ActionListener {
         String sql = "  SELECT C.*" +
                 "  FROM PROFILE P JOIN ACCOUNT C ON C.USERNAME = P.ID" +
                 "  WHERE C.TYPE = 1 AND (BLOCK IS NULL OR BLOCK <> 1)";
-        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); Statement stmt = conn.createStatement()) {
+        try (Connection conn = new CovidDAO().getConnection(); Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);
             mtx.removeAll();
             while (rs.next()) {
@@ -112,7 +113,7 @@ public class ManageManager extends JPanel implements ActionListener {
             String sql = "  SELECT C.*, P.*" +
                     "  FROM PROFILE P JOIN ACCOUNT C ON C.USERNAME = P.ID" +
                     "  WHERE USERNAME=?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                 pre.setString(1, usn);
 
                 ResultSet rs = pre.executeQuery();
@@ -140,7 +141,7 @@ public class ManageManager extends JPanel implements ActionListener {
             String sql = "  SELECT H.*" +
                     "  FROM PROFILE P JOIN HISTORY H ON H.USER_ID = P.ID" +
                     "  WHERE P.ID=?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                 pre.setString(1, usn);
 
                 ResultSet rs = pre.executeQuery();
@@ -161,7 +162,7 @@ public class ManageManager extends JPanel implements ActionListener {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure to delete", "Just to make sure", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
                 String sql = "UPDATE ACCOUNT SET BLOCK=0 WHERE USERNAME=?";
-                try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                     pre.setString(1, (String) mtx.getSelectedItem());
 
                     pre.execute();

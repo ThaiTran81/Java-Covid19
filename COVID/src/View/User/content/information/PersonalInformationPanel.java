@@ -1,5 +1,7 @@
 package View.User.content.information;
 
+import Controller.CovidDAO;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
@@ -41,7 +43,7 @@ public class PersonalInformationPanel extends JPanel {
                 "SELECT F1.F_DATE\n" +
                 "FROM PROFILE P1 JOIN F_HISTORY F1 ON P1.ID = F1.[USER_ID]\n" +
                 "WHERE P.ID = ?)";
-        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)){
+        try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)){
             pre.setString(1, id_value);
             pre.setString(2, id_value);
             ResultSet rs = pre.executeQuery();

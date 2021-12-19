@@ -1,5 +1,6 @@
 package View.Admin;
 
+import Controller.LoginController;
 import View.LoginView;
 
 import javax.swing.*;
@@ -167,7 +168,7 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         }
         if (e.getSource() == Logout){
             this.dispose();
-            new LoginView();
+            new LoginController();
         }
     }
 }

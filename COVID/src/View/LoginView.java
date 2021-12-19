@@ -1,153 +1,229 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
 package View;
-import Controller.*;
-import javax.swing.*;
+
+import Controller.LoginController;
+import com.cv19.view.event.EventLoginCallBack;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
-import Controller.*;
-import Model.LoginModel;
-import View.Admin.AdminMainFrame;
-import View.User.MainFrame;
+/**
+ *
+ * @author ThaiTran
+ */
+public class LoginView extends JFrame implements ActionListener {
 
-public class LoginView extends JFrame implements ActionListener{
-    private Container container = getContentPane();
-    private JLabel usernameLabel = new JLabel("User name");
-    private JLabel passwordLabel = new JLabel("Password");
-    private JTextField username = new JTextField("username");
-    private JPasswordField password = new JPasswordField("password");
-    private JButton loginButton = new JButton("LOGIN");
-    private JButton resetButton = new JButton("RESET");
-    private JCheckBox checkShowPassword = new JCheckBox("Show password");
-//    private JButton register = new JButton("Register");
+    private JButton btnLogin;
+    private JCheckBox cbShowpass;
+    private JPanel container;
+    private JLabel lbPass;
+    private JLabel lbTilte;
+    private JLabel lbUsername;
+    private JPasswordField txtPass;
+    private JTextField txtUsername;
+    private EventLoginCallBack callback;
 
-    public LoginView() {
-        setTitle("Login Form");
-        setBounds(10, 10, 370, 600);
+    public LoginView(EventLoginCallBack callback) {
+        this.callback = callback;
+        initComponents();
+    }
+
+    private void initComponents() {
+        GridBagConstraints gbc;
+
+        container = new JPanel();
+        lbTilte = new JLabel();
+        lbUsername = new JLabel();
+        lbPass = new JLabel();
+        txtUsername = new JTextField("Enter ID");
+        txtPass = new JPasswordField("password");
+        cbShowpass = new JCheckBox();
+        btnLogin = new JButton();
+
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setSize(new Dimension(500, 500));
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.LINE_AXIS));
+
+        container.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        container.setLayout(new GridBagLayout());
+
+        lbTilte.setFont(new Font("Tahoma", 1, 24)); // NOI18N
+        lbTilte.setText("ACCOUNT LOGIN");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 5;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0, 0, 30, 0);
+        container.add(lbTilte, gbc);
+
+        lbUsername.setText("USERNAME");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(0, 0, 20, 0);
+        container.add(lbUsername, gbc);
+
+        lbPass.setText("PASSWORD");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(0, 0, 10, 0);
+        container.add(lbPass, gbc);
+
+        txtUsername.addFocusListener(eventTxtName());
+        txtUsername.setForeground(Color.gray);
+        txtUsername.setFont(new Font("Tahoma", 0, 14));
+        txtUsername.setMargin(new Insets(2, 10, 2, 10));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.gridwidth = 4;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.ipadx = 10;
+        gbc.ipady = 10;
+        gbc.insets = new Insets(0, 20, 20, 0);
+        container.add(txtUsername, gbc);
+
+        txtPass.setEchoChar((char)0);
+        txtPass.addFocusListener(eventTxtpass());
+        txtPass.setForeground(Color.gray);
+        txtPass.setFont(new Font("Tahoma", 0, 14)); // NOI18N
+        txtPass.setMargin(new Insets(2, 10, 2, 10));
+        txtPass.addActionListener(this);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.gridwidth = 4;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.ipadx = 10;
+        gbc.ipady = 10;
+        gbc.insets = new Insets(0, 20, 10, 0);
+        container.add(txtPass, gbc);
+
+        cbShowpass.addItemListener(eventShowpass());
+        cbShowpass.setText("Show password");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.gridwidth = 4;
+        gbc.insets = new Insets(0, 20, 0, 0);
+        container.add(cbShowpass, gbc);
+
+        btnLogin.setText("Log in");
+        btnLogin.addActionListener(this);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 6;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        gbc.gridheight = 2;
+        gbc.fill = GridBagConstraints.VERTICAL;
+        gbc.insets = new Insets(0, 20, 10, 0);
+        container.add(btnLogin, gbc);
+
+        getContentPane().add(container);
+
+        pack();
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
-        setResizable(false);
-
-        container.setLayout(null);
-
-        usernameLabel.setBounds(50, 150, 100, 30);
-        container.add(usernameLabel);
-
-        passwordLabel.setBounds(50, 220, 100, 30);
-        container.add(passwordLabel);
-
-        username.setBounds(150, 150, 150, 30);
-        username.setForeground(new Color(153, 153, 153));
-        container.add(username);
-        username.addActionListener(this);
-        username.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                super.focusGained(e);
-                if (username.getText().trim().toLowerCase().equals("username")) {
-                    username.setText("");
-                    username.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e);
-                if (username.getText().trim().equals("") || username.getText().trim().toLowerCase().equals("username")) {
-                    username.setText("username");
-                    username.setForeground(new Color(153, 153, 153));
-                }
-            }
-        });
-
-        password.setBounds(150, 220, 150, 30);
-        password.setForeground(new Color(153, 153, 153));
-        container.add(password);
-        password.addActionListener(this);
-        password.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                super.focusGained(e);
-                String pass = String.valueOf(password.getPassword());
-                if (pass.trim().toLowerCase().equals("password")) {
-                    password.setText("");
-                    password.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e);
-                String pass = String.valueOf(password.getPassword());
-                if (pass.trim().equals("") || pass.trim().toLowerCase().equals("password")) {
-                    password.setText("password");
-                    password.setForeground(new Color(153, 153, 153));
-                }
-            }
-        });
-
-        loginButton.setBounds(30, 300, 80, 30);
-        container.add(loginButton);
-        loginButton.addActionListener(this);
-
-        resetButton.setBounds(130, 300, 80, 30);
-        container.add(resetButton);
-        resetButton.addActionListener(this);
-
-//        register.setBounds(230, 300, 100, 30);
-//        container.add(register);
-//        register.addActionListener(this);
-
-        checkShowPassword.setBounds(150, 250, 150, 30);
-        container.add(checkShowPassword);
-        checkShowPassword.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == loginButton) {
-            String usernametext = username.getText();
-            String passwordtext = String.valueOf(password.getPassword());
-            LoginModel user = new LoginModel();
-            try {
-                user = LoginController.Login(usernametext, passwordtext);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+        if(e.getSource()==btnLogin){
+            loginEvent();
+        }
+    }
+
+    void loginEvent(){
+        String username = txtUsername.getText();
+        String password  = String.valueOf(txtPass.getPassword());
+        if(!username.isBlank() && !password.isBlank()){
+            callback.authorize(username, password);
+        }
+    }
+    
+    FocusListener eventTxtName() {
+        FocusListener event = new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (txtUsername.getText().equals("Enter ID")) {
+                    txtUsername.setText("");
+                    txtUsername.setForeground(Color.BLACK);
+                }
             }
-            if(user.getType() == 2){
-                this.dispose();
-                new MainFrame(usernametext);
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (txtUsername.getText().isEmpty()) {
+                    txtUsername.setForeground(Color.GRAY);
+                    txtUsername.setText("Enter ID");
+                }
             }
-            if(user.getType() == 0){
-                this.dispose();
-                new AdminMainFrame();
+        };
+        return event;
+
+    }
+
+    FocusListener eventTxtpass() {
+        FocusListener event = new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                String password = String.valueOf(txtPass.getPassword());
+
+                if (password.toLowerCase().equals("password")) {
+                    txtPass.setText("");
+                    txtPass.setForeground(Color.black);
+                    txtPass.setEchoChar('*');
+                }
             }
-        }
-        if (e.getSource() == resetButton) {
-            username.setText("username");
-            username.setForeground(new Color(153, 153, 153));
-            password.setText("password");
-            password.setForeground(new Color(153, 153, 153));
-        }
-        if (e.getSource() == checkShowPassword) {
-            if (checkShowPassword.isSelected()) {
-                password.setEchoChar((char) 0);
-            } else {
-                password.setEchoChar('*');
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                 String password = String.valueOf(txtPass.getPassword());
+                if (password.isEmpty()) {
+                    txtPass.setEchoChar((char)0);
+                    txtPass.setText("password");
+                    txtPass.setForeground(Color.GRAY);
+                    
+                }
             }
-        }
-        if (e.getSource() == username) {
-            username.setText("");
-        }
-        if (e.getSource() == password) {
-            password.setText("");
-        }
-//        if (e.getSource() == register) {
-//
-//        }
+        };
+        return event;
+
+    }
+    
+    ItemListener eventShowpass(){
+        ItemListener event = new  ItemListener(){
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(cbShowpass.isSelected()){
+                    txtPass.setEchoChar((char)0);
+                }
+                else{
+                    txtPass.setEchoChar('*');
+                }
+            }
+        };
+        return event;
     }
 }

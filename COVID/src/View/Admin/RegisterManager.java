@@ -1,5 +1,7 @@
 package View.Admin;
 
+import Controller.CovidDAO;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -174,10 +176,8 @@ public class RegisterManager extends JPanel implements ActionListener {
         res.setBounds(450, 550, 500, 25);
         add(res);
 
-        String url = "jdbc:sqlserver://localhost:1433;database=QLC19";
-        String username = "sa";
-        String password = "123456";
-        try (Connection conn = DriverManager.getConnection(url, username, password); Statement stmt = conn.createStatement()){
+
+        try (Connection conn = new CovidDAO().getConnection(); Statement stmt = conn.createStatement()){
             String sql = "select * from PROVINCE";
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -257,7 +257,7 @@ public class RegisterManager extends JPanel implements ActionListener {
             }
             if (check ==true){
                 String sql = "INSERT INTO PROFILE(ID, FULLNAME, PHONENUMBER, DOB, GENDER, PROVINE, DISTRICT, VILLAGE) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-                try (Connection conn = Controller.ConnectToDBController.getSqlConnection();PreparedStatement prepStmt = conn.prepareStatement(sql);){
+                try (Connection conn = new CovidDAO().getConnection(); PreparedStatement prepStmt = conn.prepareStatement(sql);){
                     prepStmt.setString(1, this.username.getText());
                     prepStmt.setString(2, fullname.getText());
                     prepStmt.setString(3, phone.getText());
@@ -275,7 +275,7 @@ public class RegisterManager extends JPanel implements ActionListener {
                 }
 
                 sql = "INSERT INTO ACCOUNT(USERNAME, PASSWORD, TYPE, BLOCK) VALUES(?,?,?,?)";
-                try (Connection conn = Controller.ConnectToDBController.getSqlConnection();PreparedStatement prepStmt = conn.prepareStatement(sql);) {
+                try (Connection conn = new CovidDAO().getConnection();PreparedStatement prepStmt = conn.prepareStatement(sql);) {
                     prepStmt.setString(1, this.username.getText());
                     prepStmt.setString(2, temp);
                     prepStmt.setInt(3, 1);
@@ -302,7 +302,7 @@ public class RegisterManager extends JPanel implements ActionListener {
         }
         if (e.getSource() == province){
             String sql = "select * from PROVINCE WHERE NAME=?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection();PreparedStatement prepStmt = conn.prepareStatement(sql);){
+            try (Connection conn = new CovidDAO().getConnection();PreparedStatement prepStmt = conn.prepareStatement(sql);){
                 prepStmt.setString(1, (String) province.getSelectedItem());
                 ResultSet rs = prepStmt.executeQuery();
 
@@ -313,7 +313,7 @@ public class RegisterManager extends JPanel implements ActionListener {
                 ex.printStackTrace();
             }
             sql = "select * from DISTRICT WHERE ID_PROVINCE=?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement prepStmt = conn.prepareStatement(sql);){
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement prepStmt = conn.prepareStatement(sql);){
                 prepStmt.setInt(1, id_pro);
                 ResultSet rs = prepStmt.executeQuery();
                 district.removeAllItems();
@@ -328,7 +328,7 @@ public class RegisterManager extends JPanel implements ActionListener {
         }
         if (e.getSource() == district){
             String sql = "select * from DISTRICT WHERE ID_PROVINCE=? AND NAME=?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection();PreparedStatement prepStmt = conn.prepareStatement(sql);){
+            try (Connection conn = new CovidDAO().getConnection();PreparedStatement prepStmt = conn.prepareStatement(sql);){
                 prepStmt.setInt(1, id_pro);
                 prepStmt.setString(2, (String) district.getSelectedItem());
                 ResultSet rs = prepStmt.executeQuery();
@@ -340,7 +340,7 @@ public class RegisterManager extends JPanel implements ActionListener {
                 ex.printStackTrace();
             }
             sql = "select * from VILLAGE WHERE ID_PROVINCE=? AND ID_DISTRICT=?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection();PreparedStatement prepStmt = conn.prepareStatement(sql);){
+            try (Connection conn = new CovidDAO().getConnection();PreparedStatement prepStmt = conn.prepareStatement(sql);){
                 prepStmt.setInt(1, id_pro);
                 prepStmt.setInt(2, id_dic);
                 ResultSet rs = prepStmt.executeQuery();

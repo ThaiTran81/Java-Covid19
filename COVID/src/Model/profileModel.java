@@ -15,13 +15,12 @@ public class profileModel {
     private String district;
     private String village;
     private int id_qua;
-    private String id_bank;
     private String status;
 
     public profileModel() {
         username=null;
         password=null;
-        type=0;
+        type=-1;
         block=0;
         fullname=null;
         phone=null;
@@ -30,8 +29,8 @@ public class profileModel {
         province=null;
         district=null;
         village=null;
-        id_qua=0;
-        id_bank=null;
+        id_qua=-1;
+        status = null;
     }
 
 
@@ -131,14 +130,6 @@ public class profileModel {
         this.id_qua = id_qua;
     }
 
-    public String getId_bank() {
-        return id_bank;
-    }
-
-    public void setId_bank(String id_bank) {
-        this.id_bank = id_bank;
-    }
-
     public String toString(String namequa) {
         return
                 "fullname='" + fullname + '\'' +
@@ -148,21 +139,20 @@ public class profileModel {
                         ", province='" + province + '\'' +
                         ", district='" + district + '\'' +
                         ", village='" + village + '\'' +
-                        ", id_qua=" + id_qua +
-                        ", id_bank='" + id_bank + '\'' +
+                        ", id_qua=" + id_qua +'\'' +
                         ", status="+status;
 
     }
 
     public String toString() {
         return
-                "Fullname: " + fullname + '\n' +
-                        "Phone: " + phone + '\n' +
-                        "DoB: " + dob + '\n' +
-                        "Gender: " + gender + '\n' +
-                        "Province: " + province + '\n' +
-                        "District: " + district + '\n' +
-                        "Village: " + village + '\n';
+                "fullname: " + fullname + '\n' +
+                        "phone: " + phone + '\n' +
+                        "dob: " + dob + '\n' +
+                        "gender: " + gender + '\n' +
+                        "province: " + province + '\n' +
+                        "district: " + district + '\n' +
+                        "village: " + village + '\n';
     }
 
     public String getStatus() {

@@ -1,5 +1,7 @@
 package View;
 
+import Controller.CovidDAO;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -162,7 +164,7 @@ public class AddPatientView extends JFrame implements ActionListener {
         res.setBounds(500, 550, 500, 25);
         container.add(res);
 
-        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); Statement stmt = conn.createStatement()){
+        try (Connection conn = new CovidDAO().getConnection(); Statement stmt = conn.createStatement()){
             String sql = "select * from PROVINCE";
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -244,7 +246,7 @@ public class AddPatientView extends JFrame implements ActionListener {
             username.setText("");
         }
         if (e.getSource() == province){
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection()){
+            try (Connection conn = new CovidDAO().getConnection()){
                 String sql = "select * from PROVINCE WHERE NAME=?";
                 PreparedStatement prepStmt = conn.prepareStatement(sql);
                 prepStmt.setString(1, (String) province.getSelectedItem());
@@ -257,7 +259,7 @@ public class AddPatientView extends JFrame implements ActionListener {
                 ex.printStackTrace();
             }
 
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection()){
+            try (Connection conn = new CovidDAO().getConnection()){
                 String sql = "select * from DISTRICT WHERE ID_PROVINCE=?";
                 PreparedStatement prepStmt = conn.prepareStatement(sql);
                 prepStmt.setInt(1, id_pro);
@@ -273,7 +275,7 @@ public class AddPatientView extends JFrame implements ActionListener {
             }
         }
         if (e.getSource() == district){
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection()){
+            try (Connection conn = new CovidDAO().getConnection()){
                 String sql = "select * from DISTRICT WHERE ID_PROVINCE=? AND NAME=?";
                 PreparedStatement prepStmt = conn.prepareStatement(sql);
                 prepStmt.setInt(1, id_pro);
@@ -287,7 +289,7 @@ public class AddPatientView extends JFrame implements ActionListener {
                 ex.printStackTrace();
             }
 
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection()){
+            try (Connection conn = new CovidDAO().getConnection()){
                 String sql = "select * from VILLAGE WHERE ID_PROVINCE=? AND ID_DISTRICT=?";
                 PreparedStatement prepStmt = conn.prepareStatement(sql);
                 prepStmt.setInt(1, id_pro);

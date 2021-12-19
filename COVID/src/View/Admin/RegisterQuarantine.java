@@ -1,5 +1,6 @@
 package View.Admin;
 
+import Controller.CovidDAO;
 import Model.QuarantineModel;
 
 import javax.swing.*;
@@ -164,7 +165,7 @@ class AddQuarantine extends JPanel implements ActionListener {
         res.setBounds(270, 350, 500, 25);
         add(res);
 
-        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); Statement stmt = conn.createStatement()){
+        try (Connection conn =new CovidDAO().getConnection(); Statement stmt = conn.createStatement()){
             String sql = "select * from PROVINCE";
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -180,7 +181,7 @@ class AddQuarantine extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()== province){
             String sql = "select * from PROVINCE WHERE NAME=?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection();PreparedStatement prepStmt = conn.prepareStatement(sql);){
+            try (Connection conn = new CovidDAO().getConnection();PreparedStatement prepStmt = conn.prepareStatement(sql);){
                 prepStmt.setString(1, (String) province.getSelectedItem());
                 ResultSet rs = prepStmt.executeQuery();
 
@@ -195,7 +196,7 @@ class AddQuarantine extends JPanel implements ActionListener {
             qa.setProvince(id_pro);
 
             sql = "select * from DISTRICT WHERE ID_PROVINCE=?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement prepStmt = conn.prepareStatement(sql);){
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement prepStmt = conn.prepareStatement(sql);){
                 prepStmt.setInt(1, id_pro);
                 ResultSet rs = prepStmt.executeQuery();
                 district.removeAllItems();
@@ -210,7 +211,7 @@ class AddQuarantine extends JPanel implements ActionListener {
         }
         if(e.getSource() == district){
             String sql = "select * from DISTRICT WHERE ID_PROVINCE=? AND NAME=?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement prepStmt = conn.prepareStatement(sql);){
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement prepStmt = conn.prepareStatement(sql);){
                 prepStmt.setInt(1, id_pro);
                 prepStmt.setString(2, (String) district.getSelectedItem());
                 ResultSet rs = prepStmt.executeQuery();
@@ -356,7 +357,7 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
         String username = "sa";
         String password = "123456";
         String sql = "select * from QUARATINE";
-        try (Connection conn = DriverManager.getConnection(url, username, password); Statement stm = conn.createStatement()){
+        try (Connection conn = new CovidDAO().getConnection(); Statement stm = conn.createStatement()){
             ResultSet rs = stm.executeQuery(sql);
             quatx.removeAll();
             while(rs.next()){
@@ -374,7 +375,7 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
             String username = "sa";
             String password = "123456";
             String sql = "select * from QUARATINE WHERE NAME=?";
-            try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement pre = conn.prepareStatement(sql)){
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)){
                 pre.setString(1, (String) quatx.getSelectedItem());
                 ResultSet rs = pre.executeQuery();
 
@@ -400,7 +401,7 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
             sql = "SELECT P.NAME, D.NAME" +
                     " FROM PROVINCE P JOIN DISTRICT D ON P.ID_PROVINCE = D.ID_PROVINCE" +
                     " WHERE P.ID_PROVINCE = ? AND D.ID_DISTRICT = ?";
-            try (Connection conn = DriverManager.getConnection(url, username, password); PreparedStatement pre = conn.prepareStatement(sql)) {
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                 pre.setInt(1, qua.getProvince());
                 pre.setInt(2, qua.getDistrict());
                 ResultSet rs = pre.executeQuery();
@@ -415,7 +416,7 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
         if (e.getSource() == sub) {
             if (!quanamtx.getText().isEmpty() && !captx.getText().isEmpty()) {
                 String sql = "UPDATE QUARATINE SET NAME=?, CAPABLE=?, IS_DELETED=? WHERE ID_QUARATINE=?";
-                try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql);) {
+                try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql);) {
                     pre.setString(1, (String) quatx.getSelectedItem());
                     pre.setInt(2, Integer.parseInt(captx.getText()));
                     if (activatetx.getSelectedItem().equals("Open")){
@@ -488,7 +489,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
         add(result);
 
         String sql = "select * from QUARATINE WHERE IS_DELETED=0";
-        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); Statement stm = conn.createStatement()){
+        try (Connection conn = new CovidDAO().getConnection(); Statement stm = conn.createStatement()){
             ResultSet rs = stm.executeQuery(sql);
             quatx.removeAll();
             while(rs.next()){
@@ -503,7 +504,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == quatx){
             String sql = "select * from QUARATINE WHERE NAME=?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)){
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)){
                 pre.setString(1, (String) quatx.getSelectedItem());
                 ResultSet rs = pre.executeQuery();
 
@@ -522,7 +523,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
             sql = "SELECT P.NAME, D.NAME" +
                     " FROM PROVINCE P JOIN DISTRICT D ON P.ID_PROVINCE = D.ID_PROVINCE" +
                     " WHERE P.ID_PROVINCE = ? AND D.ID_DISTRICT = ?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                 pre.setInt(1, qua.getProvince());
                 pre.setInt(2, qua.getDistrict());
                 ResultSet rs = pre.executeQuery();
@@ -537,7 +538,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure to delete", "Just to make sure", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
                 String sql = "UPDATE QUARATINE SET IS_DELETED=0 WHERE ID_QUARATINE=?";
-                try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                     pre.setInt(1, qua.getId());
 
                     pre.execute();

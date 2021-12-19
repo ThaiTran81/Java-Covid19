@@ -6,7 +6,7 @@ public class HistoryModel {
     String user_id;
     java.sql.Timestamp time;
     String msg;
-
+    
     public HistoryModel() {
     }
 

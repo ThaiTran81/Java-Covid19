@@ -1,5 +1,7 @@
 package View.User.content.information;
 
+import Controller.CovidDAO;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Connection;
@@ -24,7 +26,7 @@ public class CheckDebtPanel extends JPanel {
         String sql = "SELECT *\n" +
                 "FROM DEBT\n" +
                 "WHERE [USER_ID] = ?";
-        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+        try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
             pre.setString(1, id_value);
             ResultSet rs = pre.executeQuery();
 
