@@ -24,6 +24,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class MainFrame extends JFrame implements ActionListener {
@@ -179,9 +181,33 @@ public class MainFrame extends JFrame implements ActionListener {
     private JButton search_button = new JButton("Tìm");
     private JComboBox filter_combo_box;
     private JComboBox sort_combo_box;
+    private JPanel necessity_content;
     private NecessityTablePanel necessity_table_panel;
     private JButton purchase_button = new JButton("Mua hàng");
     private NecessityPurchasePanel necessity_purchase_panel = new NecessityPurchasePanel(getId());
+
+    String[] getNecessityType() {
+        ArrayList<String> nec_type_lst = new ArrayList<String>();
+
+        String sql = "SELECT DISTINCT NEC_KIND\n" +
+                "FROM NECESSITIES";
+        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+            ResultSet rs = pre.executeQuery();
+
+            while (rs.next()) {
+                nec_type_lst.add(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        String[] nec_type = new String[nec_type_lst.size() + 1];
+        nec_type[0] = "Tất cả";
+        for (int i = 1; i < nec_type.length; i++) {
+            nec_type[i] = nec_type_lst.get(i - 1);
+        }
+
+        return nec_type;
+    }
 
     public void showNecessityPanel() {
         necessity_panel.removeAll();
@@ -222,12 +248,14 @@ public class MainFrame extends JFrame implements ActionListener {
         search_button.addActionListener(this);
 
         JLabel filter_label = new JLabel("Loại: ");
-        String[] necessity_type = {"Tất cả", "Thực phẩm ăn liền", "Rau củ", "Đồ uống", "Sữa", "Tắm gội", "Đồ gia dụng"};
+        String[] necessity_type = getNecessityType();
         filter_combo_box = new JComboBox(necessity_type);
+        filter_combo_box.addActionListener(this);
 
         JLabel sort_label = new JLabel("Sắp xếp theo: ");
-        String[] necessity_columns = {"Mặc định" ,"Tên", "Giá tăng dần", "Giá giảm dần",  "Lượng mua còn lại"};
+        String[] necessity_columns = {"Mặc định" ,"Tên", "Giá tăng dần", "Lượng mua còn lại"};
         sort_combo_box = new JComboBox(necessity_columns);
+        sort_combo_box.addActionListener(this);
 
         JPanel task_bar_panel = new JPanel();
         task_bar_panel.setBackground(Color.white);
@@ -240,7 +268,7 @@ public class MainFrame extends JFrame implements ActionListener {
         task_bar_panel.add(sort_combo_box);
 
         necessity_table_panel = new NecessityTablePanel(getId());
-        JPanel necessity_content = new JPanel();
+        necessity_content = new JPanel();
         necessity_content.setPreferredSize(new Dimension(700,320));
         necessity_content.setBackground(Color.white);
         necessity_content.add(necessity_table_panel);
@@ -305,7 +333,7 @@ public class MainFrame extends JFrame implements ActionListener {
         JLabel filter_label = new JLabel("Chọn loại sản phẩm: ");
         filter_label.setHorizontalAlignment(SwingConstants.LEFT);
         filter_label.setPreferredSize(new Dimension(150,20));
-        String[] necessity_type = {"Tất cả", "Thực phẩm ăn liền", "Rau củ", "Đồ uống", "Sữa", "Tắm gội", "Đồ gia dụng"};
+        String[] necessity_type = getNecessityType();
         filter_combo_box = new JComboBox(necessity_type);
 
         quantity_field.setPreferredSize(new Dimension(180,30));
@@ -434,7 +462,7 @@ public class MainFrame extends JFrame implements ActionListener {
         if (money != "") {
             debt.setText("Số tiền cần thanh toán: " + money);
             double m = Double.parseDouble(money)/5;
-            cost.setText("Nhập số tiền thanh toán (tối thiểu " + (int)m + ".0000):");
+            cost.setText("Nhập số tiền thanh toán (tối thiểu " + (int)m + "):");
         }
 
         cost_field.setPreferredSize(new Dimension(180,30));
@@ -624,6 +652,22 @@ public class MainFrame extends JFrame implements ActionListener {
         }
         if (e.getSource() == search_bar) {
             search_bar.setText("");
+
+        }
+        if (e.getSource() == filter_combo_box) {
+            String nec_type = filter_combo_box.getSelectedItem().toString().trim();
+            necessity_content.removeAll();
+            necessity_content.add(new NecessityTablePanel(getId(), nec_type));
+            necessity_content.repaint();
+            necessity_content.revalidate();
+        }
+        if (e.getSource() == sort_combo_box) {
+            String nec_type = filter_combo_box.getSelectedItem().toString().trim();
+            String sort_type = sort_combo_box.getSelectedItem().toString();
+            necessity_content.removeAll();
+            necessity_content.add(new NecessityTablePanel(getId(), nec_type, sort_type));
+            necessity_content.repaint();
+            necessity_content.revalidate();
         }
         if (e.getSource() == purchase_button) {
             showPurchasePanel();
@@ -636,6 +680,7 @@ public class MainFrame extends JFrame implements ActionListener {
             String cost = cost_field.getText();
             String id_bank = "";
             String balance = "";
+            String debt = "";
             String sql = "SELECT PM.*\n" +
                     "FROM PROFILE P JOIN PAYMENT PM ON P.ID_BANK = PM.ID_BANK\n" +
                     "WHERE ID = ?";
@@ -650,11 +695,40 @@ public class MainFrame extends JFrame implements ActionListener {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-            Double nb = Double.parseDouble(balance) - Double.parseDouble(cost);
-            System.out.println(nb);
+            sql = "SELECT *\n" +
+                    "FROM DEBT\n" +
+                    "WHERE USER_ID = ?";
+            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                pre.setString(1, getId());
+                ResultSet rs = pre.executeQuery();
+
+                if (rs.next()) {
+                    debt = rs.getString(2);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            String nb = Integer.toString(Integer.parseInt(balance) - Integer.parseInt(cost));
             sql = "UPDATE PAYMENT SET BALANCE = ? WHERE ID_BANK = ?";
             try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
-                pre.setDouble(1, nb);
+                pre.setString(1, nb);
+                pre.setString(2, id_bank);
+                pre.execute();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            sql = "INSERT INTO PAYMENT_HISTORY VALUES(?, GETDATE(), ?)";
+            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                pre.setString(1, getId());
+                pre.setString(2, cost);
+                pre.execute();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            String nd = Integer.toString(Integer.parseInt(debt) - Integer.parseInt(cost));
+            sql = "UPDATE DEBT SET DEBT = ? WHERE USER_ID = ?";
+            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                pre.setString(1, nd);
                 pre.setString(2, getId());
                 pre.execute();
             } catch (SQLException ex) {
