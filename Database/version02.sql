@@ -49,10 +49,21 @@ SELECT *
 FROM dbo.NECESSITIES
 
 -- 1.2.5 Thống kê số lượng người ở từng trạng thái theo thời gian
-SELECT F_DATE 'Ngày', F_KIND 'Trạng thái', COUNT(*) 'Số lượng người'
-FROM dbo.F_HISTORY
-GROUP BY F_DATE, F_KIND
-ORDER BY F_DATE
+SELECT TRY_CONVERT(DATE,fh.F_DATE)'time', F_KIND 'status', COUNT(*) 'quantity'
+FROM dbo.F_HISTORY fh
+GROUP BY TRY_CONVERT(DATE,fh.F_DATE),  F_KIND
+ORDER BY TRY_CONVERT(DATE,fh.F_DATE) DESC
+
+
+SELECT COUNT(*)
+FROM F_HISTORY fh
+WHERE fh.F_KIND='F0' 
+
+SELECT COUNT(*)
+FROM F_HISTORY fh
+WHERE TRY_CONVERT(DATE,fh.F_DATE) >= DATEADD(day, -1,TRY_CONVERT(DATE,GETDATE())) AND TRY_CONVERT(DATE,fh.F_DATE) <  TRY_CONVERT(DATE,GETDATE())
+
+
 
 -- 1.2.5 Thống kê tiêu thụ các gói nhu yếu phẩm
 SELECT n.NAME 'Tên gói', SUM(c.QUANTITY) 'Số lượng tiêu thụ'
