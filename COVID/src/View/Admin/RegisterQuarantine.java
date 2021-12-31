@@ -193,7 +193,7 @@ class AddQuarantine extends JPanel implements ActionListener {
                 ex.printStackTrace();
             }
 
-            qa.setProvince(id_pro);
+            qa.setId(id_pro);
 
             sql = "select * from DISTRICT WHERE ID_PROVINCE=?";
             try (Connection conn = new CovidDAO().getConnection(); PreparedStatement prepStmt = conn.prepareStatement(sql);){
@@ -382,7 +382,7 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
                 if (rs.next()){
                     qua.setId(rs.getInt(1));
                     qua.setName(rs.getString(2));
-                    qua.setProvince(rs.getInt(3));
+                    qua.setId_province(rs.getInt(3));
                     qua.setDistrict(rs.getInt(4));
                     qua.setCapicity(rs.getInt(5));
                     qua.setDeleted(rs.getInt(6));
@@ -402,7 +402,7 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
                     " FROM PROVINCE P JOIN DISTRICT D ON P.ID_PROVINCE = D.ID_PROVINCE" +
                     " WHERE P.ID_PROVINCE = ? AND D.ID_DISTRICT = ?";
             try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
-                pre.setInt(1, qua.getProvince());
+                pre.setInt(1, qua.getId_province());
                 pre.setInt(2, qua.getDistrict());
                 ResultSet rs = pre.executeQuery();
                 if (rs.next()){
@@ -511,7 +511,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
                 if (rs.next()){
                     qua.setId(rs.getInt(1));
                     qua.setName(rs.getString(2));
-                    qua.setProvince(rs.getInt(3));
+                    qua.setId_province(rs.getInt(3));
                     qua.setDistrict(rs.getInt(4));
                     qua.setCapicity(rs.getInt(5));
                     qua.setDeleted(rs.getInt(6));
@@ -524,7 +524,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
                     " FROM PROVINCE P JOIN DISTRICT D ON P.ID_PROVINCE = D.ID_PROVINCE" +
                     " WHERE P.ID_PROVINCE = ? AND D.ID_DISTRICT = ?";
             try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
-                pre.setInt(1, qua.getProvince());
+                pre.setInt(1, qua.getId_province());
                 pre.setInt(2, qua.getDistrict());
                 ResultSet rs = pre.executeQuery();
                 if (rs.next()){

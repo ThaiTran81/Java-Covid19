@@ -10,6 +10,7 @@ import com.cv19.view.event.EventMenu;
 import com.cv19.view.event.EventMenuCallBack;
 import com.cv19.view.event.EventMenuSelected;
 import com.cv19.view.model.Model_Menu;
+import javax.swing.JFrame;
 
 /**
  *
@@ -46,8 +47,14 @@ public class Menu extends PanelBorder {
 
         profile = new com.cv19.view.components.Profile();
         listMenu = new com.cv19.swing.ListMenu<>();
+        panelButton = new javax.swing.JPanel();
+        btnWin = new com.cv19.view.win_button.WinButton();
 
         listMenu.setOpaque(false);
+
+        panelButton.setOpaque(false);
+        panelButton.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        panelButton.add(btnWin);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -55,16 +62,18 @@ public class Menu extends PanelBorder {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(listMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(profile, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
+                .addComponent(profile, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                .addGap(106, 106, 106))
+            .addComponent(panelButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(panelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(profile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(listMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 606, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(listMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -86,8 +95,18 @@ public class Menu extends PanelBorder {
     public void addEvent(EventMenu e) {
         this.event = e;
     }
+    
+    public void initFrame(JFrame fram){
+        btnWin.initEvent(fram);
+    }
+    
+    public void setName(String name){
+        profile.setNameP(name);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.cv19.view.win_button.WinButton btnWin;
     private com.cv19.swing.ListMenu<String> listMenu;
+    private javax.swing.JPanel panelButton;
     private com.cv19.view.components.Profile profile;
     // End of variables declaration//GEN-END:variables
 }

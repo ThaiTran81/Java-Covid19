@@ -192,7 +192,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
         String sql = "SELECT DISTINCT NEC_KIND\n" +
                 "FROM NECESSITIES";
-        try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+        try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
             ResultSet rs = pre.executeQuery();
 
             while (rs.next()) {
@@ -699,7 +699,7 @@ public class MainFrame extends JFrame implements ActionListener {
             sql = "SELECT *\n" +
                     "FROM DEBT\n" +
                     "WHERE USER_ID = ?";
-            try (Connection conn = Controller.ConnectToDBController.getSqlConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                 pre.setString(1, getId());
                 ResultSet rs = pre.executeQuery();
 

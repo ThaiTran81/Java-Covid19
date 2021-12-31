@@ -117,7 +117,7 @@ public class NecessityTablePanel extends JPanel {
                 String price = rs.getString(4);
                 int time_limit = rs.getInt(5);
                 String type = rs.getString(6);
-                lst.add(new NecessityModel(name, limit, price, time_limit, type));
+                lst.add(new NecessityModel(name, limit, Integer.parseInt(price), time_limit, type));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -135,7 +135,7 @@ public class NecessityTablePanel extends JPanel {
                 }
                 data[i][0] = f_type;
                 data[i][1] = f.getName().trim();
-                data[i][2] = f.getPrice();
+                data[i][2] = Integer.toString(f.getPrice());
                 data[i][3] = String.valueOf(f.getLimit());
                 if (used_lst.size() != 0) {
                     for (int j = 0; j < used_lst.size(); j++) {

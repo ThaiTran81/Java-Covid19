@@ -1,6 +1,8 @@
 package Model;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class profileModel {
     private String username;
@@ -16,11 +18,20 @@ public class profileModel {
     private String village;
     private int id_qua;
     private String status;
+    private int id_bank;
+
+    public int getId_bank() {
+        return id_bank;
+    }
+
+    public void setId_bank(int id_bank) {
+        this.id_bank = id_bank;
+    }
 
     public profileModel() {
         username=null;
         password=null;
-        type=-1;
+        type=2;
         block=0;
         fullname=null;
         phone=null;
@@ -31,6 +42,7 @@ public class profileModel {
         village=null;
         id_qua=-1;
         status = null;
+        id_bank=-1;
     }
 
 
@@ -88,6 +100,8 @@ public class profileModel {
 
     public void setDob(Date dob) {
         this.dob = dob;
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd ");  
+        String strDate = dateFormat.format(dob);
     }
 
     public String getGender() {

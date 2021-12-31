@@ -3,12 +3,21 @@ package Model;
 public class QuarantineModel {
     private int id;
     private String name;
-    private int province;
+    private int id_province;
+    private String province;
     private int district;
     private int capicity;
     private int deleted;
 
-    public QuarantineModel(int id, String name, int province, int district, int capicity, int deleted) {
+    public int getId_province() {
+        return id_province;
+    }
+
+    public void setId_province(int id_province) {
+        this.id_province = id_province;
+    }
+
+    public QuarantineModel(int id, String name, String province, int district, int capicity, int deleted) {
         this.id = id;
         this.name = name;
         this.province = province;
@@ -35,12 +44,12 @@ public class QuarantineModel {
     public QuarantineModel(){
         id=0;
         name=null;
-        province=0;
+        province=null;
         district=0;
         capicity=0;
         deleted=0;
     }
-
+    
     public int getId() {
         return id;
     }
@@ -57,11 +66,11 @@ public class QuarantineModel {
         this.name = name;
     }
 
-    public int getProvince() {
+    public String getProvince() {
         return province;
     }
 
-    public void setProvince(int province) {
+    public void setProvince(String province) {
         this.province = province;
     }
 
@@ -88,4 +97,10 @@ public class QuarantineModel {
     public void setDeleted(int deleted) {
         this.deleted = deleted;
     }
+    
+    @Override
+    public String toString() {
+        return name+", "+province;
+    }
+    
 }

@@ -42,7 +42,7 @@ public class Profile extends javax.swing.JPanel {
 
         lbRole.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         lbRole.setForeground(new java.awt.Color(243, 244, 246));
-        lbRole.setText("Manager");
+        lbRole.setText("Quản lý");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

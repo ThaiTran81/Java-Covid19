@@ -4,6 +4,7 @@ import Model.profileModel;
 import View.Admin.AdminMainFrame;
 import View.LoginView;
 import com.cv19.view.event.EventLoginCallBack;
+import com.cv19.view.manager.ManagerController;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.sql.Connection;
@@ -34,6 +35,7 @@ public class LoginController {
 
         try {
             ResultSet rs = new CovidDAO().authAccount(username, password);
+            System.out.println("hahah");
             if (rs.next()) {
                 user.setUsername(rs.getString("USERNAME"));
                 user.setPassword(rs.getString("PASSWORD"));
@@ -42,6 +44,10 @@ public class LoginController {
                 if (user.getType() == 0) {
                     loginView.dispose();
                     new AdminMainFrame();
+                }
+                if(user.getType()==1){
+                    loginView.dispose();
+                    new ManagerController();
                 }
             }
 

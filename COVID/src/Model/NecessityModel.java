@@ -1,16 +1,33 @@
 package Model;
 
+import java.text.ParseException;
+import java.text.RuleBasedCollator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class NecessityModel {
+    private int id;
     private String name;
     private int limit;
-    private String price;
+    private int price;
     private int time_limit;
-    private String type;
+    private int consume;
 
-    public NecessityModel() {
+    public String getType() {
+        return type;
     }
 
-    public NecessityModel(String name, int limit, String price, int time_limit, String type) {
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    private String type;
+
+    
+     public NecessityModel() {
+    }
+
+    public NecessityModel(String name, int limit, int price, int time_limit, String type) {
         this.name = name;
         this.limit = limit;
         this.price = price;
@@ -18,6 +35,30 @@ public class NecessityModel {
         this.type = type;
     }
 
+    public NecessityModel(int id, String name, int limit, int price, int time_limit, int consume) {
+        this.id = id;
+        this.name = name;
+        this.limit = limit;
+        this.price = price;
+        this.time_limit = time_limit;
+        this.consume = consume;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getConsume() {
+        return consume;
+    }
+
+    public void setConsume(int consume) {
+        this.consume = consume;
+    }
     public String getName() {
         return name;
     }
@@ -34,11 +75,11 @@ public class NecessityModel {
         this.limit = limit;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
@@ -50,11 +91,5 @@ public class NecessityModel {
         this.time_limit = time_limit;
     }
 
-    public String getType() {
-        return type;
-    }
 
-    public void setType(String type) {
-        this.type = type;
-    }
 }
