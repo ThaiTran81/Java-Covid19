@@ -277,7 +277,7 @@ public class RegisterManager extends JPanel implements ActionListener {
                 sql = "INSERT INTO ACCOUNT(USERNAME, PASSWORD, TYPE, BLOCK) VALUES(?,?,?,?)";
                 try (Connection conn = new CovidDAO().getConnection();PreparedStatement prepStmt = conn.prepareStatement(sql);) {
                     prepStmt.setString(1, this.username.getText());
-                    prepStmt.setString(2, temp);
+                    prepStmt.setBytes(2, temp.getBytes());
                     prepStmt.setInt(3, 1);
                     prepStmt.setInt(4, 0);
 

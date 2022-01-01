@@ -124,7 +124,7 @@ public class NecessityTablePanel extends JPanel {
                 }
                 temp_data[i][0] = f_type;
                 temp_data[i][1] = f.getName().trim();
-                temp_data[i][2] = f.getPrice();
+                temp_data[i][2] = String.valueOf(f.getPrice());
                 temp_data[i][3] = String.valueOf(f.getLimit());
                 temp_data[i][4] = convertTimeLimit(f.getTime_limit());
                 if (used_lst.size() != 0) {

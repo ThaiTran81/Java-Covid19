@@ -36,7 +36,7 @@ public class LoginController {
 
         try {
             ResultSet rs = new CovidDAO().authAccount(username, password);
-            System.out.println("hahah");
+//            System.out.println("hahah");
             if (rs.next()) {
                 user.setUsername(rs.getString("USERNAME"));
                 user.setPassword(rs.getString("PASSWORD"));
