@@ -7,12 +7,7 @@ package View;
 import Controller.LoginController;
 import com.cv19.view.event.EventLoginCallBack;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -140,6 +135,14 @@ public class LoginView extends JFrame implements ActionListener {
         gbc.fill = GridBagConstraints.VERTICAL;
         gbc.insets = new Insets(0, 20, 10, 0);
         container.add(btnLogin, gbc);
+
+        txtPass.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loginEvent();
+            }
+        });
 
         getContentPane().add(container);
 

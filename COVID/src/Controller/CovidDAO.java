@@ -62,7 +62,7 @@ public class CovidDAO {
         String sql = "SELECT * FROM ACCOUNT WHERE USERNAME=? AND PASSWORD=?";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, username);
-        stmt.setString(2, password);
+        stmt.setBytes(2, password.getBytes());
         ResultSet rs = stmt.executeQuery();
         return rs;
     }
