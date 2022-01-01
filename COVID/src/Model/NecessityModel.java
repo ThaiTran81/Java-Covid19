@@ -13,15 +13,6 @@ public class NecessityModel {
     private int time_limit;
     private int consume;
     private String type;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     
      public NecessityModel() {
     }
@@ -98,5 +89,13 @@ public class NecessityModel {
 
     public void setTime_limit(int time_limit) {
         this.time_limit = time_limit;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
