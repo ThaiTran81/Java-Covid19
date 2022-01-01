@@ -22,16 +22,15 @@ public class NecessityTablePanel extends JPanel {
         this.setBackground(Color.white);
         this.setPreferredSize(new Dimension(690,320));
 
-        setData();
+        setData("", "");
         getUsedData(id_value);
-        data = new String[lst.size()][4];
-        getData("");
+        getData("", "", "");
 
         if (data == null) {
             this.add(new JLabel("Error."));
         }
 
-        String[] columns = {"Loại nhu yếu phẩm", "Tên sản phẩm", "Đơn giá", "Số lượng mua còn lại"};
+        String[] columns = {"Loại nhu yếu phẩm", "Tên sản phẩm", "Đơn giá", "Số lượng mua còn lại", "Giới hạn mua theo"};
         JTable table = new JTable(data, columns);
         JScrollPane sp = new JScrollPane(table);
         sp.setPreferredSize(new Dimension(680,300));
@@ -39,42 +38,20 @@ public class NecessityTablePanel extends JPanel {
         this.add(sp);
     }
 
-    public NecessityTablePanel(String id_value, String nec_type) {
+    public NecessityTablePanel(String id_value, String search, String nec_type, String sort_type, String time_type) {
         this.setBackground(Color.white);
         this.setPreferredSize(new Dimension(690,320));
 
-        setData();
+        setData(search, sort_type);
         getUsedData(id_value);
         data = new String[lst.size()][4];
-        getData(nec_type);
+        getData(nec_type, sort_type, time_type);
 
         if (data == null) {
             this.add(new JLabel("Error."));
         }
 
-        String[] columns = {"Loại nhu yếu phẩm", "Tên sản phẩm", "Đơn giá", "Số lượng mua còn lại"};
-        JTable table = new JTable(data, columns);
-        JScrollPane sp = new JScrollPane(table);
-        sp.setPreferredSize(new Dimension(680,300));
-
-        this.add(sp);
-    }
-
-    public NecessityTablePanel(String id_value, String nec_type, String sort_type) {
-        this.setBackground(Color.white);
-        this.setPreferredSize(new Dimension(690,320));
-
-        setData();
-        getUsedData(id_value);
-        data = new String[lst.size()][4];
-        getData(nec_type);
-        sortData(sort_type);
-
-        if (data == null) {
-            this.add(new JLabel("Error."));
-        }
-
-        String[] columns = {"Loại nhu yếu phẩm", "Tên sản phẩm", "Đơn giá", "Số lượng mua còn lại"};
+        String[] columns = {"Loại nhu yếu phẩm", "Tên sản phẩm", "Đơn giá", "Số lượng mua còn lại", "Giới hạn mua theo"};
         JTable table = new JTable(data, columns);
         JScrollPane sp = new JScrollPane(table);
         sp.setPreferredSize(new Dimension(680,300));
@@ -95,7 +72,7 @@ public class NecessityTablePanel extends JPanel {
                 int time_limit = rs.getInt(4);
                 if (checkDateConsume(date, time_limit)) {
                     String id = rs.getString(1);
-                    String name = rs.getString(3);
+                    String name = rs.getString(3).replaceAll("(\\r|\\n)", "");
                     int quantity = rs.getInt(5);
                     used_lst.add(new NecessityHistoryModel(id, date, name, time_limit, quantity));
                 }
@@ -105,10 +82,17 @@ public class NecessityTablePanel extends JPanel {
         }
     }
 
-    public void setData() {
+    public void setData(String search_text, String sort_type) {
+        String order_type = "ID_NECESSITIES";
+        if (sort_type.length() == 3) order_type = "NAME";
+        else if (sort_type.length() == 12) order_type = "PRICE";
+
         String sql = "SELECT *\n" +
-                "FROM NECESSITIES";
+                "FROM NECESSITIES\n" +
+                "WHERE NAME LIKE ?\n" +
+                "ORDER BY " + order_type;
         try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+            pre.setString(1, "%" + search_text + "%");
             ResultSet rs = pre.executeQuery();
 
             while (rs.next()) {
@@ -124,7 +108,9 @@ public class NecessityTablePanel extends JPanel {
         }
     }
 
-    public void getData(String nec_type) {
+    public void getData(String nec_type, String sort_type, String time_type) {
+        String[][] temp_data = new String[lst.size()][5];
+        int num_of_data = 0;
         if (this.lst != null) {
             int i = 0;
 
@@ -133,25 +119,54 @@ public class NecessityTablePanel extends JPanel {
                 if (nec_type != "" && nec_type != "Tất cả" && !Objects.equals(f_type, nec_type)) {
                     continue;
                 }
-                data[i][0] = f_type;
-                data[i][1] = f.getName().trim();
-                data[i][2] = Integer.toString(f.getPrice());
-                data[i][3] = String.valueOf(f.getLimit());
+                if (time_type != "" && time_type != "Tất cả" && !Objects.equals(convertTimeLimit(f.getTime_limit()), time_type)) {
+                    continue;
+                }
+                temp_data[i][0] = f_type;
+                temp_data[i][1] = f.getName().trim();
+                temp_data[i][2] = f.getPrice();
+                temp_data[i][3] = String.valueOf(f.getLimit());
+                temp_data[i][4] = convertTimeLimit(f.getTime_limit());
                 if (used_lst.size() != 0) {
                     for (int j = 0; j < used_lst.size(); j++) {
-                        if (Objects.equals(used_lst.elementAt(j).getName(), data[i][1])) {
-                            data[i][3] = String.valueOf(f.getLimit() - used_lst.elementAt(j).getQuantity());
+                        if (Objects.equals(used_lst.elementAt(j).getName(), temp_data[i][1])) {
+                            temp_data[i][3] = String.valueOf(f.getLimit() - used_lst.elementAt(j).getQuantity());
                             used_lst.remove(j);
                         }
                     }
                 }
                 i++;
             }
+            num_of_data = i;
+        }
+
+        data = new String[num_of_data][5];
+
+        for (int i = 0; i < data.length; i++) {
+            data[i] = temp_data[i].clone();
+        }
+
+        if (sort_type.length() == 17) {
+            int n = data.length, i, j;
+            boolean swapped;
+            String[] temp_str;
+            for (i = 0; i < n - 1; i++) {
+                swapped = false;
+                for (j = 0; j < n - i - 1; j++) {
+                    if (Integer.parseInt(data[j][3]) > Integer.parseInt(data[j + 1][3])) {
+                        temp_str = data[j];
+                        data[j] = data[j + 1];
+                        data[j + 1] = temp_str;
+                        swapped = true;
+                    }
+                }
+                if (!swapped) break;
+            }
         }
     }
 
     public boolean checkDateConsume(java.sql.Date d, int time_limit) {
-        LocalDate today = LocalDate.now().minusDays(12);
+        LocalDate today = LocalDate.now();
         LocalDate consume_day = new java.sql.Date(d.getTime()).toLocalDate();
 
         if (time_limit == 1) {
@@ -166,79 +181,12 @@ public class NecessityTablePanel extends JPanel {
         return Objects.equals(consume_day.getMonth(), today.getMonth());
     }
 
-    public void sortData(String sort_type) {
-        if (Objects.equals(sort_type, "Mặc định")) {
-            return;
-        }
-        int column_index = 0;
-        if (Objects.equals(sort_type, "Tên")) {
-            column_index = 1;
-        }
-        else if (Objects.equals(sort_type, "Giá tăng dần") || Objects.equals(sort_type, "Giá giảm dần")) {
-            column_index = 2;
-        }
-        else if (Objects.equals(sort_type, "Lượng mua còn lại")) {
-            column_index = 3;
-        }
+    public String convertTimeLimit(int v) {
+        String str = "";
+        if (v == 1) str = "Ngày";
+        else if (v == 7) str = "Tuần";
+        else if (v == 30) str = "Tháng";
 
-        String[] cl = new String[data.length];
-        for (int i = 0; i < data.length; i++) {
-            cl[i] = data[i][column_index];
-        }
-        Arrays.sort(cl);
-
-        String[] temp;
-        for (int i = 0; i < data.length; i++) {
-            for (int j = i + 1; j < data.length - 1; j++) {
-                if (cl[i] == data[j][column_index]) {
-                    temp = data[i];
-                    data[i] = data[j];
-                    data[j] = temp;
-                    break;
-                }
-            }
-        }
-
-//        int n = data.length, i, j;
-//        boolean swapped;
-//        String[] temp;
-//        for (i = 0; i < n - 1; i++) {
-//            swapped = false;
-//            for (j = 0; j < n - i - 1; j++) {
-//                if (compareData(data[j][column_index], data[j + 1][column_index])) {
-//                    temp = data[j];
-//                    data[j] = data[j + 1];
-//                    data[j + 1] = temp;
-//                    swapped = true;
-//                }
-//            }
-//            if (!swapped) break;
-//        }
-    }
-
-    public boolean compareData(String data1, String data2) {
-        int i = 0, j = 0;
-        while (true) {
-            if (i + 1 == data1.length()) {
-                return false;
-            }
-            else if (j + 1 == data2.length()) {
-                return true;
-            }
-//            System.out.println(data1.charAt(i));
-//            if (data1.charAt(i) == 0) {
-//                i++;
-//                continue;
-//            }
-//            if (data2.charAt(j) == 0) {
-//                j++;
-//                continue;
-//            }
-            if (data1.charAt(i) > data2.charAt(j)) {
-                return true;
-            }
-            i++;
-            j++;
-        }
+        return str;
     }
 }

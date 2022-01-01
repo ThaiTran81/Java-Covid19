@@ -3,6 +3,7 @@ package Controller;
 import Model.profileModel;
 import View.Admin.AdminMainFrame;
 import View.LoginView;
+import View.User.MainFrame;
 import com.cv19.view.event.EventLoginCallBack;
 import com.cv19.view.manager.ManagerController;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
@@ -45,12 +46,15 @@ public class LoginController {
                     loginView.dispose();
                     new AdminMainFrame();
                 }
-                if(user.getType()==1){
+                if (user.getType() == 1) {
                     loginView.dispose();
                     new ManagerController();
                 }
+                if (user.getType() == 2) {
+                    loginView.dispose();
+                    new MainFrame(user.getUsername());
+                }
             }
-
         } catch (SQLServerException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

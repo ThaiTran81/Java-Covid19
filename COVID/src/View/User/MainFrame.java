@@ -1,6 +1,7 @@
 package View.User;
 
 import Controller.CovidDAO;
+import Controller.LoginController;
 import Model.NecessityHistoryModel;
 import View.User.content.ContentPanel;
 import View.User.content.account.AcountPanel;
@@ -16,6 +17,7 @@ import View.User.sidebar.SideBarPanel;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 
 public class MainFrame extends JFrame implements ActionListener {
@@ -176,11 +179,15 @@ public class MainFrame extends JFrame implements ActionListener {
         information_panel.add(information_content_panel2);
         information_panel.add(information_content_panel3);
         information_panel.add(new JPanel());
+
+        information_panel.repaint();
+        information_panel.revalidate();
     }
 
     private JTextField search_bar = new JTextField("Tìm kiếm");
     private JButton search_button = new JButton("Tìm");
-    private JComboBox filter_combo_box;
+    private JComboBox type_filter_combo_box;
+    private JComboBox time_filter_combo_box;
     private JComboBox sort_combo_box;
     private JPanel necessity_content;
     private NecessityTablePanel necessity_table_panel;
@@ -215,7 +222,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
         JPanel necessity_title = new JPanel();
         necessity_title.setBackground(Color.white);
-        necessity_title.setPreferredSize(new Dimension(720,100));
+        necessity_title.setPreferredSize(new Dimension(720,70));
         JLabel necessity_text_title = new JLabel("Xem nhu yếu phẩm");
         necessity_text_title.setFont(content_title_font);
         necessity_title.add(necessity_text_title);
@@ -248,25 +255,49 @@ public class MainFrame extends JFrame implements ActionListener {
         search_button.setFont(text_font);
         search_button.addActionListener(this);
 
-        JLabel filter_label = new JLabel("Loại: ");
-        String[] necessity_type = getNecessityType();
-        filter_combo_box = new JComboBox(necessity_type);
-        filter_combo_box.addActionListener(this);
+        JPanel search_panel = new JPanel();
+        search_panel.setOpaque(false);
+        search_panel.add(search_bar);
+        search_panel.add(search_button);
 
         JLabel sort_label = new JLabel("Sắp xếp theo: ");
         String[] necessity_columns = {"Mặc định" ,"Tên", "Giá tăng dần", "Lượng mua còn lại"};
         sort_combo_box = new JComboBox(necessity_columns);
         sort_combo_box.addActionListener(this);
 
+        JPanel sort_panel = new JPanel();
+        sort_panel.setOpaque(false);
+        sort_panel.add(sort_label);
+        sort_panel.add(sort_combo_box);
+
+        JLabel type_filter_label = new JLabel("Loại sản phẩm: ");
+        String[] necessity_type = getNecessityType();
+        type_filter_combo_box = new JComboBox(necessity_type);
+        type_filter_combo_box.addActionListener(this);
+
+        JPanel type_filter_panel = new JPanel();
+        type_filter_panel.setOpaque(false);
+        type_filter_panel.add(type_filter_label);
+        type_filter_panel.add(type_filter_combo_box);
+
+        JLabel time_filter_label = new JLabel("Loại giới hạn: ");
+        String[] necessity_limit_type = {"Tất cả", "Ngày", "Tuần", "Tháng"};
+        time_filter_combo_box = new JComboBox(necessity_limit_type);
+        time_filter_combo_box.addActionListener(this);
+
+        JPanel time_filter_panel = new JPanel();
+        time_filter_panel.setOpaque(false);
+        time_filter_panel.add(time_filter_label);
+        time_filter_panel.add(time_filter_combo_box);
+
         JPanel task_bar_panel = new JPanel();
+        task_bar_panel.setLayout(new GridLayout(2,2,0,0));
         task_bar_panel.setBackground(Color.white);
-        task_bar_panel.setPreferredSize(new Dimension(740,50));
-        task_bar_panel.add(search_bar);
-        task_bar_panel.add(search_button);
-        task_bar_panel.add(filter_label);
-        task_bar_panel.add(filter_combo_box);
-        task_bar_panel.add(sort_label);
-        task_bar_panel.add(sort_combo_box);
+        task_bar_panel.setPreferredSize(new Dimension(700,100));
+        task_bar_panel.add(search_panel);
+        task_bar_panel.add(sort_panel);
+        task_bar_panel.add(type_filter_panel);
+        task_bar_panel.add(time_filter_panel);
 
         necessity_table_panel = new NecessityTablePanel(getId());
         necessity_content = new JPanel();
@@ -281,11 +312,23 @@ public class MainFrame extends JFrame implements ActionListener {
         necessity_panel.add(task_bar_panel);
         necessity_panel.add(necessity_content);
         necessity_panel.add(purchase_button);
+
+        necessity_panel.repaint();
+        necessity_panel.revalidate();
     }
 
+    private JTextField purchase_search_bar = new JTextField("Tìm kiếm");
+    private JButton purchase_search_button = new JButton("Tìm");
+    private JComboBox purchase_type_filter_combo_box;
+    private JTextField add_product_field = new JTextField("Nhập mã sản phẩm muốn mua");
+    private JButton add_product_button = new JButton("Xem");
     private NecessityPurchaseTablePanel necessity_purchase_table_panel;
+    private JPanel purchase_content;
+    private JTextArea product_chosen_field = new JTextArea();
     private JTextField quantity_field = new JTextField("Số lượng");
     private JButton add_button = new JButton("Thêm");
+    private DefaultTableModel cart_model;
+    private JTextField total_cost_field = new JTextField("0");
     private JButton buy_button = new JButton("Mua");
 
     public void showPurchasePanel() {
@@ -299,43 +342,80 @@ public class MainFrame extends JFrame implements ActionListener {
         none.setBackground(Color.white);
         none.setOpaque(true);
 
-        JLabel add_title = new JLabel("      Thêm sản phẩm");
+        JLabel add_title = new JLabel("Thêm sản phẩm");
+        add_title.setPreferredSize(new Dimension(340,30));
         add_title.setHorizontalAlignment(SwingConstants.LEFT);
-        add_title.setPreferredSize(new Dimension(350,50));
         add_title.setFont(text_font);
 
-        JLabel keyword_title = new JLabel("Tìm từ khóa");
-        keyword_title.setHorizontalAlignment(SwingConstants.LEFT);
-        keyword_title.setPreferredSize(new Dimension(150,20));
-
-        search_bar.setPreferredSize(new Dimension(135,30));
-        search_bar.setForeground(new Color(153, 153, 153));
-        search_bar.addActionListener(this);
-        search_bar.addFocusListener(new FocusAdapter() {
+        purchase_search_bar.setPreferredSize(new Dimension(250,30));
+        purchase_search_bar.setForeground(new Color(153, 153, 153));
+        purchase_search_bar.addActionListener(this);
+        purchase_search_bar.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
-                if (search_bar.getText().equals("Tìm kiếm")) {
-                    search_bar.setText("");
-                    search_bar.setForeground(Color.BLACK);
+                if (purchase_search_bar.getText().equals("Tìm kiếm")) {
+                    purchase_search_bar.setText("");
+                    purchase_search_bar.setForeground(Color.BLACK);
                 }
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                if (search_bar.getText().trim().equals("") || search_bar.getText().equals("Tìm kiếm")) {
-                    search_bar.setText("Tìm kiếm");
-                    search_bar.setForeground(new Color(153, 153, 153));
+                if (purchase_search_bar.getText().trim().equals("") || purchase_search_bar.getText().equals("Tìm kiếm")) {
+                    purchase_search_bar.setText("Tìm kiếm");
+                    purchase_search_bar.setForeground(new Color(153, 153, 153));
                 }
             }
         });
 
-        JLabel filter_label = new JLabel("Chọn loại sản phẩm: ");
-        filter_label.setHorizontalAlignment(SwingConstants.LEFT);
-        filter_label.setPreferredSize(new Dimension(150,20));
+        purchase_search_button.setFocusable(false);
+        purchase_search_button.setPreferredSize(new Dimension(70,30));
+        purchase_search_button.setFont(text_font);
+        purchase_search_button.addActionListener(this);
+
         String[] necessity_type = getNecessityType();
-        filter_combo_box = new JComboBox(necessity_type);
+        purchase_type_filter_combo_box = new JComboBox(necessity_type);
+        purchase_type_filter_combo_box.setBorder(javax.swing.BorderFactory.createTitledBorder("Loại sản phẩm"));
+        purchase_type_filter_combo_box.setPreferredSize(new Dimension(180,50));
+        purchase_type_filter_combo_box.addActionListener(this);
+
+        add_product_field.setPreferredSize(new Dimension(220,30));
+        add_product_field.setForeground(new Color(153, 153, 153));
+        add_product_field.addActionListener(this);
+        add_product_field.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                super.focusGained(e);
+                if (add_product_field.getText().equals("Nhập mã sản phẩm muốn mua")) {
+                    add_product_field.setText("");
+                    add_product_field.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e);
+                if (add_product_field.getText().trim().equals("") || add_product_field.getText().equals("Nhập mã sản phẩm muốn mua")) {
+                    add_product_field.setText("Nhập mã sản phẩm muốn mua");
+                    add_product_field.setForeground(new Color(153, 153, 153));
+                }
+            }
+        });
+
+        add_product_button.setFocusable(false);
+        add_product_button.setPreferredSize(new Dimension(100,30));
+        add_product_button.setFont(text_font);
+        add_product_button.addActionListener(this);
+
+        product_chosen_field.setColumns(30);
+        product_chosen_field.setRows(7);
+        product_chosen_field.setEditable(false);
+
+        JPanel product_chosen_field_panel = new JPanel();
+        product_chosen_field_panel.setBorder(javax.swing.BorderFactory.createTitledBorder("Sản phẩm đã chọn"));
+        product_chosen_field_panel.add(product_chosen_field);
 
         quantity_field.setPreferredSize(new Dimension(180,30));
         quantity_field.setForeground(new Color(153, 153, 153));
@@ -344,7 +424,7 @@ public class MainFrame extends JFrame implements ActionListener {
             @Override
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
-                if (quantity_field.getText().equals("Tìm kiếm")) {
+                if (quantity_field.getText().equals("Số lượng")) {
                     quantity_field.setText("");
                     quantity_field.setForeground(Color.BLACK);
                 }
@@ -353,41 +433,56 @@ public class MainFrame extends JFrame implements ActionListener {
             @Override
             public void focusLost(FocusEvent e) {
                 super.focusLost(e);
-                if (quantity_field.getText().trim().equals("") || quantity_field.getText().equals("Tìm kiếm")) {
-                    quantity_field.setText("Tìm kiếm");
+                if (quantity_field.getText().trim().equals("") || quantity_field.getText().equals("Số lượng")) {
+                    quantity_field.setText("Số lượng");
                     quantity_field.setForeground(new Color(153, 153, 153));
                 }
             }
         });
 
-        necessity_purchase_table_panel = new NecessityPurchaseTablePanel(getId());
+        JLabel none1 = new JLabel();
+        none1.setPreferredSize(new Dimension(340,15));
+        JLabel none2 = new JLabel();
+        none2.setPreferredSize(new Dimension(340,20));
+        JPanel add_necessity_lpanel = new JPanel();
+        add_necessity_lpanel.add(add_title);
+        add_necessity_lpanel.add(purchase_search_bar);
+        add_necessity_lpanel.add(purchase_search_button);
+        add_necessity_lpanel.add(none1);
+        add_necessity_lpanel.add(purchase_type_filter_combo_box);
+        add_necessity_lpanel.add(none2);
+        add_necessity_lpanel.add(add_product_field);
+        add_necessity_lpanel.add(add_product_button);
+
+        necessity_purchase_table_panel = new NecessityPurchaseTablePanel(getId(), Boolean.FALSE);
+        purchase_content = new JPanel();
+        purchase_content.add(necessity_purchase_table_panel);
+
+        JPanel add_necessity_rpanel = new JPanel();
+        add_necessity_rpanel.add(purchase_content);
 
         JPanel add_necessity_panel = new JPanel();
+        add_necessity_panel.setLayout(new GridLayout(1,2,0,0));
         add_necessity_panel.setBorder(new LineBorder(Color.black,1));
-        add_necessity_panel.add(add_title);
-        add_necessity_panel.add(keyword_title);
-        add_necessity_panel.add(search_bar);
-        add_necessity_panel.add(filter_label);
-        add_necessity_panel.add(filter_combo_box);
-        add_necessity_panel.add(quantity_field);
-        add_necessity_panel.add(add_button);
-        add_necessity_panel.add(necessity_purchase_table_panel);
+        add_necessity_panel.add(add_necessity_lpanel);
+        add_necessity_panel.add(add_necessity_rpanel);
 
-        JLabel cart_title = new JLabel("      Giỏ hàng");
-        cart_title.setHorizontalAlignment(SwingConstants.LEFT);
-        cart_title.setPreferredSize(new Dimension(350,50));
-        cart_title.setFont(text_font);
+        add_button.addActionListener(this);
+        add_button.setFocusable(false);
 
-        String[][] data = new String[3][3];
-        for (int i = 0; i < data.length; i++) {
-            data[i][0] = "";
-            data[i][1] = "";
-            data[i][2] = "";
-        }
-        String[] columns = {"Tên sản phẩm", "Số lượng", "Đơn Giá"};
-        JTable table = new JTable(data, columns);
+        JLabel none3 = new JLabel();
+        none3.setPreferredSize(new Dimension(340,17));
+        JPanel cart_lpanel = new JPanel();
+        cart_lpanel.add(product_chosen_field_panel);
+        cart_lpanel.add(none3);
+        cart_lpanel.add(quantity_field);
+        cart_lpanel.add(add_button);
+
+        String[] columns = {"Mã sản phẩm", "Tên sản phẩm", "Đơn Giá", "Số lượng", "Tổng cộng"};
+        cart_model = new DefaultTableModel(columns, 0);
+        JTable table = new JTable(cart_model);
         JScrollPane sp = new JScrollPane(table);
-        sp.setPreferredSize(new Dimension(320,200));
+        sp.setPreferredSize(new Dimension(320,150));
 
         JPanel cart_table_panel = new JPanel();
         cart_table_panel.setBackground(Color.white);
@@ -395,32 +490,50 @@ public class MainFrame extends JFrame implements ActionListener {
         cart_table_panel.setPreferredSize(new Dimension(690,210));
         cart_table_panel.add(sp);
 
-        JLabel total_price = new JLabel("Tổng số tiền: 0000.00");
-        total_price.setHorizontalAlignment(SwingConstants.LEFT);
-        total_price.setPreferredSize(new Dimension(250,30));
-        total_price.setFont(text_font);
+        JLabel total_cost_title = new JLabel("Tổng số tiền: ");
+        total_cost_title.setHorizontalAlignment(SwingConstants.LEFT);
+        total_cost_title.setPreferredSize(new Dimension(120,30));
+        total_cost_title.setFont(text_font);
+
+        total_cost_field.setPreferredSize(new Dimension(120,30));
+        total_cost_field.setBackground(Color.white);
+        total_cost_field.setForeground(Color.black);
+        total_cost_field.setEditable(false);
+        total_cost_field.addActionListener(this);
 
         buy_button.addActionListener(this);
+        buy_button.setFocusable(false);
+
+        JLabel none4 = new JLabel();
+        none4.setPreferredSize(new Dimension(340,10));
+        JPanel cart_rpanel = new JPanel();
+        cart_rpanel.add(sp);
+        cart_rpanel.add(none4);
+        cart_rpanel.add(total_cost_title);
+        cart_rpanel.add(total_cost_field);
+        cart_rpanel.add(buy_button);
 
         JPanel cart_panel = new JPanel();
+        cart_panel.setLayout(new GridLayout(1,2,0,0));
         cart_panel.setBorder(new LineBorder(Color.black,1));
-        cart_panel.add(cart_title);
-        cart_panel.add(cart_table_panel);
-        cart_panel.add(total_price);
-        cart_panel.add(buy_button);
+        cart_panel.add(cart_lpanel);
+        cart_panel.add(cart_rpanel);
 
         JPanel ct = new JPanel();
-        ct.setLayout(new GridLayout(1,2,0,10));
+        ct.setLayout(new GridLayout(2,1,0,0));
         ct.setBorder(new LineBorder(Color.black,1));
         ct.setBackground(Color.yellow);
-        ct.setOpaque(true);
-        ct.setPreferredSize(new Dimension(700,400));
+        ct.setOpaque(false);
+        ct.setPreferredSize(new Dimension(700,450));
         ct.add(add_necessity_panel);
         ct.add(cart_panel);
 
         necessity_purchase_panel.add(title);
         necessity_purchase_panel.add(none);
         necessity_purchase_panel.add(ct);
+
+        necessity_purchase_panel.repaint();
+        necessity_purchase_panel.revalidate();
     }
 
     private JTextField cost_field = new JTextField("Số tiền thanh toán");
@@ -515,6 +628,9 @@ public class MainFrame extends JFrame implements ActionListener {
         payment_panel.add(payment_title);
         payment_panel.add(none);
         payment_panel.add(ct);
+
+        payment_panel.repaint();
+        payment_panel.revalidate();
     }
 
     private JTextField old_password_field = new JTextField("");
@@ -613,6 +729,9 @@ public class MainFrame extends JFrame implements ActionListener {
         account_panel.add(account_title);
         account_panel.add(none);
         account_panel.add(ct);
+
+        account_panel.repaint();
+        account_panel.revalidate();
     }
 
     @Override
@@ -634,7 +753,8 @@ public class MainFrame extends JFrame implements ActionListener {
             switchPanel(account_panel);
         }
         if (e.getSource() == logout_button) {
-
+            this.dispose();
+            new LoginController();
         }
         if (e.getSource() == personal_information_button) {
             switchPanel(new PersonalInformationPanel(getId()));
@@ -653,24 +773,154 @@ public class MainFrame extends JFrame implements ActionListener {
         }
         if (e.getSource() == search_bar) {
             search_bar.setText("");
-
         }
-        if (e.getSource() == filter_combo_box) {
-            String nec_type = filter_combo_box.getSelectedItem().toString().trim();
-            necessity_content.removeAll();
-            necessity_content.add(new NecessityTablePanel(getId(), nec_type));
-            necessity_content.repaint();
-            necessity_content.revalidate();
-        }
-        if (e.getSource() == sort_combo_box) {
-            String nec_type = filter_combo_box.getSelectedItem().toString().trim();
+        if (e.getSource() == search_button || e.getSource() == type_filter_combo_box || e.getSource() == sort_combo_box || e.getSource() == time_filter_combo_box) {
+            String search = search_bar.getText();
+            String nec_type = type_filter_combo_box.getSelectedItem().toString().trim();
             String sort_type = sort_combo_box.getSelectedItem().toString();
+            String time_type = time_filter_combo_box.getSelectedItem().toString();
+            if (Objects.equals(search, "Tìm kiếm")) {
+                search = "";
+            }
             necessity_content.removeAll();
-            necessity_content.add(new NecessityTablePanel(getId(), nec_type, sort_type));
+            necessity_content.add(new NecessityTablePanel(getId(), search, nec_type, sort_type, time_type));
             necessity_content.repaint();
             necessity_content.revalidate();
         }
         if (e.getSource() == purchase_button) {
+            showPurchasePanel();
+            switchPanel(necessity_purchase_panel);
+        }
+        if (e.getSource() == purchase_search_bar) {
+            purchase_search_bar.setText("");
+        }
+        if (e.getSource() == purchase_search_button || e.getSource() == purchase_type_filter_combo_box) {
+            String search = purchase_search_bar.getText();
+            String nec_type = purchase_type_filter_combo_box.getSelectedItem().toString().trim();
+            if (Objects.equals(search, "Tìm kiếm")) {
+                search = "";
+            }
+            purchase_content.removeAll();
+            purchase_content.add(new NecessityPurchaseTablePanel(getId(), search, nec_type));
+            purchase_content.repaint();
+            purchase_content.revalidate();
+        }
+        if (e.getSource() == add_product_button) {
+            String pro_id = add_product_field.getText();
+            NecessityPurchaseTablePanel pro_datas = new NecessityPurchaseTablePanel(getId(), Boolean.TRUE);
+            String[][] datas = pro_datas.getData();
+            String[] specific_data = new String[6];
+            for (int i = 0; i < datas.length; i++) {
+                if (Objects.equals(datas[i][0], pro_id)) {
+                    specific_data = datas[i].clone();
+                    break;
+                }
+            }
+            String result = "Mã sản phẩm: " + specific_data[0] +
+                    "\nLoại sản phẩm: " + specific_data[1] +
+                    "\nTên sản phẩm: " + specific_data[2] +
+                    "\nĐơn giá: " + specific_data[3] +
+                    "\nGiới hạn mua còn lại: " + specific_data[4] +
+                    "\nLoại giới hạn theo:  " + specific_data[5];
+            product_chosen_field.setText(result);
+        }
+        if (e.getSource() == add_button) {
+            int qtt = Integer.parseInt(quantity_field.getText());
+            String pro_i4 = product_chosen_field.getText().trim();
+            String pls_chose_pro_first = "Vui lòng chọn loại sản phẩm trước khi nhập số lượng.";
+            String success = "Thêm vào giỏ hàng thành công.";
+            if (Objects.equals(pro_i4, "") || Objects.equals(pro_i4, pls_chose_pro_first) || Objects.equals(pro_i4, success)) {
+                product_chosen_field.setText(pls_chose_pro_first);
+            }
+            else {
+                String pls_enter_reasonable_price = "Số lượng nhập vượt quá lượng mua còn lại, vui lòng nhập lại";
+                String[] pro_i4_part = pro_i4.split("\n");
+                String[] pro_i4_id = pro_i4_part[0].split(" ");
+                String[] pro_i4_name = pro_i4_part[2].split(" ");
+                String[] pro_i4_price = pro_i4_part[3].split(" ");
+                String[] pro_i4_limit_qtt =  pro_i4_part[4].split(" ");
+                if (qtt > Integer.parseInt(pro_i4_limit_qtt[5])) {
+                    if (Objects.equals(pro_i4_part[pro_i4_part.length - 1], pls_enter_reasonable_price)) {
+                        product_chosen_field.setText(pro_i4);
+                    }
+                    else {
+                        product_chosen_field.setText(pro_i4 + "\n\n" + pls_enter_reasonable_price);
+                    }
+                }
+                else {
+                    String pro_name = "";
+                    for (int i = 3; i < pro_i4_name.length; i++) {
+                        pro_name += pro_i4_name[i] + " ";
+                    }
+                    cart_model.addRow(new Object[]{pro_i4_id[3], pro_name.trim(), pro_i4_price[2], qtt, Integer.parseInt(pro_i4_price[2])*qtt});
+                    int total_cost = 0;
+                    for (int i = 0; i < cart_model.getRowCount(); i++) {
+                        total_cost += Integer.parseInt(String.valueOf(cart_model.getValueAt(i, 4)));
+                    }
+                    total_cost_field.setText(String.valueOf(total_cost));
+                    product_chosen_field.setText(success);
+                }
+            }
+        }
+        if (e.getSource() == buy_button) {
+            int count = 0;
+            String sql = "SELECT *\n" +
+                    "FROM BILL";
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                ResultSet rs = pre.executeQuery();
+
+                while (rs.next()) {
+                    count++;
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            int id_bill = count + 1;
+            sql = "INSERT BILL VALUES (?, ?, GETDATE(), ?)";
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                pre.setInt(1, id_bill);
+                pre.setString(2, getId());
+                pre.setInt(3, Integer.parseInt(total_cost_field.getText()));
+
+                pre.execute();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            sql = "INSERT CONSUME VALUES (?, ?, ?)";
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                for (int i = 0; i < cart_model.getRowCount(); i++) {
+                    pre.setInt(1, id_bill);
+                    pre.setInt(2, Integer.parseInt(String.valueOf(cart_model.getValueAt(i, 0))));
+                    pre.setInt(3, Integer.parseInt(String.valueOf(cart_model.getValueAt(i, 3))));
+
+                    pre.execute();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            int debt = 0;
+            sql = "SELECT *\n" +
+                    "FROM DEBT\n" +
+                    "WHERE USER_ID = ?";
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                pre.setString(1, getId());
+                ResultSet rs = pre.executeQuery();
+
+                if (rs.next()) {
+                    debt = rs.getInt(2);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            debt += Integer.parseInt(total_cost_field.getText());
+            sql = "UPDATE DEBT SET DEBT = ? WHERE USER_ID = ?";
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                pre.setInt(1, debt);
+                pre.setString(2, getId());
+                pre.execute();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             showPurchasePanel();
             switchPanel(necessity_purchase_panel);
         }
@@ -734,6 +984,34 @@ public class MainFrame extends JFrame implements ActionListener {
                 pre.execute();
             } catch (SQLException ex) {
                 ex.printStackTrace();
+            }
+        }
+        if (e.getSource() == change_password_button) {
+            String old_p = "";
+            String sql = "SELECT *\n" +
+                    "FROM ACCOUNT\n" +
+                    "WHERE USERNAME = ?";
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                pre.setString(1, getId());
+                ResultSet rs = pre.executeQuery();
+
+                if (rs.next()) {
+                    old_p = rs.getString(2);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            if (Objects.equals(old_password_field.getText(), old_p)) {
+                if (Objects.equals(new_password_field.getText(), retype_new_password_field.getText())) {
+                    sql = "UPDATE ACCOUNT SET PASSWORD = ? WHERE USERNAME = ?";
+                    try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                        pre.setString(1, new_password_field.getText());
+                        pre.setString(2, getId());
+                        pre.execute();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
             }
         }
     }

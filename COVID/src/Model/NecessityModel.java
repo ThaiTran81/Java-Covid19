@@ -12,6 +12,7 @@ public class NecessityModel {
     private int price;
     private int time_limit;
     private int consume;
+    private String type;
 
     public String getType() {
         return type;
@@ -20,8 +21,6 @@ public class NecessityModel {
     public void setType(String type) {
         this.type = type;
     }
-
-    private String type;
 
     
      public NecessityModel() {
@@ -44,6 +43,15 @@ public class NecessityModel {
         this.consume = consume;
     }
 
+    public NecessityModel(int id, String name, int limit, int price, int time_limit, String type) {
+        this.id = id;
+        this.name = name;
+        this.limit = limit;
+        this.price = price;
+        this.time_limit = time_limit;
+        this.type = type;
+    }
+
     public int getId() {
         return id;
     }
@@ -59,6 +67,7 @@ public class NecessityModel {
     public void setConsume(int consume) {
         this.consume = consume;
     }
+
     public String getName() {
         return name;
     }
@@ -90,6 +99,4 @@ public class NecessityModel {
     public void setTime_limit(int time_limit) {
         this.time_limit = time_limit;
     }
-
-
 }
