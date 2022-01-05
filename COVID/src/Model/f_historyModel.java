@@ -1,16 +1,19 @@
 package Model;
 
+import java.sql.Timestamp;
 import java.sql.Date;
 
 public class f_historyModel {
     private String username;
     private String f_kind;
-    private java.sql.Date date;
+    private java.sql.Timestamp date;
+    private String relatedUser;
+    private String quarantine;
 
     public f_historyModel() {
     }
 
-    public f_historyModel(String username, String f_kind, Date date) {
+    public f_historyModel(String username, String f_kind, Timestamp date) {
         this.username = username;
         this.f_kind = f_kind;
         this.date = date;
@@ -24,7 +27,7 @@ public class f_historyModel {
         return f_kind;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
@@ -36,7 +39,25 @@ public class f_historyModel {
         this.f_kind = f_kind;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
+
+    public String getRelatedUser() {
+        return relatedUser;
+    }
+
+    public void setRelatedUser(String relatedUser) {
+        this.relatedUser = relatedUser;
+    }
+
+    public String getQuarantine() {
+        return quarantine;
+    }
+
+    public void setQuarantine(String quarantine) {
+        this.quarantine = quarantine;
+    }
+
+
 }

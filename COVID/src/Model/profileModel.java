@@ -19,6 +19,7 @@ public class profileModel {
     private int id_qua;
     private String status;
     private int id_bank;
+    private String related_id;
 
     public int getId_bank() {
         return id_bank;
@@ -43,6 +44,15 @@ public class profileModel {
         id_qua=-1;
         status = null;
         id_bank=-1;
+        this.related_id=null;
+    }
+
+    public String getRelated_id() {
+        return related_id;
+    }
+
+    public void setRelated_id(String related_id) {
+        this.related_id = related_id;
     }
 
 
@@ -100,8 +110,6 @@ public class profileModel {
 
     public void setDob(Date dob) {
         this.dob = dob;
-        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd ");  
-        String strDate = dateFormat.format(dob);
     }
 
     public String getGender() {

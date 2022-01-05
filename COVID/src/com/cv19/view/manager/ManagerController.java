@@ -1,6 +1,7 @@
 
 package com.cv19.view.manager;
 
+import Controller.CovidDAO;
 import Model.profileModel;
 import com.cv19.view.body.AddForm;
 import com.cv19.view.body.HomeForm;
@@ -15,6 +16,10 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import utils.FUtil;
 
 /**
  *
@@ -24,44 +29,53 @@ public class ManagerController extends javax.swing.JFrame {
     private Point initialClick;
     private profileModel profile;
     
-    public ManagerController() {
-        initComponents();
-        profile = new profileModel();
-        setBackground(new Color(0,0,0,0));
-        menu.initFrame(this);
-        // add listen 
-        addMouseListener(new MouseAdapter() {
-        public void mousePressed(MouseEvent e) {
-            initialClick = e.getPoint();
-            getComponentAt(initialClick);
+    public ManagerController(String id) {
+        try {
+            initComponents();
+            profile = new CovidDAO().getProfileUser(id);
+            setBackground(new Color(0,0,0,0));
+            menu.initFrame(this);
+            
+            //build graph
+            
+            FUtil.buildGraph();
+            
+            //add name user to menu
+            
+            menu.setName(profile.getFullname());
+            
+            // add listen
+            addMouseListener(new MouseAdapter() {
+                public void mousePressed(MouseEvent e) {
+                    initialClick = e.getPoint();
+                    getComponentAt(initialClick);
+                }
+            });
+            addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    
+                    // get location of Window
+                    int thisX = getLocation().x;
+                    int thisY = getLocation().y;
+                    
+                    // Determine how much the mouse moved since the initial click
+                    int xMoved = e.getX() - initialClick.x;
+                    int yMoved = e.getY() - initialClick.y;
+                    
+                    // Move window to this position
+                    int X = thisX + xMoved;
+                    int Y = thisY + yMoved;
+                    setLocation(X, Y);
+                }
+            });
+            
+            // show form
+            showForm(new HomeForm());
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ManagerController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    });
-        addMouseMotionListener(new MouseMotionAdapter() {
-        @Override
-        public void mouseDragged(MouseEvent e) {
-
-            // get location of Window
-            int thisX = getLocation().x;
-            int thisY = getLocation().y;
-
-            // Determine how much the mouse moved since the initial click
-            int xMoved = e.getX() - initialClick.x;
-            int yMoved = e.getY() - initialClick.y;
-
-            // Move window to this position
-            int X = thisX + xMoved;
-            int Y = thisY + yMoved;
-            setLocation(X, Y);
-        }
-    });
-        
-        // show form
-        showForm(new HomeForm());
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ManagerController.this.setVisible(true);
-            }
-        });
     }
 
     @SuppressWarnings("unchecked")
@@ -141,7 +155,7 @@ public class ManagerController extends javax.swing.JFrame {
                     showForm(new OutBalanceForm());
                 }
                 if(index ==5){
-                    showForm(new MyProfileForm());
+                    showForm(new MyProfileForm(profile));
                 }
                 if(index == 6){
                     ManagerController.this.dispose();
@@ -158,7 +172,7 @@ public class ManagerController extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ManagerController().setVisible(true);
+                new ManagerController("1").setVisible(true);
             }
         });
     }

@@ -54,6 +54,7 @@ public class NecessityForm extends javax.swing.JPanel {
     private int minPrice = 0;
     private int maxPrice = 0;
     private int step = 0;
+    int previousClick;
 
     public NecessityForm() {
         lst = new ArrayList<>();
@@ -91,6 +92,8 @@ public class NecessityForm extends javax.swing.JPanel {
     void btnEditEvent() {
         int id = 0;
         int row = table.getSelectedRow();
+        if(row ==-1) row=previousClick;
+        else previousClick=row;
         id = (int) table.getValueAt(row, 0);
         JOptionPane.showMessageDialog(null, new NecessityEditPanel(id), Integer.toString(id), JOptionPane.UNDEFINED_CONDITION);
         btnFindActionPerformed(null);
@@ -157,66 +160,28 @@ public class NecessityForm extends javax.swing.JPanel {
         panelTop.setBorder(javax.swing.BorderFactory.createTitledBorder("Thêm"));
         panelTop.setMinimumSize(new java.awt.Dimension(390, 500));
         panelTop.setPreferredSize(new java.awt.Dimension(1001, 200));
-        java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 20, 5);
-        flowLayout1.setAlignOnBaseline(true);
-        panelTop.setLayout(flowLayout1);
+        panelTop.setLayout(null);
 
-        panelInput.setLayout(new java.awt.GridBagLayout());
+        panelInput.setPreferredSize(new java.awt.Dimension(333, 200));
 
         lbPackIn.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbPackIn.setText("Tên gói :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        panelInput.add(lbPackIn, gridBagConstraints);
 
         txtPackAdd.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 10, 4, 10));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.ipadx = 80;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 0);
-        panelInput.add(txtPackAdd, gridBagConstraints);
+        txtPackAdd.setMaximumSize(new java.awt.Dimension(0, 0));
 
         lbLimitIn.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbLimitIn.setText("Mức giới hạn :");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        panelInput.add(lbLimitIn, gridBagConstraints);
 
         txtLimitIn.setPreferredSize(new java.awt.Dimension(30, 25));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.ipadx = 80;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 0);
-        panelInput.add(txtLimitIn, gridBagConstraints);
+        txtLimitIn.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                txtLimitInStateChanged(evt);
+            }
+        });
 
         lbTimeIn.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbTimeIn.setText("Thời gian giới hạn theo");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        panelInput.add(lbTimeIn, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.ipadx = 80;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 0);
-        panelInput.add(comboTime, gridBagConstraints);
 
         btnAdd.setText("Thêm");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
@@ -224,32 +189,12 @@ public class NecessityForm extends javax.swing.JPanel {
                 btnAddActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelInput.add(btnAdd, gridBagConstraints);
 
         lbPrice.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbPrice.setText("Giá tiền:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        panelInput.add(lbPrice, gridBagConstraints);
 
         txtPrice.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 10, 4, 10));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.ipadx = 80;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 0);
-        panelInput.add(txtPrice, gridBagConstraints);
+        txtPrice.setMaximumSize(new java.awt.Dimension(0, 0));
 
         btnReset.setText("Làm mới");
         btnReset.addActionListener(new java.awt.event.ActionListener() {
@@ -257,14 +202,67 @@ public class NecessityForm extends javax.swing.JPanel {
                 btnResetActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        panelInput.add(btnReset, gridBagConstraints);
+
+        javax.swing.GroupLayout panelInputLayout = new javax.swing.GroupLayout(panelInput);
+        panelInput.setLayout(panelInputLayout);
+        panelInputLayout.setHorizontalGroup(
+            panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelInputLayout.createSequentialGroup()
+                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelInputLayout.createSequentialGroup()
+                        .addComponent(lbPackIn, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(txtPackAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelInputLayout.createSequentialGroup()
+                        .addComponent(lbPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(txtPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelInputLayout.createSequentialGroup()
+                        .addComponent(lbLimitIn, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(txtLimitIn, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
+                    .addGroup(panelInputLayout.createSequentialGroup()
+                        .addComponent(lbTimeIn)
+                        .addGap(5, 5, 5)
+                        .addComponent(comboTime, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnReset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        panelInputLayout.setVerticalGroup(
+            panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelInputLayout.createSequentialGroup()
+                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelInputLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(lbPackIn))
+                    .addComponent(txtPackAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelInputLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(lbPrice))
+                    .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelInputLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(lbLimitIn))
+                    .addComponent(txtLimitIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelInputLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(lbTimeIn))
+                    .addComponent(comboTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addComponent(btnAdd)
+                .addGap(0, 0, 0)
+                .addComponent(btnReset))
+        );
 
         panelTop.add(panelInput);
+        panelInput.setBounds(26, 21, 333, 200);
 
         taNotify.setEditable(false);
         taNotify.setColumns(50);
@@ -272,6 +270,7 @@ public class NecessityForm extends javax.swing.JPanel {
         taNotify.setRows(10);
         taNotify.setText(">>>Thông tin");
         panelTop.add(taNotify);
+        taNotify.setBounds(379, 37, 404, 160);
 
         add(panelTop);
 
@@ -312,7 +311,7 @@ public class NecessityForm extends javax.swing.JPanel {
         });
         panelFind.add(comboFilter);
 
-        btnFind.setText("Truy suất");
+        btnFind.setText("Tìm");
         btnFind.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFindActionPerformed(evt);
@@ -404,10 +403,12 @@ public class NecessityForm extends javax.swing.JPanel {
             }
 
             new CovidDAO().addNecessity(model);
+            
             taNotify.setText(">>>Thông báo\n" + "Tên gói: " + model.getName() + "\n" + "Giá: " + model.getPrice()
                     + "\n Mức giới hạn: " + model.getLimit() + " sản phẩm/"
-                    + comboTime.getSelectedObjects().toString() + "\n đã được thêm");
+                    + comboTime.getSelectedItem().toString() + "\n đã được thêm");
         } catch (SQLException ex) {
+            taNotify.setText(">>>Thông báo\n Có lỗi xảy ra, thêm không thành công");
             Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAddActionPerformed
@@ -438,6 +439,12 @@ public class NecessityForm extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_comboFilterItemStateChanged
+
+    private void txtLimitInStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_txtLimitInStateChanged
+       if((int)txtLimitIn.getValue()<=0){
+           txtLimitIn.setValue(0);
+       }
+    }//GEN-LAST:event_txtLimitInStateChanged
 
     void sortLst() throws ParseException {
         if(lst==null) return;

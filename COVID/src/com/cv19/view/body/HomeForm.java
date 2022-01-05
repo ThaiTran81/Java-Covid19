@@ -81,7 +81,7 @@ public class HomeForm extends javax.swing.JPanel {
 
             statusHealth.setIcon("healthy");
             statusHealth.setLbTitle("KHỎI BỆNH");
-            statusHealth.setLbNum("" + new CovidDAO().getNumByF("Good"));
+            statusHealth.setLbNum("" + new CovidDAO().getNumByF("OK"));
             statusHealth.setColor(new Color(159, 219, 8));
 
             statusDeath.setIcon("emergency");
@@ -105,7 +105,7 @@ public class HomeForm extends javax.swing.JPanel {
         } catch (SQLException ex) {
             Logger.getLogger(HomeForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch(java.lang.NullPointerException ex){
-            JOptionPane.showMessageDialog(null, "Không tìm thấy", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Không tìm thấy"+ex, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
         
     }

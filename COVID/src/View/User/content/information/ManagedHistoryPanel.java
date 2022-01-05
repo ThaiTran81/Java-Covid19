@@ -58,7 +58,7 @@ public class ManagedHistoryPanel extends JPanel {
             while (rs.next()) {
                 String id = rs.getString(1);
                 String f_kind = rs.getString(2);
-                java.sql.Date date = rs.getDate(3);
+                java.sql.Timestamp date = rs.getTimestamp(3);
                 lst.add(new f_historyModel(id, f_kind, date));
             }
         } catch (SQLException ex) {

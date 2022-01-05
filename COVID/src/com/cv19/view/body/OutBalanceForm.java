@@ -154,6 +154,7 @@ public class OutBalanceForm extends javax.swing.JPanel {
     void sort() {
         try {
             int choice = comboSort.getSelectedIndex();
+            if(lst == null || lst.size()==0) return;
             if (choice == 0) {
 
                 lst.sort(new OutBalanceSorter(true, true));

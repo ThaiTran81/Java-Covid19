@@ -8,6 +8,7 @@ import com.cv19.view.event.EventLoginCallBack;
 import com.cv19.view.manager.ManagerController;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,10 +37,10 @@ public class LoginController {
 
         try {
             ResultSet rs = new CovidDAO().authAccount(username, password);
-//            System.out.println("hahah");
+
             if (rs.next()) {
                 user.setUsername(rs.getString("USERNAME"));
-                user.setPassword(rs.getString("PASSWORD"));
+                user.setPassword(new String(rs.getBytes("PASSWORD")));
                 user.setType(rs.getInt("TYPE"));
                 System.out.println(user.getType());
                 if (user.getType() == 0) {
@@ -48,13 +49,14 @@ public class LoginController {
                 }
                 if (user.getType() == 1) {
                     loginView.dispose();
-                    new ManagerController();
+                    new ManagerController(user.getUsername()).setVisible(true);
                 }
                 if (user.getType() == 2) {
                     loginView.dispose();
                     new MainFrame(user.getUsername());
                 }
             }
+            else JOptionPane.showMessageDialog(null,"username hoặc mật khẩu không đúng","Thông báo", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLServerException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

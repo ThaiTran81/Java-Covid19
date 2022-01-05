@@ -7,15 +7,20 @@ import Model.profileModel;
 import com.cv19.view.components.AddressCombobox;
 import com.cv19.view.event.EventFindCallBack;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import java.awt.Color;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.ParseException;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import utils.Validator;
 
 /**
  *
@@ -24,8 +29,8 @@ import javax.swing.JOptionPane;
 public class AddForm extends javax.swing.JPanel {
 
     String dates[]
-            = {"1", "2", "3", "4", "5",
-                "6", "7", "8", "9", "10",
+            = {"01", "02", "03", "04", "05",
+                "06", "07", "08", "09", "10",
                 "11", "12", "13", "14", "15",
                 "16", "17", "18", "19", "20",
                 "21", "22", "23", "24", "25",
@@ -33,8 +38,8 @@ public class AddForm extends javax.swing.JPanel {
                 "31"};
 
     String months[]
-            = {"1", "2", "3", "4", "5",
-                "6", "7", "8", "9", "10",
+            = {"01", "02", "03", "04", "05",
+                "06", "07", "08", "09", "10",
                 "11", "12"};
     String years[]
             = {"1987", "1988", "1989", "1990",
@@ -49,6 +54,8 @@ public class AddForm extends javax.swing.JPanel {
     String status[] = {"F0", "F1", "F2", "F3", "F4+", "Khỏi bệnh"};
     AddressCombobox comboAddr;
     ArrayList<QuarantineModel> lstQua;
+    boolean idValid = false;
+    boolean phoneValid = true;
 
     public AddForm() {
         initComponents();
@@ -67,12 +74,67 @@ public class AddForm extends javax.swing.JPanel {
         for (int i = 0; i < lstQua.size(); i++) {
             comboQua.addItem(lstQua.get(i));
         }
+
+        addValidate();
+
     }
 
+    void addValidate() {
+        txtID.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                idValid = Validator.IDValidate(txtID.getText());
+                if (idValid) {
+                    lbIdErr.setForeground(AddForm.this.getBackground());
+                } else {
+                    lbIdErr.setForeground(Color.red);
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                idValid = Validator.IDValidate(txtID.getText());
+                if (idValid) {
+                    lbIdErr.setForeground(AddForm.this.getBackground());
+                } else {
+                    lbIdErr.setForeground(Color.red);
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
+
+        txtPhone.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                phoneValid = Validator.phoneValidate(txtPhone.getText());
+                if (phoneValid) {
+                    lbPhoneErr.setForeground(AddForm.this.getBackground());
+                } else {
+                    lbPhoneErr.setForeground(Color.red);
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                phoneValid = Validator.phoneValidate(txtPhone.getText());
+                if (phoneValid) {
+                    lbPhoneErr.setForeground(AddForm.this.getBackground());
+                } else {
+                    lbPhoneErr.setForeground(Color.red);
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
+    }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         container = new javax.swing.JPanel();
         lbName = new javax.swing.JLabel();
@@ -101,8 +163,11 @@ public class AddForm extends javax.swing.JPanel {
         comboGender = new javax.swing.JComboBox<>();
         lbPhone = new javax.swing.JLabel();
         txtPhone = new javax.swing.JTextField();
+        lbPhoneErr = new javax.swing.JLabel();
+        lbIdErr = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
-        setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));
 
         container.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -155,6 +220,11 @@ public class AddForm extends javax.swing.JPanel {
         });
 
         btnReset.setText("Làm mới");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
         btnChooseSrc.setText("Chọn");
         btnChooseSrc.addActionListener(new java.awt.event.ActionListener() {
@@ -176,11 +246,6 @@ public class AddForm extends javax.swing.JPanel {
         comboQua.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         comboYear.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        comboYear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboYearActionPerformed(evt);
-            }
-        });
 
         comboDay.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
@@ -203,78 +268,96 @@ public class AddForm extends javax.swing.JPanel {
         txtPhone.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
         txtPhone.setMargin(new java.awt.Insets(5, 10, 5, 10));
 
+        lbPhoneErr.setForeground(new java.awt.Color(240, 240, 240));
+        lbPhoneErr.setText("Số điện thoại không hợp lệ");
+
+        lbIdErr.setForeground(new java.awt.Color(240, 240, 240));
+        lbIdErr.setText("Không hợp lệ");
+
+        jLabel3.setForeground(new java.awt.Color(240, 240, 240));
+        jLabel3.setText("Tên không hợp lệ");
+
         javax.swing.GroupLayout containerLayout = new javax.swing.GroupLayout(container);
         container.setLayout(containerLayout);
         containerLayout.setHorizontalGroup(
             containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(containerLayout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addComponent(lbName, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(4, 4, 4)
-                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(104, 104, 104)
-                .addComponent(lbID)
-                .addGap(28, 28, 28)
-                .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(containerLayout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addComponent(lbPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(4, 4, 4)
-                .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(containerLayout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addComponent(lbTreat, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(4, 4, 4)
-                .addComponent(comboQua, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(containerLayout.createSequentialGroup()
-                .addGap(183, 183, 183)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(containerLayout.createSequentialGroup()
-                .addGap(1, 1, 1)
+                .addContainerGap()
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(containerLayout.createSequentialGroup()
-                        .addComponent(lbAddr, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbTreat, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(comboQua, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(containerLayout.createSequentialGroup()
+                        .addGap(182, 182, 182)
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(containerLayout.createSequentialGroup()
+                        .addComponent(lbPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(4, 4, 4)
-                        .addComponent(comboCity, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(comboDist, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(containerLayout.createSequentialGroup()
-                        .addComponent(lbDOB, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(containerLayout.createSequentialGroup()
+                                .addComponent(lbAddr, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(4, 4, 4)
+                                .addComponent(comboCity, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
+                                .addComponent(comboDist, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(containerLayout.createSequentialGroup()
+                                .addComponent(lbDOB, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(4, 4, 4)
+                                .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(comboDay, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(6, 6, 6)
+                        .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(containerLayout.createSequentialGroup()
+                                .addComponent(lbGender)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(comboGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(comboVill, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(containerLayout.createSequentialGroup()
+                        .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(containerLayout.createSequentialGroup()
+                                .addComponent(lbSrc)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtSrc, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(containerLayout.createSequentialGroup()
+                                .addComponent(lbSta, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtSta, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(36, 36, 36)
+                        .addComponent(btnChooseSrc)
+                        .addGap(6, 6, 6)
+                        .addComponent(btnDelSrc, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(containerLayout.createSequentialGroup()
+                        .addComponent(lbName, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(4, 4, 4)
-                        .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comboDay, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(6, 6, 6)
-                .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(containerLayout.createSequentialGroup()
-                        .addComponent(lbGender)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comboGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(comboVill, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGroup(containerLayout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(containerLayout.createSequentialGroup()
-                        .addComponent(lbSrc)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSrc, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(containerLayout.createSequentialGroup()
-                        .addComponent(lbSta, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(4, 4, 4)
-                        .addComponent(txtSta, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(36, 36, 36)
-                .addComponent(btnChooseSrc)
-                .addGap(6, 6, 6)
-                .addComponent(btnDelSrc, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(containerLayout.createSequentialGroup()
+                                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(104, 104, 104)
+                                .addComponent(lbID))
+                            .addComponent(lbPhoneErr)
+                            .addComponent(jLabel3))
+                        .addGap(28, 28, 28)
+                        .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbIdErr)
+                            .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         containerLayout.setVerticalGroup(
             containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(containerLayout.createSequentialGroup()
-                .addGap(2, 2, 2)
+                .addGap(0, 0, 0)
+                .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbIdErr, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -283,7 +366,9 @@ public class AddForm extends javax.swing.JPanel {
                         .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbName)
                             .addComponent(lbID))))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbPhoneErr)
+                .addGap(2, 2, 2)
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(containerLayout.createSequentialGroup()
                         .addGap(4, 4, 4)
@@ -312,11 +397,9 @@ public class AddForm extends javax.swing.JPanel {
                     .addComponent(comboDist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboVill, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(containerLayout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(lbSta))
-                    .addComponent(txtSta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtSta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbSta))
                 .addGap(18, 18, 18)
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtSrc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -327,15 +410,14 @@ public class AddForm extends javax.swing.JPanel {
                             .addComponent(btnChooseSrc)
                             .addComponent(btnDelSrc))))
                 .addGap(18, 18, 18)
-                .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(containerLayout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(lbTreat))
+                .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbTreat)
                     .addComponent(comboQua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAdd)
-                    .addComponent(btnReset)))
+                    .addComponent(btnReset))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(container);
@@ -343,63 +425,67 @@ public class AddForm extends javax.swing.JPanel {
 
     private void btnChooseSrcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseSrcActionPerformed
         EventFindCallBack callback;
-        new FindDialog(new EventFindCallBack(){
+        new FindDialog(new EventFindCallBack() {
             @Override
             public void setRelatedAddForm(String id, String status) {
                 AddForm.this.txtSrc.setText(id);
-                if(status.equals("Good")){
+
+                if (status.equalsIgnoreCase("Good")) {
                     AddForm.this.txtSta.setText("Good");
-                }
-                if(status.equals("F0")){
+                } else if (status.equalsIgnoreCase("F0")) {
                     AddForm.this.txtSta.setText("F1");
-                }
-                if(status.equals("F1")){
+                } else if (status.equalsIgnoreCase("F1")) {
                     AddForm.this.txtSta.setText("F2");
-                }
-                if(status.equals("F2")){
+                } else if (status.equalsIgnoreCase("F2")) {
                     AddForm.this.txtSta.setText("F3");
-                }
-                else{
+                } else {
                     AddForm.this.txtSta.setText("F3+");
                 }
             }
-            
+
         });
     }//GEN-LAST:event_btnChooseSrcActionPerformed
 
-    private void comboYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboYearActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_comboYearActionPerformed
-
-    boolean validation(){
-        if(txtName.getText().isBlank() || txtID.getText().isBlank()
-                || txtPhone.getText().isBlank()|| comboCity.getSelectedIndex()==0
-                || comboDist.getSelectedIndex()==0|| comboVill.getSelectedIndex()==0){
+    boolean checkValid() {
+        if (txtName.getText().isBlank() || txtID.getText().isBlank()
+                || txtPhone.getText().isBlank() || comboCity.getSelectedIndex() == 0
+                || comboDist.getSelectedIndex() == 0 || comboVill.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ các trường", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             return false;
-    }
+        } else if (!idValid) {
+            JOptionPane.showMessageDialog(null, "cmnd/cccd không hợp lệ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        } else if (!phoneValid) {
+            JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
         return true;
     }
-    
+
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         try {
             // TODO add your handling code here:
-            if(!validation()){
-                JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ các trường", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            if (!checkValid()) {
                 return;
             }
+            // get input data name
             profileModel user = new profileModel();
             user.setFullname(txtName.getText());
             user.setUsername(txtID.getText());
             String dob = comboYear.getSelectedItem() + "-" + comboMonth.getSelectedItem() + "-" + comboDay.getSelectedItem();
-
+            //dob
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
             Date parsed = format.parse(dob);
+
             java.sql.Date sql = new java.sql.Date(parsed.getTime());
             user.setDob(sql);
+
+            user.setPassword(dob.replace("-", ""));
+            //gender, phone
             user.setGender((String) comboGender.getSelectedItem());
-
             user.setPhone(txtPhone.getText());
-
+            //address
             AddressModel addr = (AddressModel) comboCity.getSelectedItem();
             user.setProvince(addr.getName());
 
@@ -407,21 +493,36 @@ public class AddForm extends javax.swing.JPanel {
             user.setDistrict(addr.getName());
 
             addr = (AddressModel) comboVill.getSelectedItem();
-
             user.setVillage(addr.getName());
 
             user.setStatus(txtSta.getText());
+
             QuarantineModel quaratine = (QuarantineModel) comboQua.getSelectedItem();
             user.setId_qua(quaratine.getId());
-
-            new CovidDAO().addAccount(user);
+            if (!txtSrc.getText().isBlank()) {
+                user.setRelated_id(txtSrc.getText());
+            }
+            if (new CovidDAO().getProfileUser(user.getUsername()) != null) {
+                notify("Người dùng đã tồn tại");
+                return;
+            }
+            if (new CovidDAO().addAccount(user)>0) {
+                notify("Thêm thành công");
+                btnResetActionPerformed(null);
+            };
         } catch (SQLServerException ex) {
+            notify("Thêm thất bại, có lỗi xảy ra");
             Logger.getLogger(AddForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
+            notify("Thêm thất bại, có lỗi xảy ra");
+
             Logger.getLogger(AddForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
+            notify("Thêm thất bại, có lỗi xảy ra");
+
             Logger.getLogger(AddForm.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnDelSrcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelSrcActionPerformed
@@ -430,6 +531,20 @@ public class AddForm extends javax.swing.JPanel {
         txtSta.setText("F0");
     }//GEN-LAST:event_btnDelSrcActionPerformed
 
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        txtID.setText("");
+        txtName.setText("");
+        txtPhone.setText("");
+        txtSrc.setText("");
+        txtSta.setText("F0");
+        lbIdErr.setForeground(this.getBackground());
+        lbPhoneErr.setForeground(this.getBackground());
+        comboAddr = new AddressCombobox(comboCity, comboDist, comboVill);
+    }//GEN-LAST:event_btnResetActionPerformed
+
+    void notify(String msg) {
+        JOptionPane.showMessageDialog(null, msg, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
@@ -445,12 +560,15 @@ public class AddForm extends javax.swing.JPanel {
     private javax.swing.JComboBox<AddressModel> comboVill;
     private javax.swing.JComboBox<String> comboYear;
     private javax.swing.JPanel container;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel lbAddr;
     private javax.swing.JLabel lbDOB;
     private javax.swing.JLabel lbGender;
     private javax.swing.JLabel lbID;
+    private javax.swing.JLabel lbIdErr;
     private javax.swing.JLabel lbName;
     private javax.swing.JLabel lbPhone;
+    private javax.swing.JLabel lbPhoneErr;
     private javax.swing.JLabel lbSrc;
     private javax.swing.JLabel lbSta;
     private javax.swing.JLabel lbTreat;

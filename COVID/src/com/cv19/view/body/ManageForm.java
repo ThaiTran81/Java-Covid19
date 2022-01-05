@@ -49,14 +49,16 @@ public class ManageForm extends javax.swing.JPanel {
                 "2015", "2016", "2017", "2018",
                 "2019", "2020", "2021", "2022"};
 
-    String status[] = {"-Chọn trạng thái-", "F0", "F1", "F2", "F3", "F4+", "Good"};
+    String status[] = {"-Chọn trạng thái-", "F0", "F1", "F2", "F3", "F4+", "OK"};
     String sort[] = {"Sắp xếp theo tên tăng dần", "Sắp xếp theo tên giảm dần"};
     ArrayList<QuarantineModel> lstQua;
     ArrayList<CurrentStateModel> arrRs = null;
 
     private JButton button = new JButton();
+    int previousClick;// fix index -1 from jtable
 
     public ManageForm() {
+        button.setFocusable(false);
         initComponents();
         comboYear.setModel(new DefaultComboBoxModel(years));
         comboStatus.setModel(new DefaultComboBoxModel(status));
@@ -97,9 +99,10 @@ public class ManageForm extends javax.swing.JPanel {
     }
 
     void btnViewDetailEvent() {
-        table.getSelectedRow();
-        String selectedID = (String) table.getValueAt(table.getSelectedRow(), 1);
-
+        int selectedRow = table.getSelectedRow();
+        if(selectedRow ==-1) selectedRow=previousClick;
+        else previousClick = selectedRow;
+        String selectedID = (String) table.getValueAt(selectedRow, 1);
         new ViewDetailDialog(selectedID).setVisible(true);
 
     }
