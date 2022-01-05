@@ -105,7 +105,7 @@ public class HomeForm extends javax.swing.JPanel {
         } catch (SQLException ex) {
             Logger.getLogger(HomeForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch(java.lang.NullPointerException ex){
-            JOptionPane.showMessageDialog(null, "Không tìm thấy"+ex, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Không tìm thấy", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
         
     }
@@ -291,7 +291,6 @@ public class HomeForm extends javax.swing.JPanel {
         String day = (String) comboDay.getSelectedItem();
         String month = (String) comboMonth.getSelectedItem();
         String year = (String) comboYear.getSelectedItem();
-        System.out.println(day + month + year + "");
         int count = 0;
         if (day.equalsIgnoreCase("ngày")) {
             count++;

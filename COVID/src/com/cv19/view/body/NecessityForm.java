@@ -5,6 +5,7 @@
 package com.cv19.view.body;
 
 import Controller.CovidDAO;
+import Controller.HistoryDAO;
 import Model.NecessityModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.Component;
@@ -407,6 +408,7 @@ public class NecessityForm extends javax.swing.JPanel {
             taNotify.setText(">>>Thông báo\n" + "Tên gói: " + model.getName() + "\n" + "Giá: " + model.getPrice()
                     + "\n Mức giới hạn: " + model.getLimit() + " sản phẩm/"
                     + comboTime.getSelectedItem().toString() + "\n đã được thêm");
+            HistoryDAO.AddHistory("Đã thêm gói nhu yếu phẩm mới: "+ model.getName());
         } catch (SQLException ex) {
             taNotify.setText(">>>Thông báo\n Có lỗi xảy ra, thêm không thành công");
             Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);

@@ -337,7 +337,7 @@ public class ManageForm extends javax.swing.JPanel {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         try {
-            // TODO add your handling code here:
+
             String name = txtName.getText();
             String id = txtID.getText();
             String year = (String) comboYear.getSelectedItem();
@@ -364,18 +364,18 @@ public class ManageForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
-        // TODO add your handling code here:
+
         reset();
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void comboSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboSortActionPerformed
-        // TODO add your handling code here:
+
         //delete
     }//GEN-LAST:event_comboSortActionPerformed
 
     private void comboSortItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboSortItemStateChanged
         try {
-            // TODO add your handling code here:
+
             if (arrRs == null) {
                 return;
             }

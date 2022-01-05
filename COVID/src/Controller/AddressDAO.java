@@ -64,11 +64,11 @@ public class AddressDAO {
         return lst;
     }
     
-    public ArrayList<AddressModel> getVillage(int district) throws SQLServerException, SQLException {
+    public ArrayList<AddressModel> getVillage(int district, int province) throws SQLServerException, SQLException {
 
         ArrayList<AddressModel> lst = new ArrayList<AddressModel>();
 
-        String sql = "SELECT ID_VILLAGE, NAME FROM VILLAGE WHERE ID_DISTRICT= "+district;
+        String sql = "SELECT ID_VILLAGE, NAME FROM VILLAGE WHERE ID_DISTRICT= "+district+ " AND ID_PROVINCE="+province;
         Statement stmt = null;
         Connection conn = new CovidDAO().getConnection();
         stmt = conn.createStatement();

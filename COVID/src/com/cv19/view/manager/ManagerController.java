@@ -2,6 +2,8 @@
 package com.cv19.view.manager;
 
 import Controller.CovidDAO;
+import Controller.HistoryDAO;
+import Controller.LoginController;
 import Model.profileModel;
 import com.cv19.view.body.AddForm;
 import com.cv19.view.body.HomeForm;
@@ -43,7 +45,7 @@ public class ManagerController extends javax.swing.JFrame {
             //add name user to menu
             
             menu.setName(profile.getFullname());
-            
+            HistoryDAO.setID(profile.getUsername());
             // add listen
             addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
@@ -133,12 +135,11 @@ public class ManagerController extends javax.swing.JFrame {
     }
     
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        // TODO add your handling code here:
+
         menu.setSelectedIndex(0);
         menu.addEvent(new EventMenu(){
             @Override
             public void menuIndexChange(int index) {
-                System.out.println(index);
                 if(index == 0){
                     showForm(new HomeForm());
                 }
@@ -158,6 +159,7 @@ public class ManagerController extends javax.swing.JFrame {
                     showForm(new MyProfileForm(profile));
                 }
                 if(index == 6){
+                    new LoginController();
                     ManagerController.this.dispose();
                 }
             }

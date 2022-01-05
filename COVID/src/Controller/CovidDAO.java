@@ -252,7 +252,7 @@ public class CovidDAO {
     public TreeMap<String, FModel> getNumFDate(String date) throws SQLException {
         String where = "";
         if (date != null) {
-            where = "WHERE TRY_CONVERT(DATE,fh.F_DATE) = '" + date + "'\n";
+            where = "WHERE TRY_CONVERT(DATE,fh1.F_DATE) = '" + date + "'\n";
         }
         String sql = "SELECT TRY_CONVERT(DATE,fh.F_DATE)'time', F_KIND 'status', COUNT(*) 'quantity'\n"
                 + "FROM dbo.F_HISTORY fh INNER JOIN (SELECT\n"
@@ -447,7 +447,7 @@ public class CovidDAO {
         stmt.setInt(3, item.getPrice());
         stmt.setInt(4, item.getTime_limit());
 
-        stmt.executeUpdate();
+        System.out.println(stmt.executeUpdate());
     }
 
     public ArrayList<NecessityModel> getNecessityByName(String name) throws SQLException {
@@ -644,9 +644,23 @@ public class CovidDAO {
 
     public int updateNewPassword(String id, String password) throws SQLException {
         String sql = "UPDATE ACCOUNT \n"
-                + "set PASSWORD = '" + password + "' "
-                + "WHERE USERNAME =" + id;
+                + "set PASSWORD = ? "
+                + "WHERE USERNAME = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setBytes(1,password.getBytes());
+        stmt.setString(2,id);
+        return stmt.executeUpdate();
+    }
+    public String getPass(String id) throws SQLException {
+        String sql="SELECT a.PASSWORD\n" +
+                "FROM ACCOUNT a\n" +
+                "WHERE a.USERNAME = '"+id+"'";
         Statement stmt = conn.createStatement();
-        return stmt.executeUpdate(sql);
+        ResultSet rs = stmt.executeQuery(sql);
+        String pass = null;
+        if(rs.next()){
+            pass = new String(rs.getBytes(1));
+        }
+        return pass;
     }
 }

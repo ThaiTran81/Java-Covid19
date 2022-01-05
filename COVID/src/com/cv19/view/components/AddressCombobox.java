@@ -82,7 +82,7 @@ public class AddressCombobox implements ItemListener {
         }
     }
     
-    void eventDistrict() {
+    void eventDistrict(int city) {
         try {
             AddressModel dist_model = (AddressModel) comboDistrict.getSelectedItem();
             if (dist_model == null || dist_model.getId() == -1) {
@@ -90,7 +90,7 @@ public class AddressCombobox implements ItemListener {
                 comboVillage.addItem(itemsVill);
                 return;
             }
-            lstVill = new AddressDAO().getVillage(dist_model.getId());
+            lstVill = new AddressDAO().getVillage(dist_model.getId(), city);
             if (lstVill == null) {
                 return;
             }
@@ -110,7 +110,9 @@ public class AddressCombobox implements ItemListener {
             eventCity();
         }
         if (e.getSource() == comboDistrict) {
-            eventDistrict();
+            AddressModel city = (AddressModel) comboCity.getSelectedItem();
+            if(city.getId()==-1) return;
+            eventDistrict(city.getId());
         }
     }
     

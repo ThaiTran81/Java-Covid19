@@ -39,7 +39,7 @@ public class MyProfileForm extends javax.swing.JPanel {
             return "Quản lý";
         }
 
-        return "Người được quản lý";
+        return "Quản lý";
 
     }
 
@@ -276,7 +276,13 @@ public class MyProfileForm extends javax.swing.JPanel {
         String curPass=new String(txtCurPass.getPassword());
         String newPass1 = new String(txtNewPass.getPassword());
         String newPass2 = new String(txtNewPass2.getPassword());
-        if(!curPass.equals(user.getPassword())){
+        String oldpass=null;
+        try {
+            oldpass = new CovidDAO().getPass(user.getUsername());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(!curPass.equals(oldpass)){
             notify("Mật khẩu hiện tại không hợp lệ");
             return;
         }
@@ -288,17 +294,17 @@ public class MyProfileForm extends javax.swing.JPanel {
         if(newPass1.equals(newPass2)){
             try {
                 new CovidDAO().updateNewPassword(user.getUsername(), newPass1);
+                notify("Thay đổi mật khẩu thành công");
+                btnCancelActionPerformed(null);
                 return;
             } catch (SQLException ex) {
                 notify("Thay đổi mật khẩu không thành công");
                 Logger.getLogger(MyProfileForm.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            notify("Thay đổi mật khẩu thành công");
-            btnCancelActionPerformed(null);
+
         }
-        
-        notify("Xác nhận mật khẩu mới không khớp!!!!");
+        else notify("Xác nhận mật khẩu mới không khớp!!!!");
         
     }//GEN-LAST:event_btnChangeActionPerformed
 

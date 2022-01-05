@@ -1,6 +1,7 @@
 package com.cv19.view.body;
 
 import Controller.CovidDAO;
+import Controller.HistoryDAO;
 import Model.AddressModel;
 import Model.QuarantineModel;
 import Model.profileModel;
@@ -508,6 +509,7 @@ public class AddForm extends javax.swing.JPanel {
             }
             if (new CovidDAO().addAccount(user)>0) {
                 notify("Thêm thành công");
+                HistoryDAO.AddHistory("Đã thêm "+user.getUsername()+" vào danh sách");
                 btnResetActionPerformed(null);
             };
         } catch (SQLServerException ex) {

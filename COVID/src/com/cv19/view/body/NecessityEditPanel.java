@@ -5,6 +5,7 @@
 package com.cv19.view.body;
 
 import Controller.CovidDAO;
+import Controller.HistoryDAO;
 import Model.NecessityModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.Color;
@@ -247,6 +248,7 @@ public class NecessityEditPanel extends javax.swing.JPanel {
             Object params[] = {model.getName(), model.getLimit(), model.getPrice(), model.getTime_limit(), model.getId()};
             new CovidDAO().executeUpdate(sql, params);
             successNotify("Cập nhật thành công");
+            HistoryDAO.AddHistory("Đã cập nhật lại gói nhu yếu phẩm " + model.getName()+" ["+model.getId()+"]");
         } catch (SQLServerException ex) {
             failedNotify();
         } catch (SQLException ex) {
@@ -262,6 +264,7 @@ public class NecessityEditPanel extends javax.swing.JPanel {
             Object params[] = {model.getId()};
             new CovidDAO().executeUpdate(sql, params);
             successNotify("Xoá thành công");
+            HistoryDAO.AddHistory("Đã xoá gói nhu yếu phẩm: " +model.getName()+"["+model.getId()+"]");
         } catch (SQLServerException ex) {
             System.out.print(ex);
             failedNotify();
