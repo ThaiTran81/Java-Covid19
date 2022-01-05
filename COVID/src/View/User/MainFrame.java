@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -886,7 +887,7 @@ public class MainFrame extends JFrame implements ActionListener {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-            sql = "INSERT CONSUME VALUES (?, ?, ?)";
+            sql = "INSERT INTO CONSUME (ID_BILL, ID_NECESSITIES, QUANTITY) VALUES (?, ?, ?)";
             try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                 for (int i = 0; i < cart_model.getRowCount(); i++) {
                     pre.setInt(1, id_bill);
