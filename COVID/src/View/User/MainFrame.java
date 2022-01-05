@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -886,7 +887,7 @@ public class MainFrame extends JFrame implements ActionListener {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-            sql = "INSERT CONSUME VALUES (?, ?, ?)";
+            sql = "INSERT INTO CONSUME (ID_BILL, ID_NECESSITIES, QUANTITY) VALUES (?, ?, ?)";
             try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                 for (int i = 0; i < cart_model.getRowCount(); i++) {
                     pre.setInt(1, id_bill);
@@ -987,7 +988,7 @@ public class MainFrame extends JFrame implements ActionListener {
             }
         }
         if (e.getSource() == change_password_button) {
-            String old_p = "";
+            String a=null;
             String sql = "SELECT *\n" +
                     "FROM ACCOUNT\n" +
                     "WHERE USERNAME = ?";
@@ -996,16 +997,17 @@ public class MainFrame extends JFrame implements ActionListener {
                 ResultSet rs = pre.executeQuery();
 
                 if (rs.next()) {
-                    old_p = rs.getString(2);
+                    a= new String(rs.getBytes(2));
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-            if (Objects.equals(old_password_field.getText(), old_p)) {
-                if (Objects.equals(new_password_field.getText(), retype_new_password_field.getText())) {
+
+            if (old_password_field.getText().equals(a)) {
+                if (new_password_field.getText().equals(retype_new_password_field.getText())) {
                     sql = "UPDATE ACCOUNT SET PASSWORD = ? WHERE USERNAME = ?";
                     try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
-                        pre.setString(1, new_password_field.getText());
+                        pre.setBytes(1, new_password_field.getText().getBytes());
                         pre.setString(2, getId());
                         pre.execute();
                     } catch (SQLException ex) {

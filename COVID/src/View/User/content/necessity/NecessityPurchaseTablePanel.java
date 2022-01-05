@@ -172,7 +172,7 @@ public class NecessityPurchaseTablePanel extends JPanel {
     }
 
     public boolean checkDateConsume(java.sql.Date d, int time_limit) {
-        LocalDate today = LocalDate.now().minusDays(12);
+        LocalDate today = LocalDate.now().now();
         LocalDate consume_day = new java.sql.Date(d.getTime()).toLocalDate();
 
         if (time_limit == 1) {
