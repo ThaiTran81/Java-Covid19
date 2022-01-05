@@ -18,5 +18,14 @@
     </orderEntry>
     <orderEntry type="library" name="mssql-jdbc-9.4.0.jre16" level="project" />
     <orderEntry type="library" name="jgrapht-core-1.5.1" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Downloads/jgrapht-1.5.1/jgrapht-1.5.1/lib/jgrapht-core-1.5.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
