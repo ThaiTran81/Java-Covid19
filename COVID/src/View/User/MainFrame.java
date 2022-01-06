@@ -634,9 +634,9 @@ public class MainFrame extends JFrame implements ActionListener {
         payment_panel.revalidate();
     }
 
-    private JTextField old_password_field = new JTextField("");
-    private JTextField new_password_field = new JTextField("");
-    private JTextField retype_new_password_field = new JTextField("");
+    private JPasswordField old_password_field = new JPasswordField();
+    private JPasswordField new_password_field = new JPasswordField();
+    private JPasswordField retype_new_password_field = new JPasswordField();
     private JButton change_password_button = new JButton("Change");
 
     public void showAccountPanel() {
@@ -1003,11 +1003,11 @@ public class MainFrame extends JFrame implements ActionListener {
                 ex.printStackTrace();
             }
 
-            if (old_password_field.getText().equals(a)) {
-                if (new_password_field.getText().equals(retype_new_password_field.getText())) {
+            if (String.valueOf(old_password_field.getPassword()).equals(a)) {
+                if (String.valueOf(new_password_field.getPassword()).equals(String.valueOf(retype_new_password_field.getPassword()))) {
                     sql = "UPDATE ACCOUNT SET PASSWORD = ? WHERE USERNAME = ?";
                     try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
-                        pre.setBytes(1, new_password_field.getText().getBytes());
+                        pre.setBytes(1, String.valueOf(new_password_field.getPassword()).getBytes());
                         pre.setString(2, getId());
                         pre.execute();
                     } catch (SQLException ex) {
