@@ -237,7 +237,7 @@ class AddQuarantine extends JPanel implements ActionListener {
                 pre.setInt(2, id_pro);
                 pre.setInt(3, id_dic);
                 pre.setInt(4, Integer.parseInt(captx.getText()));
-                pre.setInt(5, 1);
+                pre.setInt(5, 0);
 
                 int i = pre.executeUpdate();
                 if (i > 0){
@@ -392,10 +392,10 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
             }
             quanamtx.setText(qua.getName());
             captx.setText(""+qua.getCapicity());
-            if (qua.getDeleted() == 0){
+            if (qua.getDeleted() == 1){
                 activatetx.setSelectedItem("Closed");
             }
-            else if (qua.getDeleted() == 1){
+            else if (qua.getDeleted() == 0){
                 activatetx.setSelectedItem("Open");
             }
             sql = "SELECT P.NAME, D.NAME" +
@@ -537,7 +537,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
         if (e.getSource() == sub) {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure to delete", "Just to make sure", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
-                String sql = "UPDATE QUARATINE SET IS_DELETED=0 WHERE ID_QUARATINE=?";
+                String sql = "UPDATE QUARATINE SET IS_DELETED=1 WHERE ID_QUARATINE=?";
                 try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                     pre.setInt(1, qua.getId());
 

@@ -1013,6 +1013,7 @@ public class MainFrame extends JFrame implements ActionListener {
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
+                    JOptionPane.showMessageDialog(null,"Thành công","Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         }

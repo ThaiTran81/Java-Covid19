@@ -153,11 +153,13 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         if (e.getSource() == CreateAccountBtn){
             container.remove(rq);
             container.remove(ra);
+            rm.revalidate();
             container.add(rm);
         }
         if (e.getSource() == ManageBtn){
             container.remove(rq);
             container.remove(rm);
+            ra.revalidate();
             container.add(ra);
         }
 
@@ -165,6 +167,7 @@ public class AdminMainFrame extends JFrame implements ActionListener {
             container.remove(rm);
             container.remove(ra);
             container.add(rq);
+            rq.revalidate();
         }
         if (e.getSource() == Logout){
             this.dispose();

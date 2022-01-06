@@ -161,15 +161,29 @@ public class ManageManager extends JPanel implements ActionListener {
         if (e.getSource() == delete) {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure to delete", "Just to make sure", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
-                String sql = "UPDATE ACCOUNT SET BLOCK=0 WHERE USERNAME=?";
+                String sql = "UPDATE ACCOUNT SET BLOCK=1 WHERE USERNAME=?";
                 try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                     pre.setString(1, (String) mtx.getSelectedItem());
 
                     pre.execute();
                     JOptionPane.showMessageDialog(null, "Success");
+
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+            }
+            String sql = "  SELECT C.*" +
+                    "  FROM PROFILE P JOIN ACCOUNT C ON C.USERNAME = P.ID" +
+                    "  WHERE C.TYPE = 1 AND (BLOCK IS NULL OR BLOCK <> 1)";
+            try (Connection conn = new CovidDAO().getConnection(); Statement stmt = conn.createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                mtx.removeAllItems();
+                while (rs.next()) {
+                    String name = rs.getString(1);
+                    mtx.addItem(name);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
     }
