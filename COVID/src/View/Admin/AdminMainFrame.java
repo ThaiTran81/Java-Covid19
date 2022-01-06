@@ -46,7 +46,7 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         CreateAccountBtn.setBounds(200, 150, 190, 20);
         CreateAccountBtn.setOpaque(false);
         CreateAccountBtn.setPreferredSize(new Dimension(240, 50));
-        CreateAccountBtn.setIcon(new ImageIcon("src/gear.png"));
+        CreateAccountBtn.setIcon(new ImageIcon("src/com/cv19/icon/gear.png"));
         CreateAccountBtn.setBorder(new EmptyBorder(0, 15, 0, 0));
         CreateAccountBtn.setFocusable(false);
         CreateAccountBtn.setForeground(Color.WHITE);
@@ -71,7 +71,7 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         ManageBtn.setBounds(200, 150, 190, 20);
         ManageBtn.setOpaque(false);
         ManageBtn.setPreferredSize(new Dimension(240, 50));
-        ManageBtn.setIcon(new ImageIcon("src/user.png"));
+        ManageBtn.setIcon(new ImageIcon("src/com/cv19/icon/user.png"));
         ManageBtn.setBorder(new EmptyBorder(0, 15, 0, 0));
         ManageBtn.setFocusable(false);
         ManageBtn.setForeground(Color.WHITE);
@@ -97,7 +97,7 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         QuarantineBtn.setBounds(200, 150, 190, 20);
         QuarantineBtn.setOpaque(false);
         QuarantineBtn.setPreferredSize(new Dimension(240, 50));
-        QuarantineBtn.setIcon(new ImageIcon("src/home.png"));
+        QuarantineBtn.setIcon(new ImageIcon("src/com/cv19/icon/home.png"));
         QuarantineBtn.setBorder(new EmptyBorder(0, 15, 0, 0));
         QuarantineBtn.setFocusable(false);
         QuarantineBtn.setForeground(Color.WHITE);
@@ -123,7 +123,7 @@ public class AdminMainFrame extends JFrame implements ActionListener {
         Logout.setBounds(200, 150, 190, 20);
         Logout.setOpaque(false);
         Logout.setPreferredSize(new Dimension(240, 50));
-        Logout.setIcon(new ImageIcon("src/classroom.png"));
+        Logout.setIcon(new ImageIcon("src/com/cv19/icon/classroom.png"));
         Logout.setBorder(new EmptyBorder(0, 15, 0, 0));
         Logout.setFocusable(false);
         Logout.setForeground(Color.WHITE);
