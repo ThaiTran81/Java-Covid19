@@ -2,6 +2,7 @@ package Controller;
 
 import Model.profileModel;
 import View.Admin.AdminMainFrame;
+import View.ChangeFirstPassView;
 import View.LoginView;
 import View.User.MainFrame;
 import com.cv19.view.event.EventLoginCallBack;
@@ -58,7 +59,10 @@ public class LoginController {
                 }
                 if (user.getType() == 2) {
                     loginView.dispose();
-                    new MainFrame(user.getUsername());
+                    if(checkFirstLogIn(user.getUsername())){
+                        new ChangeFirstPassView(user.getUsername()).setVisible(true);
+                    }
+                   else new MainFrame(user.getUsername());
                 }
             }
             else JOptionPane.showMessageDialog(null,"username hoặc mật khẩu không đúng","Thông báo", JOptionPane.INFORMATION_MESSAGE);
@@ -67,6 +71,17 @@ public class LoginController {
         } catch (SQLException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    boolean checkFirstLogIn(String id){
+        try {
+            profileModel model = new CovidDAO().getProfileUser(id);
+            String pass = model.getDob().toString().replace("-","");
+            if(user.getPassword().equals(pass)) return true;
+        } catch (SQLException e) {
+            return true;
+        }
+        return false;
     }
 
 }

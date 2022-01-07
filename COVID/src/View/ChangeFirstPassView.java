@@ -1,6 +1,17 @@
 package View;
 
 
+import Controller.CovidDAO;
+import Model.profileModel;
+import View.User.MainFrame;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.SQLException;
+
 public class ChangeFirstPassView extends javax.swing.JFrame {
 
     public ChangeFirstPassView(String id) {
@@ -16,9 +27,9 @@ public class ChangeFirstPassView extends javax.swing.JFrame {
         lbName = new javax.swing.JLabel();
         txtName = new javax.swing.JTextField();
         lbPass = new javax.swing.JLabel();
-        txtPass = new javax.swing.JTextField();
+        txtPass = new javax.swing.JPasswordField();
         lbConfirmPass = new javax.swing.JLabel();
-        txtConfirmPass = new javax.swing.JTextField();
+        txtConfirmPass = new javax.swing.JPasswordField();
         jLabel5 = new javax.swing.JLabel();
         cbShowPass = new javax.swing.JCheckBox();
         btnCancel = new javax.swing.JButton();
@@ -62,28 +73,74 @@ public class ChangeFirstPassView extends javax.swing.JFrame {
         panelMain.add(jLabel5);
 
         cbShowPass.setText("Show password");
+        cbShowPass.addItemListener(eventShowpass());
         panelMain.add(cbShowPass);
 
         btnCancel.setText("HUỶ");
         panelMain.add(btnCancel);
 
         btnSubmit.setText("XÁC NHẬN");
+        btnSubmit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updatePass();
+            }
+        });
         panelMain.add(btnSubmit);
 
         getContentPane().add(panelMain);
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>
 
     private void txtConfirmPassActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        updatePass();
+    }
+
+
+    void updatePass() {
+        String username = txtName.getText();
+        String password = String.valueOf(txtPass.getPassword());
+        String rePassword = String.valueOf(txtConfirmPass.getPassword());
+
+        if (username.isBlank() || password.isBlank() || rePassword.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ các trường", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            if(!password.equals(rePassword)){
+                JOptionPane.showMessageDialog(null, "Mật khẩu xác nhận không khớp", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            try {
+                new CovidDAO().updateNewPassword(username, password);
+                new MainFrame(username);
+                this.dispose();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null,"Thay đổi thất bại vui lòng thử lại sau","Thông báo", JOptionPane.ERROR);
+            }
+
+        }
+    }
+
+    ItemListener eventShowpass() {
+        ItemListener event = new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (cbShowPass.isSelected()) {
+                    txtPass.setEchoChar((char) 0);
+                } else {
+                    txtPass.setEchoChar('•');
+                }
+            }
+        };
+        return event;
     }
 
     public static void main(String args[]) {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ChangeFirstPassView().setVisible(true);
+                new ChangeFirstPassView(null).setVisible(true);
             }
         });
     }
@@ -99,9 +156,9 @@ public class ChangeFirstPassView extends javax.swing.JFrame {
     private javax.swing.JLabel lbPass;
     private javax.swing.JPanel panelHeader;
     private javax.swing.JPanel panelMain;
-    private javax.swing.JTextField txtConfirmPass;
+    private javax.swing.JPasswordField txtConfirmPass;
     private javax.swing.JTextField txtName;
-    private javax.swing.JTextField txtPass;
+    private javax.swing.JPasswordField txtPass;
     // End of variables declaration
 }
 
