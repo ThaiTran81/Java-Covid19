@@ -294,11 +294,11 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
         add(inform1);
 
         qualabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        qualabel.setBounds(100, 100, 190, 20);
+        qualabel.setBounds(50, 100, 190, 20);
         add(qualabel);
 
         quatx.setFont(new Font("Arial", Font.PLAIN, 15));
-        quatx.setBounds(200, 100, 190, 20);
+        quatx.setBounds(150, 100, 240, 20);
         quatx.addActionListener(this);
         add(quatx);
 
@@ -468,11 +468,11 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
         add(inform1);
 
         qualabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        qualabel.setBounds(100, 100, 190, 20);
+        qualabel.setBounds(50, 100, 190, 20);
         add(qualabel);
 
         quatx.setFont(new Font("Arial", Font.PLAIN, 15));
-        quatx.setBounds(200, 100, 190, 20);
+        quatx.setBounds(150, 100, 240, 20);
         quatx.addActionListener(this);
         add(quatx);
 
