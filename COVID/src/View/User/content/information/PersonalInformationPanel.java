@@ -54,8 +54,8 @@ public class PersonalInformationPanel extends JPanel {
                 id.setText("Số CMND/CCCD: " + rs.getString(1));
                 dob.setText("Năm sinh: " + rs.getString(4));
                 address.setText("Địa chỉ nơi ở: " + rs.getString(8) + ", " + rs.getString(7) + ", " + rs.getString(6));
-                status.setText("Trạng thái hiện tại: " + rs.getString(12));
-                quaratine.setText("Nơi đang điều trị: " + rs.getString(15));
+                status.setText("Trạng thái hiện tại: " + rs.getString(11));
+                quaratine.setText("Nơi đang điều trị: " + rs.getString(19));
             }
         } catch (SQLException ex){
             ex.printStackTrace();

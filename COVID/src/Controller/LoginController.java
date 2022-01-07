@@ -42,6 +42,11 @@ public class LoginController {
                 user.setUsername(rs.getString("USERNAME"));
                 user.setPassword(new String(rs.getBytes("PASSWORD")));
                 user.setType(rs.getInt("TYPE"));
+                int blocked = rs.getInt(4);
+                if (blocked==1){
+                    JOptionPane.showMessageDialog(null,"username này đã bị chặn","Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
                 System.out.println(user.getType());
                 if (user.getType() == 0) {
                     loginView.dispose();

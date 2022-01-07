@@ -28,10 +28,10 @@ public class QuarantineModel {
 
     public String toString(String namepro, String namedist) {
         String temp = null;
-        if (deleted == 1){
+        if (deleted == 0){
             temp = "Open";
         }
-        else if (deleted == 0){
+        else if (deleted == 1){
             temp = "Closed";
         }
         return " Name: " + name + "\n" +
