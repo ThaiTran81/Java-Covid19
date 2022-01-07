@@ -4,14 +4,13 @@
  */
 package com.cv19.view.body;
 
-import Controller.CovidDAO;
-import Model.profileModel;
+import com.Controller.CovidDAO;
+import com.Model.profileModel;
 import com.cv19.view.event.EventFindSelected;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 
 /**

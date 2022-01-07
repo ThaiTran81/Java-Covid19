@@ -4,7 +4,7 @@
  */
 package com.cv19.view.event;
 
-import Model.profileModel;
+import com.Model.profileModel;
 
 /**
  *

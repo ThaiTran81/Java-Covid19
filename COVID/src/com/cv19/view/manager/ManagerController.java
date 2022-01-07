@@ -1,10 +1,10 @@
 
 package com.cv19.view.manager;
 
-import Controller.CovidDAO;
-import Controller.HistoryDAO;
-import Controller.LoginController;
-import Model.profileModel;
+import com.Controller.CovidDAO;
+import com.Controller.HistoryDAO;
+import com.Controller.LoginController;
+import com.Model.profileModel;
 import com.cv19.view.body.AddForm;
 import com.cv19.view.body.HomeForm;
 import com.cv19.view.body.ManageForm;
@@ -19,9 +19,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import utils.FUtil;
+
+import com.utils.FUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -30,10 +31,11 @@ import utils.FUtil;
 public class ManagerController extends javax.swing.JFrame {
     private Point initialClick;
     private profileModel profile;
-    
+    private static final Logger logger = LogManager.getLogger(ManagerController.class.getName());
     public ManagerController(String id) {
         try {
             initComponents();
+            logger.info("Starting get data manager "+id);
             profile = new CovidDAO().getProfileUser(id);
             setBackground(new Color(0,0,0,0));
             menu.initFrame(this);
@@ -76,7 +78,7 @@ public class ManagerController extends javax.swing.JFrame {
             showForm(new HomeForm());
 
         } catch (SQLException ex) {
-            Logger.getLogger(ManagerController.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         }
     }
 

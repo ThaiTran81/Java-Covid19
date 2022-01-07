@@ -4,7 +4,6 @@
  */
 package com.cv19.view.components;
 
-import com.cv19.swing.ListMenu;
 import com.cv19.swing.PanelBorder;
 import com.cv19.view.event.EventMenu;
 import com.cv19.view.event.EventMenuCallBack;

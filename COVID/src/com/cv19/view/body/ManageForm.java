@@ -1,36 +1,28 @@
 package com.cv19.view.body;
 
-import Controller.CovidDAO;
-import Model.AddressModel;
-import Model.CurrentStateModel;
-import Model.FModel;
-import Model.QuarantineModel;
-import com.cv19.view.components.AddressCombobox;
+import com.Controller.CovidDAO;
+import com.Model.CurrentStateModel;
+import com.Model.QuarantineModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.text.Collator;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
-import utils.CurrentStateSorter;
+import com.utils.CurrentStateSorter;
 
 /**
  *

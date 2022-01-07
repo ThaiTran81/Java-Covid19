@@ -4,13 +4,11 @@
  */
 package com.cv19.view.body;
 
-import Controller.CovidDAO;
-import Model.profileModel;
+import com.Controller.CovidDAO;
+import com.Model.profileModel;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**

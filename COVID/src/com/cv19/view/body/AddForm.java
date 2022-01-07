@@ -1,10 +1,10 @@
 package com.cv19.view.body;
 
-import Controller.CovidDAO;
-import Controller.HistoryDAO;
-import Model.AddressModel;
-import Model.QuarantineModel;
-import Model.profileModel;
+import com.Controller.CovidDAO;
+import com.Controller.HistoryDAO;
+import com.Model.AddressModel;
+import com.Model.QuarantineModel;
+import com.Model.profileModel;
 import com.cv19.view.components.AddressCombobox;
 import com.cv19.view.event.EventFindCallBack;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
@@ -21,7 +21,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import utils.Validator;
+import com.utils.Validator;
 
 /**
  *

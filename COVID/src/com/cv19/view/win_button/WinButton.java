@@ -1,6 +1,5 @@
 package com.cv19.view.win_button;
 
-import com.cv19.swing.PanelBack;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;

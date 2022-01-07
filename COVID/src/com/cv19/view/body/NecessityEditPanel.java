@@ -4,9 +4,9 @@
  */
 package com.cv19.view.body;
 
-import Controller.CovidDAO;
-import Controller.HistoryDAO;
-import Model.NecessityModel;
+import com.Controller.CovidDAO;
+import com.Controller.HistoryDAO;
+import com.Model.NecessityModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.Color;
 import java.sql.SQLException;

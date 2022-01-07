@@ -4,8 +4,8 @@
  */
 package com.cv19.view.components;
 
-import Controller.AddressDAO;
-import Model.AddressModel;
+import com.Controller.AddressDAO;
+import com.Model.AddressModel;
 import com.cv19.view.body.HomeForm;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;

@@ -4,30 +4,19 @@
  */
 package com.cv19.view.body;
 
-import Controller.AddressDAO;
-import Controller.CovidDAO;
-import Model.AddressModel;
-import Model.FModel;
+import com.Controller.CovidDAO;
+import com.Model.FModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.sql.Date;
 import java.util.TreeMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComponent;
 import javax.swing.JOptionPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import utils.SortByValue;
+import com.utils.SortByValue;
 
 /**
  *

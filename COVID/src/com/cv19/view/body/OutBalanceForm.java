@@ -1,9 +1,9 @@
 package com.cv19.view.body;
 
-import Controller.CovidDAO;
-import Model.OutBalanceModel;
+import com.Controller.CovidDAO;
+import com.Model.OutBalanceModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import utils.OutBalanceSorter;
+import com.utils.OutBalanceSorter;
 
 /**
  *

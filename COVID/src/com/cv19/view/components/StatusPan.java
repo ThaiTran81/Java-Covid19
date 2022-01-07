@@ -7,7 +7,6 @@ package com.cv19.view.components;
 import com.cv19.swing.PanelBack;
 import java.awt.Color;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 
 /**
  *

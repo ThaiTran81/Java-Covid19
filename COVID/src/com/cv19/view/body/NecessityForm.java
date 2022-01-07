@@ -4,24 +4,17 @@
  */
 package com.cv19.view.body;
 
-import Controller.CovidDAO;
-import Controller.HistoryDAO;
-import Model.NecessityModel;
+import com.Controller.CovidDAO;
+import com.Controller.HistoryDAO;
+import com.Model.NecessityModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.text.Collator;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
@@ -33,8 +26,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
-import utils.AlignTable;
-import utils.NecessitySorter;
+import com.utils.AlignTable;
+import com.utils.NecessitySorter;
 import java.sql.ResultSet;
 
 /**

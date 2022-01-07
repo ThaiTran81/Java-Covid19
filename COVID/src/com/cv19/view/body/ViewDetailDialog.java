@@ -4,11 +4,6 @@
  */
 package com.cv19.view.body;
 
-import com.cv19.view.components.*;
-import com.cv19.view.body.FindForm;
-import com.cv19.view.event.EventFindCallBack;
-import com.cv19.view.event.EventFindSelected;
-
 /**
  *
  * @author ThaiTran

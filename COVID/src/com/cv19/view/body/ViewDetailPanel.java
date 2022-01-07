@@ -4,14 +4,12 @@
  */
 package com.cv19.view.body;
 
-import Controller.CovidDAO;
-import Controller.HistoryDAO;
-import Model.AddressModel;
-import Model.QuarantineModel;
-import Model.f_historyModel;
-import Model.profileModel;
+import com.Controller.CovidDAO;
+import com.Controller.HistoryDAO;
+import com.Model.QuarantineModel;
+import com.Model.f_historyModel;
+import com.Model.profileModel;
 import com.cv19.view.components.AddressCombobox;
-import com.cv19.view.event.EventFindCallBack;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.sql.SQLException;
@@ -23,7 +21,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-import utils.FUtil;
+import com.utils.FUtil;
 
 /**
  * @author ThaiTran
