@@ -1,2 +1,4 @@
-2022-01-07 16:16:13 INFO  main:19 - start
-2022-01-07 16:16:18 INFO  LoginController:38 - Authorize account admin
+2022-01-07 22:23:30 INFO  main:19 - start
+2022-01-07 22:23:37 INFO  LoginController:38 - Authorize account admin
+2022-01-07 22:23:48 INFO  LoginController:38 - Authorize account manager2
+2022-01-07 22:23:48 INFO  ManagerController:38 - Starting get data manager manager2

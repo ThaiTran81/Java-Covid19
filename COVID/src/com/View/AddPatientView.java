@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AddPatientView extends JFrame implements ActionListener {
     private Container container = getContentPane();
@@ -173,7 +175,7 @@ public class AddPatientView extends JFrame implements ActionListener {
                 province.addItem(name);
             }
         } catch (SQLException ex){
-            ex.printStackTrace();
+            Logger.getLogger(AddPatientView.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
         }
     }
     public void actionPerformed(ActionEvent e){
@@ -256,7 +258,7 @@ public class AddPatientView extends JFrame implements ActionListener {
                     id_pro = rs.getInt(1);
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(AddPatientView.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
 
             try (Connection conn = new CovidDAO().getConnection()){
@@ -271,7 +273,7 @@ public class AddPatientView extends JFrame implements ActionListener {
                     district.addItem(dis);
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(AddPatientView.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
         }
         if (e.getSource() == district){
@@ -286,7 +288,7 @@ public class AddPatientView extends JFrame implements ActionListener {
                     id_dic = rs.getInt(1);
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(AddPatientView.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
 
             try (Connection conn = new CovidDAO().getConnection()){
@@ -301,7 +303,7 @@ public class AddPatientView extends JFrame implements ActionListener {
                     village.addItem(vil);
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(AddPatientView.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
         }
     }

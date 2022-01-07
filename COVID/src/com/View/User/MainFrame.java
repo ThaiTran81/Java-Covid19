@@ -27,6 +27,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainFrame extends JFrame implements ActionListener {
     private JLayeredPane main_layer;
@@ -202,7 +204,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 nec_type_lst.add(rs.getString(1));
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
         }
         String[] nec_type = new String[nec_type_lst.size() + 1];
         nec_type[0] = "Tất cả";
@@ -566,7 +568,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 money = rs.getString(2);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
         }
 
         if (money != "") {
@@ -669,7 +671,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 confirm_password = rs.getString(2);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
         }
 
         old_password_field.setPreferredSize(new Dimension(180,30));
@@ -869,7 +871,7 @@ public class MainFrame extends JFrame implements ActionListener {
                     count++;
                 }
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
             int id_bill = count + 1;
             sql = "INSERT BILL VALUES (?, ?, GETDATE(), ?)";
@@ -880,7 +882,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
                 pre.execute();
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
             sql = "INSERT INTO CONSUME (ID_BILL, ID_NECESSITIES, QUANTITY) VALUES (?, ?, ?)";
             try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
@@ -892,7 +894,7 @@ public class MainFrame extends JFrame implements ActionListener {
                     pre.execute();
                 }
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
             int debt = 0;
             sql = "SELECT *\n" +
@@ -906,7 +908,7 @@ public class MainFrame extends JFrame implements ActionListener {
                     debt = rs.getInt(2);
                 }
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
             debt += Integer.parseInt(total_cost_field.getText());
             sql = "UPDATE DEBT SET DEBT = ? WHERE USER_ID = ?";
@@ -915,7 +917,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 pre.setString(2, getId());
                 pre.execute();
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
             showPurchasePanel();
             switchPanel(necessity_purchase_panel);
@@ -940,7 +942,7 @@ public class MainFrame extends JFrame implements ActionListener {
                     balance = rs.getString(2);
                 }
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
             sql = "SELECT *\n" +
                     "FROM DEBT\n" +
@@ -953,7 +955,7 @@ public class MainFrame extends JFrame implements ActionListener {
                     debt = rs.getString(2);
                 }
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
             String nb = Integer.toString(Integer.parseInt(balance) - Integer.parseInt(cost));
             sql = "UPDATE PAYMENT SET BALANCE = ? WHERE ID_BANK = ?";
@@ -962,7 +964,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 pre.setString(2, id_bank);
                 pre.execute();
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
             sql = "INSERT INTO PAYMENT_HISTORY VALUES(?, GETDATE(), ?)";
             try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
@@ -970,7 +972,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 pre.setString(2, cost);
                 pre.execute();
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
             String nd = Integer.toString(Integer.parseInt(debt) - Integer.parseInt(cost));
             sql = "UPDATE DEBT SET DEBT = ? WHERE USER_ID = ?";
@@ -979,7 +981,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 pre.setString(2, getId());
                 pre.execute();
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
         }
         if (e.getSource() == change_password_button) {
@@ -995,7 +997,7 @@ public class MainFrame extends JFrame implements ActionListener {
                     a= new String(rs.getBytes(2));
                 }
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
 
             if (String.valueOf(old_password_field.getPassword()).equals(a)) {
@@ -1006,7 +1008,7 @@ public class MainFrame extends JFrame implements ActionListener {
                         pre.setString(2, getId());
                         pre.execute();
                     } catch (SQLException ex) {
-                        ex.printStackTrace();
+                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
                     }
                     JOptionPane.showMessageDialog(null,"Thành công","Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 }

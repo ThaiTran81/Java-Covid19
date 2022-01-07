@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ManageManager extends JPanel implements ActionListener {
     private JLabel title = new JLabel("MANAGER VIEW");
@@ -81,7 +83,7 @@ public class ManageManager extends JPanel implements ActionListener {
                 mtx.addItem(name);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(ManageManager.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
         }
     }
     void view(Vector<HistoryModel> list){
@@ -153,7 +155,7 @@ public class ManageManager extends JPanel implements ActionListener {
                     list.add(temp);
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(ManageManager.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
 
             view(list);
@@ -169,7 +171,7 @@ public class ManageManager extends JPanel implements ActionListener {
                     JOptionPane.showMessageDialog(null, "Success");
 
                 } catch (SQLException ex) {
-                    ex.printStackTrace();
+                    Logger.getLogger(ManageManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             String sql = "  SELECT C.*" +
@@ -183,7 +185,7 @@ public class ManageManager extends JPanel implements ActionListener {
                     mtx.addItem(name);
                 }
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(ManageManager.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
         }
     }

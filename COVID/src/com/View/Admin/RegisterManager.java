@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RegisterManager extends JPanel implements ActionListener {
     private JLabel title = new JLabel("Registration Form");
@@ -186,7 +188,7 @@ public class RegisterManager extends JPanel implements ActionListener {
                 province.addItem(name);
             }
         } catch (SQLException ex){
-            ex.printStackTrace();
+            Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
         }
         setVisible(true);
     }
@@ -271,7 +273,7 @@ public class RegisterManager extends JPanel implements ActionListener {
                     prepStmt.setString(8, (String) village.getSelectedItem());
                     prepStmt.execute();
                 } catch (SQLException ex){
-                    ex.printStackTrace();
+                    Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
                 }
 
                 sql = "INSERT INTO ACCOUNT(USERNAME, PASSWORD, TYPE, BLOCK) VALUES(?,?,?,?)";
@@ -286,7 +288,7 @@ public class RegisterManager extends JPanel implements ActionListener {
                         res.setText("Success");
                     }
                 } catch (SQLException ex){
-                    ex.printStackTrace();
+                    Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
                 }
             }
         }
@@ -310,7 +312,7 @@ public class RegisterManager extends JPanel implements ActionListener {
                     id_pro = rs.getInt(1);
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
             sql = "select * from DISTRICT WHERE ID_PROVINCE=?";
             try (Connection conn = new CovidDAO().getConnection(); PreparedStatement prepStmt = conn.prepareStatement(sql);){
@@ -323,7 +325,7 @@ public class RegisterManager extends JPanel implements ActionListener {
                     district.addItem(dis);
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
         }
         if (e.getSource() == district){
@@ -337,7 +339,7 @@ public class RegisterManager extends JPanel implements ActionListener {
                     id_dic = rs.getInt(1);
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
             sql = "select * from VILLAGE WHERE ID_PROVINCE=? AND ID_DISTRICT=?";
             try (Connection conn = new CovidDAO().getConnection();PreparedStatement prepStmt = conn.prepareStatement(sql);){
@@ -350,7 +352,7 @@ public class RegisterManager extends JPanel implements ActionListener {
                     village.addItem(vil);
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(RegisterManager.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
         }
     }
