@@ -25,7 +25,7 @@ public class CovidDAO {
 
     String sv = "localhost";
     String usr = "sa";
-    String pwd = "1234567890";
+    String pwd = "123456";
     String db = "QLC19";
     int prt = 1433;
 

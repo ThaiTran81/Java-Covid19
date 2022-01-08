@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ChangeFirstPassView extends javax.swing.JFrame {
 
@@ -115,6 +117,7 @@ public class ChangeFirstPassView extends javax.swing.JFrame {
                 new MainFrame(username);
                 this.dispose();
             } catch (SQLException e) {
+                Logger.getLogger(ChangeFirstPassView.class.getName()).log(Level.SEVERE, "Thay đổi MK thất bại", e);
                 JOptionPane.showMessageDialog(null,"Thay đổi thất bại vui lòng thử lại sau","Thông báo", JOptionPane.ERROR);
             }
 

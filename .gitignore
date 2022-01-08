@@ -1,3 +1,9 @@
 *.class
 
 ./COVID/out
+
+COVID\logs
+*.log
+*.gz
+*.log
+COVID/logs/app.log

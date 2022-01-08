@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class RegisterQuarantine extends JPanel implements ActionListener {
     private JLabel title = new JLabel("Quarantine Management");
@@ -174,7 +176,7 @@ class AddQuarantine extends JPanel implements ActionListener {
                 province.addItem(name);
             }
         } catch (SQLException ex){
-            ex.printStackTrace();
+            Logger.getLogger(AddQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
         }
     }
     @Override
@@ -190,7 +192,7 @@ class AddQuarantine extends JPanel implements ActionListener {
                 }
 
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(AddQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
 
             qa.setId(id_pro);
@@ -206,7 +208,7 @@ class AddQuarantine extends JPanel implements ActionListener {
                     district.addItem(dis);
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(AddQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
         }
         if(e.getSource() == district){
@@ -220,7 +222,7 @@ class AddQuarantine extends JPanel implements ActionListener {
                     id_dic = rs.getInt(1);
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(AddQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
 
             qa.setDistrict(id_dic);
@@ -244,7 +246,7 @@ class AddQuarantine extends JPanel implements ActionListener {
                     res.setText("Success");
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(AddQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
 
         }
@@ -294,11 +296,11 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
         add(inform1);
 
         qualabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        qualabel.setBounds(100, 100, 190, 20);
+        qualabel.setBounds(50, 100, 190, 20);
         add(qualabel);
 
         quatx.setFont(new Font("Arial", Font.PLAIN, 15));
-        quatx.setBounds(200, 100, 190, 20);
+        quatx.setBounds(150, 100, 240, 20);
         quatx.addActionListener(this);
         add(quatx);
 
@@ -365,7 +367,7 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
                 quatx.addItem(name);
             }
         } catch (SQLException ex){
-            ex.printStackTrace();
+            Logger.getLogger(ModifyQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
         }
     }
     @Override
@@ -388,7 +390,7 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
                     qua.setDeleted(rs.getInt(6));
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(ModifyQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
             quanamtx.setText(qua.getName());
             captx.setText(""+qua.getCapicity());
@@ -410,7 +412,7 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
                     result.setText(qua.toString(rs.getString(1), rs.getString(2)));
                 }
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(ModifyQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
         }
         if (e.getSource() == sub) {
@@ -430,7 +432,7 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
                     pre.execute();
                     res.setText("Success");
                 } catch (SQLException ex) {
-                    ex.printStackTrace();
+                    Logger.getLogger(ModifyQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
                 }
             }
         }
@@ -468,11 +470,11 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
         add(inform1);
 
         qualabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        qualabel.setBounds(100, 100, 190, 20);
+        qualabel.setBounds(50, 100, 190, 20);
         add(qualabel);
 
         quatx.setFont(new Font("Arial", Font.PLAIN, 15));
-        quatx.setBounds(200, 100, 190, 20);
+        quatx.setBounds(150, 100, 240, 20);
         quatx.addActionListener(this);
         add(quatx);
 
@@ -497,7 +499,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
                 quatx.addItem(name);
             }
         } catch (SQLException ex){
-            ex.printStackTrace();
+            Logger.getLogger(DeleteQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
         }
     }
     @Override
@@ -517,7 +519,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
                     qua.setDeleted(rs.getInt(6));
                 }
             } catch (SQLException ex){
-                ex.printStackTrace();
+                Logger.getLogger(DeleteQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
 
             sql = "SELECT P.NAME, D.NAME" +
@@ -531,7 +533,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
                     result.setText(qua.toString(rs.getString(1), rs.getString(2)));
                 }
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(DeleteQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
         }
         if (e.getSource() == sub) {
@@ -544,7 +546,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
                     pre.execute();
                     JOptionPane.showMessageDialog(null, "Success");
                 } catch (SQLException ex) {
-                    ex.printStackTrace();
+                    Logger.getLogger(DeleteQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
                 }
             }
         }
