@@ -175,20 +175,37 @@ public class CovidDAO {
         return lst;
     }
 
-    public profileModel getStatusUser(String id, String name) throws SQLException {
+    public int getCountUserQuaratine(int id) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM PROFILE WHERE ID_QUARATINE = "+id;
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        if(rs.next()){
+            int i = rs.getInt(1);
+            return i;
+        }
+
+        return 0;
+    }
+
+    public List<profileModel> getStatusUser(String id, String name) throws SQLException {
         String sql = "SELECT ID, FULLNAME, F_STATUS\n"
                 + "FROM PROFILE\n"
-                + "WHERE ID LIKE ? \n";
+                + "WHERE ID LIKE ? and FULLNAME LIKE ? AND LEN(F_STATUS)>0\n";
+        if(id == null) id = "";
+        if(name == null) name="";
         PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, id);
+        stmt.setString(1, "%"+id+"%");
+        stmt.setString(2, "%"+name+"%");
         ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
+        List<profileModel> lst = new ArrayList<>();
+        while (rs.next()) {
             profileModel tmp = new profileModel();
             tmp.setUsername(rs.getString(1));
             tmp.setFullname(rs.getString(2));
             tmp.setStatus(rs.getString(3));
-            return tmp;
+            lst.add(tmp);
         }
+        if(lst.size() >0) return lst;
         return null;
     }
 
@@ -435,14 +452,15 @@ public class CovidDAO {
     }
 
     public void addNecessity(NecessityModel item) throws SQLException {
-        String sql = "INSERT INTO NECESSITIES (NAME, LIMIT, PRICE, TIME_LIMIT,consumption)\n"
-                + "  VALUES (? , ?, ?, ?, DEFAULT);";
+        String sql = "INSERT INTO NECESSITIES (NAME, LIMIT, PRICE, TIME_LIMIT,NEC_KIND,consumption)\n"
+                + "  VALUES (? , ?, ?, ?,?, DEFAULT);";
         PreparedStatement stmt = conn.prepareStatement(sql);
 
         stmt.setString(1, item.getName());
         stmt.setInt(2, item.getLimit());
         stmt.setInt(3, item.getPrice());
         stmt.setInt(4, item.getTime_limit());
+        stmt.setString(5, item.getType());
 
         System.out.println(stmt.executeUpdate());
     }
@@ -473,7 +491,7 @@ public class CovidDAO {
     }
 
     public NecessityModel getNecessityByID(int id) throws SQLException {
-        String sql = "SELECT n.ID_NECESSITIES, n.NAME, n.LIMIT, n.PRICE, n.TIME_LIMIT, n.consumption\n"
+        String sql = "SELECT n.ID_NECESSITIES, n.NAME, n.LIMIT, n.PRICE, n.TIME_LIMIT, n.NEC_KIND, n.consumption\n"
                 + "FROM NECESSITIES n\n"
                 + "WHERE n.ID_NECESSITIES = " + id;
 
@@ -488,8 +506,8 @@ public class CovidDAO {
             model.setLimit(rs.getInt(3));
             model.setPrice(rs.getInt(4));
             model.setTime_limit(rs.getInt(5));
-            model.setConsume(rs.getInt(6));
-
+            model.setType(rs.getString(6));
+            model.setConsume(rs.getInt(7));
             return model;
         }
         return null;
@@ -659,5 +677,22 @@ public class CovidDAO {
             pass = new String(rs.getBytes(1));
         }
         return pass;
+
+    }
+
+
+    public List<String> getCategory() throws SQLException{
+        String sql = "SELECT DISTINCT n.NEC_KIND\n" +
+                "FROM NECESSITIES n";
+        Statement stmt = conn.createStatement();
+
+        ResultSet rs = stmt.executeQuery(sql);
+        List<String> lst = new ArrayList<>();
+        while(rs.next()){
+            String catName = rs.getString(1);
+            lst.add(catName);
+        }
+        if(lst.size()==0) return null;
+        return lst;
     }
 }

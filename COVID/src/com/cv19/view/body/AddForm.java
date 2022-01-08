@@ -500,6 +500,11 @@ public class AddForm extends javax.swing.JPanel {
 
             QuarantineModel quaratine = (QuarantineModel) comboQua.getSelectedItem();
             user.setId_qua(quaratine.getId());
+
+            if(quaratine.getCapicity() < new CovidDAO().getCountUserQuaratine(quaratine.getId()) +1 ){
+                JOptionPane.showMessageDialog(null,"Nơi điều trị đã hết chỗ, vui lòng chọn nơi điều trị khác","Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
             if (!txtSrc.getText().isBlank()) {
                 user.setRelated_id(txtSrc.getText());
             }
@@ -541,7 +546,7 @@ public class AddForm extends javax.swing.JPanel {
         txtSta.setText("F0");
         lbIdErr.setForeground(this.getBackground());
         lbPhoneErr.setForeground(this.getBackground());
-        comboAddr = new AddressCombobox(comboCity, comboDist, comboVill);
+        comboCity.setSelectedIndex(0);
     }//GEN-LAST:event_btnResetActionPerformed
 
     void notify(String msg) {

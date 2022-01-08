@@ -8,13 +8,14 @@ import com.Controller.CovidDAO;
 import com.Model.profileModel;
 import com.cv19.view.event.EventFindSelected;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
  * @author ThaiTran
  */
 public class FindForm extends javax.swing.JPanel {
@@ -22,14 +23,14 @@ public class FindForm extends javax.swing.JPanel {
     /**
      * Creates new form FindForm
      */
-    
+
     EventFindSelected callback;
-    
+
     public FindForm(EventFindSelected callback) {
-        
-        this.callback=callback;
+
+        this.callback = callback;
         initComponents();
-        
+
     }
 
     @SuppressWarnings("unchecked")
@@ -96,26 +97,26 @@ public class FindForm extends javax.swing.JPanel {
         panelResult.setLayout(flowLayout1);
 
         table.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+                new Object[][]{
 
-            },
-            new String [] {
-                "CMND/CCCD", "Họ tên", "Trạng thái"
-            }
+                },
+                new String[]{
+                        "CMND/CCCD", "Họ tên", "Trạng thái"
+                }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
+            Class[] types = new Class[]{
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
-            boolean[] canEdit = new boolean [] {
-                false, false, false
+            boolean[] canEdit = new boolean[]{
+                    false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                return types[columnIndex];
             }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tbRelate.setViewportView(table);
@@ -139,39 +140,43 @@ public class FindForm extends javax.swing.JPanel {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
-        if(!txtID.getText().isBlank()){
-            try {
-                profileModel profile = new CovidDAO().getStatusUser(txtID.getText(), txtName.getText());
-                if(profile ==null){
-                    return;
-                }
-                addTable(profile);
-            } catch (SQLServerException ex) {
-                Logger.getLogger(FindForm.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(FindForm.class.getName()).log(Level.SEVERE, null, ex);
+
+        try {
+            List<profileModel> lst = new CovidDAO().getStatusUser(txtID.getText(), txtName.getText());
+            if (lst == null) {
+                return;
             }
-            
-            
+            addTable(lst);
+
+        } catch (SQLServerException ex) {
+            Logger.getLogger(FindForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FindForm.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectActionPerformed
         // TODO add your handling code here:
+        if(table.getSelectedRow()==-1) return;
         String idRelated = (String) table.getValueAt(table.getSelectedRow(), 0);
-        String status =(String) table.getValueAt(table.getSelectedRow(), 2);
-        if(idRelated.isBlank() || status.isBlank()) return;
+        String status = (String) table.getValueAt(table.getSelectedRow(), 2);
+        if (idRelated.isBlank() || status.isBlank()) return;
         callback.selected(idRelated, status);
-        
+
     }//GEN-LAST:event_btnSelectActionPerformed
-    
-    void addTable(profileModel profile){
+
+    void addTable(List<profileModel> lst) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
-        model.addRow(new Object[]{profile.getUsername(), profile.getFullname(),profile.getStatus()});
+        for (profileModel profile :
+                lst) {
+            model.addRow(new Object[]{profile.getUsername(), profile.getFullname(), profile.getStatus()});
+        }
     }
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnSelect;

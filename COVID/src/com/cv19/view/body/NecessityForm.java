@@ -10,11 +10,18 @@ import com.Model.NecessityModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.text.Collator;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
@@ -41,46 +48,56 @@ public class NecessityForm extends javax.swing.JPanel {
      */
     private String limitTime[] = {"ngày", "tuần", "tháng"};
     private String sort[] = {"Sắp xếp theo bảng chữ cái tăng dần", "Sắp xếp theo bảng chữ cái giảm dần",
-        "Sắp xếp theo giá tăng dần", "Sắp xếp theo giá giảm dần", "Sắp xếp theo lượng tiêu thụ tăng dần", "Sắp xếp theo lượng tiêu thụ giảm dần"};
+            "Sắp xếp theo giá tăng dần", "Sắp xếp theo giá giảm dần", "Sắp xếp theo lượng tiêu thụ tăng dần", "Sắp xếp theo lượng tiêu thụ giảm dần"};
     private String filter[] = {};
     private ArrayList<NecessityModel> lst;
+    private ArrayList<String> category;
     private JButton btnEdit;
     private int minPrice = 0;
     private int maxPrice = 0;
     private int step = 0;
     int previousClick;
 
-    public NecessityForm() {
-        lst = new ArrayList<>();
-        btnEdit = new JButton();
-        btnEdit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnEditEvent();
-            }
-        });
-        initComponents();
+    public NecessityForm(){
+        try {
+            lst = new ArrayList<>();
+            btnEdit = new JButton();
+            btnEdit.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    btnEditEvent();
+                }
+            });
+            initComponents();
 
-        initFilterRange();
+            initFilterRange();
 
-        comboTime.setModel(new DefaultComboBoxModel(limitTime));
-        comboSort.setModel(new DefaultComboBoxModel(sort));
+            category = (ArrayList<String>) new CovidDAO().getCategory();
 
-        table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
-        table.setRowHeight(30);
-        TableColumnModel columnModel = table.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(5);
-        columnModel.getColumn(0).setCellRenderer(AlignTable.left());
-        columnModel.getColumn(1).setPreferredWidth(180);
-        columnModel.getColumn(2).setPreferredWidth(30);
-        columnModel.getColumn(3).setPreferredWidth(20);
-        columnModel.getColumn(4).setPreferredWidth(20);
-        columnModel.getColumn(4).setCellRenderer(AlignTable.right());
-        columnModel.getColumn(5).setPreferredWidth(20);
-        columnModel.getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), "Chỉnh sửa", btnEdit));
-        columnModel.getColumn(5).setCellRenderer(new ButtonRenderer("Chỉnh sửa"));
+            comboTime.setModel(new DefaultComboBoxModel(limitTime));
+            comboSort.setModel(new DefaultComboBoxModel(sort));
+            comboCate.setModel(new DefaultComboBoxModel(category.toArray()));
 
-        btnFindActionPerformed(null);
+            table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
+            table.setRowHeight(30);
+            TableColumnModel columnModel = table.getColumnModel();
+            columnModel.getColumn(0).setPreferredWidth(5);
+            columnModel.getColumn(0).setCellRenderer(AlignTable.left());
+            columnModel.getColumn(1).setPreferredWidth(180);
+            columnModel.getColumn(2).setPreferredWidth(30);
+            columnModel.getColumn(3).setPreferredWidth(20);
+            columnModel.getColumn(4).setPreferredWidth(20);
+            columnModel.getColumn(4).setCellRenderer(AlignTable.right());
+            columnModel.getColumn(5).setPreferredWidth(20);
+            columnModel.getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), "Chỉnh sửa", btnEdit));
+            columnModel.getColumn(5).setCellRenderer(new ButtonRenderer("Chỉnh sửa"));
+
+            btnFindActionPerformed(null);
+        } catch (SQLServerException ex) {
+            Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     void btnEditEvent() {
@@ -121,9 +138,8 @@ public class NecessityForm extends javax.swing.JPanel {
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         panelTop = new javax.swing.JPanel();
         panelInput = new javax.swing.JPanel();
@@ -137,6 +153,8 @@ public class NecessityForm extends javax.swing.JPanel {
         lbPrice = new javax.swing.JLabel();
         txtPrice = new javax.swing.JTextField();
         btnReset = new javax.swing.JButton();
+        lbCate = new javax.swing.JLabel();
+        comboCate = new javax.swing.JComboBox<>();
         taNotify = new javax.swing.JTextArea();
         panelFind = new javax.swing.JPanel();
         lbPack = new javax.swing.JLabel();
@@ -153,7 +171,7 @@ public class NecessityForm extends javax.swing.JPanel {
 
         panelTop.setBorder(javax.swing.BorderFactory.createTitledBorder("Thêm"));
         panelTop.setMinimumSize(new java.awt.Dimension(390, 500));
-        panelTop.setPreferredSize(new java.awt.Dimension(1001, 200));
+        panelTop.setPreferredSize(new java.awt.Dimension(1001, 215));
         panelTop.setLayout(null);
 
         panelInput.setPreferredSize(new java.awt.Dimension(333, 200));
@@ -197,66 +215,80 @@ public class NecessityForm extends javax.swing.JPanel {
             }
         });
 
+        lbCate.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lbCate.setText("Loại:");
+
         javax.swing.GroupLayout panelInputLayout = new javax.swing.GroupLayout(panelInput);
         panelInput.setLayout(panelInputLayout);
         panelInputLayout.setHorizontalGroup(
-            panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelInputLayout.createSequentialGroup()
-                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelInputLayout.createSequentialGroup()
-                        .addComponent(lbPackIn, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5)
-                        .addComponent(txtPackAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panelInputLayout.createSequentialGroup()
-                        .addComponent(lbPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5)
-                        .addComponent(txtPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panelInputLayout.createSequentialGroup()
-                        .addComponent(lbLimitIn, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5)
-                        .addComponent(txtLimitIn, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
-                    .addGroup(panelInputLayout.createSequentialGroup()
-                        .addComponent(lbTimeIn)
-                        .addGap(5, 5, 5)
-                        .addComponent(comboTime, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnReset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelInputLayout.createSequentialGroup()
+                                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelInputLayout.createSequentialGroup()
+                                                .addComponent(lbPackIn, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(5, 5, 5)
+                                                .addComponent(txtPackAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(panelInputLayout.createSequentialGroup()
+                                                .addComponent(lbPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(5, 5, 5)
+                                                .addComponent(txtPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(panelInputLayout.createSequentialGroup()
+                                                .addComponent(lbLimitIn, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(5, 5, 5)
+                                                .addComponent(txtLimitIn, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
+                                        .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnReset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(panelInputLayout.createSequentialGroup()
+                                                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(lbTimeIn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(lbCate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGap(5, 5, 5)
+                                                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(comboCate, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(comboTime, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addContainerGap())
         );
         panelInputLayout.setVerticalGroup(
-            panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelInputLayout.createSequentialGroup()
-                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelInputLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(lbPackIn))
-                    .addComponent(txtPackAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
-                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelInputLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(lbPrice))
-                    .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
-                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelInputLayout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(lbLimitIn))
-                    .addComponent(txtLimitIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
-                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelInputLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(lbTimeIn))
-                    .addComponent(comboTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
-                .addComponent(btnAdd)
-                .addGap(0, 0, 0)
-                .addComponent(btnReset))
+                panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelInputLayout.createSequentialGroup()
+                                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelInputLayout.createSequentialGroup()
+                                                .addGap(2, 2, 2)
+                                                .addComponent(lbPackIn))
+                                        .addComponent(txtPackAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(10, 10, 10)
+                                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelInputLayout.createSequentialGroup()
+                                                .addGap(2, 2, 2)
+                                                .addComponent(lbPrice))
+                                        .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(10, 10, 10)
+                                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelInputLayout.createSequentialGroup()
+                                                .addGap(4, 4, 4)
+                                                .addComponent(lbLimitIn))
+                                        .addComponent(txtLimitIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(10, 10, 10)
+                                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelInputLayout.createSequentialGroup()
+                                                .addGap(2, 2, 2)
+                                                .addComponent(lbTimeIn))
+                                        .addComponent(comboTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panelInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelInputLayout.createSequentialGroup()
+                                                .addGap(2, 2, 2)
+                                                .addComponent(lbCate))
+                                        .addComponent(comboCate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                                .addComponent(btnAdd)
+                                .addGap(0, 0, 0)
+                                .addComponent(btnReset)
+                                .addContainerGap())
         );
 
         panelTop.add(panelInput);
-        panelInput.setBounds(26, 21, 333, 200);
+        panelInput.setBounds(26, 21, 333, 240);
 
         taNotify.setEditable(false);
         taNotify.setColumns(50);
@@ -319,18 +351,18 @@ public class NecessityForm extends javax.swing.JPanel {
 
         table.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+                new Object [][] {
 
-            },
-            new String [] {
-                "Mã", "Tên gói", "Mức giới hạn", "Đơn giá", "Lượng tiêu thụ", "Tuỳ chọn"
-            }
+                },
+                new String [] {
+                        "Mã", "Tên gói", "Mức giới hạn", "Đơn giá", "Lượng tiêu thụ", "Tuỳ chọn"
+                }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class
+                    java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, true
+                    false, false, false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -345,9 +377,9 @@ public class NecessityForm extends javax.swing.JPanel {
         scTable.setViewportView(table);
 
         add(scTable);
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
-    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
+    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             if (txtPackFind.getText().isBlank()) {
                 try {
@@ -373,9 +405,9 @@ public class NecessityForm extends javax.swing.JPanel {
         }
 
 
-    }//GEN-LAST:event_btnFindActionPerformed
+    }
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             if (txtPackAdd.getText().isBlank() && txtPrice.getText().isBlank()) {
                 JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ các trường", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
@@ -386,6 +418,7 @@ public class NecessityForm extends javax.swing.JPanel {
             model.setName(txtPackAdd.getText());
             model.setLimit((int) txtLimitIn.getValue());
             model.setPrice(Integer.parseInt(txtPrice.getText()));
+            model.setType(comboCate.getSelectedItem().toString());
             if (comboTime.getSelectedIndex() == 0) {
                 model.setTime_limit(1);
             }
@@ -397,35 +430,34 @@ public class NecessityForm extends javax.swing.JPanel {
             }
 
             new CovidDAO().addNecessity(model);
-            
+
             taNotify.setText(">>>Thông báo\n" + "Tên gói: " + model.getName() + "\n" + "Giá: " + model.getPrice()
                     + "\n Mức giới hạn: " + model.getLimit() + " sản phẩm/"
                     + comboTime.getSelectedItem().toString() + "\n đã được thêm");
-            HistoryDAO.AddHistory("Đã thêm gói nhu yếu phẩm mới: "+ model.getName());
         } catch (SQLException ex) {
             taNotify.setText(">>>Thông báo\n Có lỗi xảy ra, thêm không thành công");
             Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnAddActionPerformed
+    }
 
-    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {
         txtPackAdd.setText("");
         txtPrice.setText("");
         txtLimitIn.setValue(0);
         comboTime.setSelectedIndex(0);
         taNotify.setText(">>>Thông báo");
-    }//GEN-LAST:event_btnResetActionPerformed
+    }
 
-    private void comboSortItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboSortItemStateChanged
+    private void comboSortItemStateChanged(java.awt.event.ItemEvent evt) {
         try {
             sortLst();
             addToTable();
         } catch (ParseException ex) {
             Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_comboSortItemStateChanged
+    }
 
-    private void comboFilterItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboFilterItemStateChanged
+    private void comboFilterItemStateChanged(java.awt.event.ItemEvent evt) {
         try {
             sortLst();
             addToTable();
@@ -433,13 +465,13 @@ public class NecessityForm extends javax.swing.JPanel {
             Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-    }//GEN-LAST:event_comboFilterItemStateChanged
+    }
 
-    private void txtLimitInStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_txtLimitInStateChanged
-       if((int)txtLimitIn.getValue()<=0){
-           txtLimitIn.setValue(0);
-       }
-    }//GEN-LAST:event_txtLimitInStateChanged
+    private void txtLimitInStateChanged(javax.swing.event.ChangeEvent evt) {
+        if((int)txtLimitIn.getValue()<=0){
+            txtLimitIn.setValue(0);
+        }
+    }
 
     void sortLst() throws ParseException {
         if(lst==null) return;
@@ -510,7 +542,7 @@ public class NecessityForm extends javax.swing.JPanel {
         }
 
         public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
+                                                       boolean isSelected, boolean hasFocus, int row, int column) {
             return this;
         }
     }
@@ -527,7 +559,7 @@ public class NecessityForm extends javax.swing.JPanel {
         }
 
         public Component getTableCellEditorComponent(JTable table, Object value,
-                boolean isSelected, int row, int column) {
+                                                     boolean isSelected, int row, int column) {
             this.button.setText(label);
             return this.button;
         }
@@ -538,13 +570,15 @@ public class NecessityForm extends javax.swing.JPanel {
 
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnFind;
     private javax.swing.JButton btnReset;
+    private javax.swing.JComboBox<String> comboCate;
     private javax.swing.JComboBox<String> comboFilter;
     private javax.swing.JComboBox<String> comboSort;
     private javax.swing.JComboBox<String> comboTime;
+    private javax.swing.JLabel lbCate;
     private javax.swing.JLabel lbFilter;
     private javax.swing.JLabel lbLimitIn;
     private javax.swing.JLabel lbPack;
@@ -562,5 +596,5 @@ public class NecessityForm extends javax.swing.JPanel {
     private javax.swing.JTextField txtPackAdd;
     private javax.swing.JTextField txtPackFind;
     private javax.swing.JTextField txtPrice;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration
 }

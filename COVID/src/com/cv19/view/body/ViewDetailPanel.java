@@ -143,7 +143,6 @@ public class ViewDetailPanel extends javax.swing.JPanel {
         txtDob = new javax.swing.JTextField();
         panelBtn = new javax.swing.JPanel();
         btnUpdate = new javax.swing.JButton();
-        btnDel = new javax.swing.JButton();
         tableRelatedPanel = new javax.swing.JPanel();
         lbTable = new javax.swing.JLabel();
         scTable = new javax.swing.JScrollPane();
@@ -314,8 +313,6 @@ public class ViewDetailPanel extends javax.swing.JPanel {
         });
         panelBtn.add(btnUpdate);
 
-        btnDel.setText("Khoá ");
-        panelBtn.add(btnDel);
 
         panelMid.add(panelBtn);
 
@@ -450,7 +447,6 @@ public class ViewDetailPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDel;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JComboBox<QuarantineModel> comboQua;
     private javax.swing.JComboBox<String> comboSta;

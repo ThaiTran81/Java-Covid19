@@ -13,6 +13,8 @@ public class AddressModel {
     String name;
 
     public AddressModel() {
+        this.id=-1;
+        this.name=null;
     }
 
     public AddressModel(int id, String name) {
