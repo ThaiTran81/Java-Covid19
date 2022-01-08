@@ -44,7 +44,6 @@ public class NecessityEditPanel extends javax.swing.JPanel {
             comboTime.setSelectedIndex(getIndexUnit());
 
             for ( int i = 0; i< category.size(); i++) {
-                System.out.print(category.get(i)) ;
                 if(category.get(i).equalsIgnoreCase(model.getType())){
                     comboCate.setSelectedIndex(i);
                     break;

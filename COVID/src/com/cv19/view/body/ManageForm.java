@@ -389,7 +389,7 @@ public class ManageForm extends javax.swing.JPanel {
             DefaultTableModel model = (DefaultTableModel) table.getModel();
             model.setRowCount(0);
 
-            if (arrRs == null) {
+            if (arrRs == null || arrRs.size()==0) {
                 JOptionPane.showMessageDialog(null, "Không tìm thấy kết quả phù hợp", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 model.setNumRows(0);
                 return;

@@ -7,14 +7,14 @@ package com.cv19.view.body;
 import com.Controller.CovidDAO;
 import com.Model.profileModel;
 import com.cv19.view.event.EventFindSelected;
+import com.main.main;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 /**
  * @author ThaiTran
  */
@@ -25,7 +25,7 @@ public class FindForm extends javax.swing.JPanel {
      */
 
     EventFindSelected callback;
-
+    private static final Logger logger = LogManager.getLogger(FindForm.class.getName());
     public FindForm(EventFindSelected callback) {
 
         this.callback = callback;
@@ -149,9 +149,9 @@ public class FindForm extends javax.swing.JPanel {
             addTable(lst);
 
         } catch (SQLServerException ex) {
-            Logger.getLogger(FindForm.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex);
         } catch (SQLException ex) {
-            Logger.getLogger(FindForm.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex);
         }
 
 

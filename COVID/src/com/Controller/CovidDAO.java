@@ -25,7 +25,7 @@ public class CovidDAO {
 
     String sv = "localhost";
     String usr = "sa";
-    String pwd = "123456";
+    String pwd = "1234567890";
     String db = "QLC19";
     int prt = 1433;
 
@@ -637,10 +637,9 @@ public class CovidDAO {
     public void updateState(Object params[]) throws SQLException {
         String sql = "UPDATE PROFILE \n"
                 + "set F_STATUS = '" + params[1] + "' "
-                + "WHERE ID =" + params[0];
+                + "WHERE ID ='" + params[0]+"'";
         Statement stmt = conn.createStatement();
-
-
+        stmt.executeUpdate(sql);
     }
 
     public void updateStateAndQua(Object params[]) throws SQLException {

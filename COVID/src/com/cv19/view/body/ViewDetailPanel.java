@@ -400,8 +400,7 @@ public class ViewDetailPanel extends javax.swing.JPanel {
             if (preQua != comboQua.getSelectedIndex()) {
                 HistoryDAO.AddHistory("Đã chuyển nơi điều trị của " + user.getUsername() + " sang " + ((QuarantineModel) comboQua.getSelectedItem()).toString() + " [" + user.getId_qua() + "]");
             }
-
-            if (preSta != comboSta.getSelectedIndex()) {
+            if(preSta!= comboSta.getSelectedIndex()) {
                 preSta = comboSta.getSelectedIndex();
                 FUtil.updateUserCovidByState(user.getUsername(), comboSta.getSelectedItem().toString(), user.getStatus());
                 HistoryDAO.AddHistory("Đã chuyển trạng thái " + user.getUsername() + " sang " + user.getStatus());

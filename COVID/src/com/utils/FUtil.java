@@ -52,7 +52,6 @@ public class FUtil {
             id,
             state
         };
-        
         if (state.equals("OK")) {
             try {
                 new CovidDAO().updateState(params);
@@ -89,9 +88,11 @@ public class FUtil {
             try {
                  new CovidDAO().updateState(params);
             } catch (Exception e) {
+                System.out.println(e);
                 return false;
             }
             traversalAndUpdate(id, 1, "");
+
         }
 
         return true;

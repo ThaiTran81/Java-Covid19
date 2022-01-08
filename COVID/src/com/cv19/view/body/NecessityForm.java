@@ -7,6 +7,7 @@ package com.cv19.view.body;
 import com.Controller.CovidDAO;
 import com.Controller.HistoryDAO;
 import com.Model.NecessityModel;
+import com.main.main;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.Component;
 import java.awt.Font;
@@ -22,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -36,6 +35,8 @@ import javax.swing.table.TableColumnModel;
 import com.utils.AlignTable;
 import com.utils.NecessitySorter;
 import java.sql.ResultSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -57,6 +58,7 @@ public class NecessityForm extends javax.swing.JPanel {
     private int maxPrice = 0;
     private int step = 0;
     int previousClick;
+    private static final Logger logger = LogManager.getLogger(NecessityForm.class.getName());
 
     public NecessityForm(){
         try {
@@ -94,7 +96,7 @@ public class NecessityForm extends javax.swing.JPanel {
 
             btnFindActionPerformed(null);
         } catch (SQLServerException ex) {
-            Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -130,9 +132,9 @@ public class NecessityForm extends javax.swing.JPanel {
             }
 
         } catch (SQLServerException ex) {
-            Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         } catch (SQLException ex) {
-            Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         }
 
     }
@@ -387,11 +389,11 @@ public class NecessityForm extends javax.swing.JPanel {
                     sortLst();
                     addToTable();
                 } catch (SQLServerException ex) {
-                    Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error(ex);
                 } catch (SQLException ex) {
-                    Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error(ex);
                 } catch (ParseException ex) {
-                    Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error(ex);
                 }
                 return;
             }
@@ -399,9 +401,9 @@ public class NecessityForm extends javax.swing.JPanel {
             sortLst();
             addToTable();
         } catch (SQLException ex) {
-            Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         } catch (ParseException ex) {
-            Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         }
 
 
@@ -436,7 +438,7 @@ public class NecessityForm extends javax.swing.JPanel {
                     + comboTime.getSelectedItem().toString() + "\n đã được thêm");
         } catch (SQLException ex) {
             taNotify.setText(">>>Thông báo\n Có lỗi xảy ra, thêm không thành công");
-            Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         }
     }
 
@@ -453,7 +455,7 @@ public class NecessityForm extends javax.swing.JPanel {
             sortLst();
             addToTable();
         } catch (ParseException ex) {
-            Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         }
     }
 
@@ -462,7 +464,7 @@ public class NecessityForm extends javax.swing.JPanel {
             sortLst();
             addToTable();
         } catch (ParseException ex) {
-            Logger.getLogger(NecessityForm.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         }
 
     }

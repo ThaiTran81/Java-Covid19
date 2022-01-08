@@ -7,6 +7,7 @@ import com.Model.QuarantineModel;
 import com.Model.profileModel;
 import com.cv19.view.components.AddressCombobox;
 import com.cv19.view.event.EventFindCallBack;
+import com.main.main;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.Color;
 import java.sql.SQLException;
@@ -15,13 +16,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.text.ParseException;
 import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import com.utils.FUtil;
 import com.utils.Validator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -57,7 +62,7 @@ public class AddForm extends javax.swing.JPanel {
     ArrayList<QuarantineModel> lstQua;
     boolean idValid = false;
     boolean phoneValid = true;
-
+    private static final Logger logger = LogManager.getLogger(AddForm.class.getName());
     public AddForm() {
         initComponents();
         comboDay.setModel(new DefaultComboBoxModel(dates));
@@ -67,9 +72,9 @@ public class AddForm extends javax.swing.JPanel {
         try {
             lstQua = new CovidDAO().getAllQuarantine();
         } catch (SQLServerException ex) {
-            Logger.getLogger(AddForm.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         } catch (SQLException ex) {
-            Logger.getLogger(AddForm.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         }
 
         for (int i = 0; i < lstQua.size(); i++) {
@@ -516,18 +521,19 @@ public class AddForm extends javax.swing.JPanel {
                 notify("Thêm thành công");
                 HistoryDAO.AddHistory("Đã thêm "+user.getUsername()+" vào danh sách");
                 btnResetActionPerformed(null);
+                FUtil.buildGraph();
             };
         } catch (SQLServerException ex) {
             notify("Thêm thất bại, có lỗi xảy ra");
-            Logger.getLogger(AddForm.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         } catch (SQLException ex) {
             notify("Thêm thất bại, có lỗi xảy ra");
 
-            Logger.getLogger(AddForm.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         } catch (ParseException ex) {
             notify("Thêm thất bại, có lỗi xảy ra");
 
-            Logger.getLogger(AddForm.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         }
 
     }//GEN-LAST:event_btnAddActionPerformed
