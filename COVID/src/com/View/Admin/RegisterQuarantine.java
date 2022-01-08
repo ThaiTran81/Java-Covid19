@@ -409,7 +409,7 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
                 ResultSet rs = pre.executeQuery();
                 if (rs.next()){
 
-                    result.setText(qua.toString(rs.getString(1), rs.getString(2)));
+                    result.setText(qua.toString(rs.getString(1), rs.getString(2), qua.getId()));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ModifyQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
@@ -530,7 +530,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
                 pre.setInt(2, qua.getDistrict());
                 ResultSet rs = pre.executeQuery();
                 if (rs.next()){
-                    result.setText(qua.toString(rs.getString(1), rs.getString(2)));
+                    result.setText(qua.toString(rs.getString(1), rs.getString(2), qua.getId()));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(DeleteQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);

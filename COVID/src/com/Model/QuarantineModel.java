@@ -1,5 +1,14 @@
 package com.Model;
 
+import com.Controller.CovidDAO;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class QuarantineModel {
     private int id;
     private String name;
@@ -26,7 +35,7 @@ public class QuarantineModel {
         this.deleted = deleted;
     }
 
-    public String toString(String namepro, String namedist) {
+    public String toString(String namepro, String namedist, int id_qua) {
         String temp = null;
         if (deleted == 0){
             temp = "Open";
@@ -34,11 +43,26 @@ public class QuarantineModel {
         else if (deleted == 1){
             temp = "Closed";
         }
+
+        int count = 0;
+        String sql = "  SELECT Count(*)\n" +
+                "  FROM QUARATINE Q JOIN PROFILE P ON Q.ID_QUARATINE=P.ID_QUARATINE" +
+                " WHERE Q.ID_QUARATINE=?";
+        try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+            pre.setInt(1, id_qua);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()){
+                count = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(QuarantineModel.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
+        }
         return " Name: " + name + "\n" +
                 " Province: " + namepro + "\n"+
                 " District: " + namedist +"\n"+
                 " Capacity: " + capicity +"\n" +
-                " Activate: " + temp;
+                " Activate: " + temp + "\n" +
+                " Current Patients: " + count + "\n";
     }
 
     public QuarantineModel(){
