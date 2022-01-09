@@ -279,6 +279,7 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
     private JLabel activatelabel = new JLabel("Activate");
     private JComboBox activatetx = new JComboBox(new String[]{"Closed", "Open"});
 
+    private JButton refresh = new JButton("Refresh");
     private QuarantineModel qua = new QuarantineModel();
     ModifyQuarantine(){
         setBounds(0, 100, 860, 600);
@@ -340,6 +341,12 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
         sub.setToolTipText("Submit all what you've typed");
         add(sub);
 
+        refresh.setFont(new Font("Arial", Font.PLAIN, 15));
+        refresh.setBounds(390, 350, 100, 20);
+        refresh.addActionListener(this);
+        refresh.setToolTipText("Refresh");
+        add(refresh);
+
         reset.setFont(new Font("Arial", Font.PLAIN, 15));
         reset.setBounds(270, 350, 100, 20);
         reset.addActionListener(this);
@@ -356,9 +363,6 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
         res.setBounds(270, 400, 500, 25);
         add(res);
 
-        String url = "jdbc:sqlserver://localhost:1433;database=QLC19";
-        String username = "sa";
-        String password = "123456";
         String sql = "select * from QUARATINE";
         try (Connection conn = new CovidDAO().getConnection(); Statement stm = conn.createStatement()){
             ResultSet rs = stm.executeQuery(sql);
@@ -438,6 +442,19 @@ class ModifyQuarantine extends  JPanel implements ActionListener {
             quanamtx.setText(qua.getName());
             captx.setText(""+qua.getCapicity());
         }
+        if (e.getSource()==refresh){
+            String sql = "select * from QUARATINE"; //WHERE IS_DELETED=0";
+            try (Connection conn = new CovidDAO().getConnection(); Statement stm = conn.createStatement()){
+                ResultSet rs = stm.executeQuery(sql);
+                quatx.removeAllItems();
+                while(rs.next()){
+                    String name = rs.getString(2);
+                    quatx.addItem(name);
+                }
+            } catch (SQLException ex){
+                Logger.getLogger(ModifyQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
+            }
+        }
     }
 }
 
@@ -449,7 +466,7 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
 
     private JButton sub = new JButton("Delete");
     private JTextArea result = new JTextArea();
-
+    private JButton refresh = new JButton("Refresh");
     private QuarantineModel qua = new QuarantineModel();
     DeleteQuarantine(){
         setBounds(0, 100, 860, 600);
@@ -481,6 +498,12 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
         sub.addActionListener(this);
         sub.setToolTipText("Delete this quarantine");
         add(sub);
+
+        refresh.setFont(new Font("Arial", Font.PLAIN, 15));
+        refresh.setBounds(270, 350, 100, 20);
+        refresh.addActionListener(this);
+        refresh.setToolTipText("Refresh");
+        add(refresh);
 
         result.setFont(new Font("Arial", Font.PLAIN, 15));
         result.setBounds(400, 100, 300, 250);
@@ -568,6 +591,19 @@ class DeleteQuarantine extends  JPanel implements ActionListener {
                 }
             } else if (count != 0){
                 JOptionPane.showMessageDialog(null, "Can not delete because there are still people here");
+            }
+        }
+        if(e.getSource()==refresh){
+            String sql = "select * from QUARATINE"; //WHERE IS_DELETED=0";
+            try (Connection conn = new CovidDAO().getConnection(); Statement stm = conn.createStatement()){
+                ResultSet rs = stm.executeQuery(sql);
+                quatx.removeAllItems();
+                while(rs.next()){
+                    String name = rs.getString(2);
+                    quatx.addItem(name);
+                }
+            } catch (SQLException ex){
+                Logger.getLogger(DeleteQuarantine.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
         }
     }
