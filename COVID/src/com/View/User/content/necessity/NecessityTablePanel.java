@@ -95,12 +95,14 @@ public class NecessityTablePanel extends JPanel {
             ResultSet rs = pre.executeQuery();
 
             while (rs.next()) {
-                String name = rs.getString(2);
-                int limit = rs.getInt(3);
-                String price = rs.getString(4);
-                int time_limit = rs.getInt(5);
-                String type = rs.getString(6);
-                lst.add(new NecessityModel(name, limit, Integer.parseInt(price), time_limit, type));
+                if (rs.getInt(8) == 0) {
+                    String name = rs.getString(2);
+                    int limit = rs.getInt(3);
+                    String price = rs.getString(4);
+                    int time_limit = rs.getInt(5);
+                    String type = rs.getString(6);
+                    lst.add(new NecessityModel(name, limit, Integer.parseInt(price), time_limit, type));
+                }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

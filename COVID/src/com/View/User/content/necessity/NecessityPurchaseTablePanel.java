@@ -99,13 +99,15 @@ public class NecessityPurchaseTablePanel extends JPanel {
             ResultSet rs = pre.executeQuery();
 
             while (rs.next()) {
-                int id = rs.getInt(1);
-                String name = rs.getString(2);
-                int limit = rs.getInt(3);
-                int price = rs.getInt(4);
-                int time_limit = rs.getInt(5);
-                String type = rs.getString(6);
-                lst.add(new NecessityModel(id, name, limit, price, time_limit, type));
+                if (rs.getInt(8) == 0) {
+                    int id = rs.getInt(1);
+                    String name = rs.getString(2);
+                    int limit = rs.getInt(3);
+                    int price = rs.getInt(4);
+                    int time_limit = rs.getInt(5);
+                    String type = rs.getString(6);
+                    lst.add(new NecessityModel(id, name, limit, price, time_limit, type));
+                }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

@@ -692,12 +692,32 @@ public class MainFrame extends JFrame implements ActionListener {
         account_panel.add(ct);
     }
 
+    public void setNecessityTable() {
+        String search = search_bar.getText();
+        System.out.println(search);
+        String nec_type = type_filter_combo_box.getSelectedItem().toString().trim();
+        String sort_type = sort_combo_box.getSelectedItem().toString();
+        String time_type = time_filter_combo_box.getSelectedItem().toString();
+        if (Objects.equals(search, "Tìm kiếm")) {
+            search = "";
+        }
+        necessity_content.removeAll();
+        necessity_content.add(new NecessityTablePanel(getId(), search, nec_type, sort_type, time_type));
+        necessity_content.repaint();
+        necessity_content.revalidate();
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == information_button) {
             switchPanel(information_panel);
         }
         if (e.getSource() == necessity_button) {
+            search_bar.setText("");
+            sort_combo_box.setSelectedIndex(0);
+            type_filter_combo_box.setSelectedIndex(0);
+            time_filter_combo_box.setSelectedIndex(0);
+            setNecessityTable();
             switchPanel(necessity_panel);
         }
         if (e.getSource() == payment_button) {
@@ -750,20 +770,11 @@ public class MainFrame extends JFrame implements ActionListener {
             search_bar.setText("");
         }
         if (e.getSource() == search_button || e.getSource() == type_filter_combo_box || e.getSource() == sort_combo_box || e.getSource() == time_filter_combo_box) {
-            String search = search_bar.getText();
-            System.out.println(search);
-            String nec_type = type_filter_combo_box.getSelectedItem().toString().trim();
-            String sort_type = sort_combo_box.getSelectedItem().toString();
-            String time_type = time_filter_combo_box.getSelectedItem().toString();
-            if (Objects.equals(search, "Tìm kiếm")) {
-                search = "";
-            }
-            necessity_content.removeAll();
-            necessity_content.add(new NecessityTablePanel(getId(), search, nec_type, sort_type, time_type));
-            necessity_content.repaint();
-            necessity_content.revalidate();
+            setNecessityTable();
         }
         if (e.getSource() == purchase_button) {
+            search_bar.setText("");
+            type_filter_combo_box.setSelectedIndex(0);
             switchPanel(necessity_purchase_panel);
         }
         if (e.getSource() == purchase_search_bar) {
@@ -897,6 +908,11 @@ public class MainFrame extends JFrame implements ActionListener {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
             JOptionPane.showMessageDialog(this, "Mua thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            product_chosen_field.setText("");
+            add_product_field.setText("");
+            total_cost_field.setText("");
+            quantity_field.setText("");
+            cart_model.setRowCount(0);
             switchPanel(necessity_purchase_panel);
         }
         if (e.getSource() == cost_field) {
