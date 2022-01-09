@@ -2,6 +2,7 @@ package com.View;
 
 
 import com.Controller.CovidDAO;
+import com.Controller.LoginController;
 import com.View.User.MainFrame;
 
 import javax.swing.*;
@@ -78,6 +79,13 @@ public class ChangeFirstPassView extends javax.swing.JFrame {
         panelMain.add(cbShowPass);
 
         btnCancel.setText("HUỶ");
+        btnCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new LoginController();
+                ChangeFirstPassView.this.dispose();
+            }
+        });
         panelMain.add(btnCancel);
 
         btnSubmit.setText("XÁC NHẬN");
