@@ -68,6 +68,12 @@ public class MainFrame extends JFrame implements ActionListener {
 
         add(main_layer);
         setVisible(true);
+
+        showInformationPanel();
+        showNecessityPanel();
+        showPurchasePanel();
+        showAccountPanel();
+        showPaymentPanel();
     }
 
     private SideBarPanel side_bar;
@@ -137,8 +143,6 @@ public class MainFrame extends JFrame implements ActionListener {
     private InformationButton payment_history_button;
 
     public void showInformationPanel() {
-        information_panel.removeAll();
-
         JPanel none1 = new JPanel();
         none1.setPreferredSize(new Dimension(80,50));
         JPanel none2 = new JPanel();
@@ -177,9 +181,6 @@ public class MainFrame extends JFrame implements ActionListener {
         information_panel.add(information_content_panel2);
         information_panel.add(information_content_panel3);
         information_panel.add(new JPanel());
-
-        information_panel.repaint();
-        information_panel.revalidate();
     }
 
     private JTextField search_bar = new JTextField("Tìm kiếm");
@@ -216,8 +217,6 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     public void showNecessityPanel() {
-        necessity_panel.removeAll();
-
         JPanel necessity_title = new JPanel();
         necessity_title.setBackground(Color.white);
         necessity_title.setPreferredSize(new Dimension(720,70));
@@ -310,9 +309,6 @@ public class MainFrame extends JFrame implements ActionListener {
         necessity_panel.add(task_bar_panel);
         necessity_panel.add(necessity_content);
         necessity_panel.add(purchase_button);
-
-        necessity_panel.repaint();
-        necessity_panel.revalidate();
     }
 
     private JTextField purchase_search_bar = new JTextField("Tìm kiếm");
@@ -330,8 +326,6 @@ public class MainFrame extends JFrame implements ActionListener {
     private JButton buy_button = new JButton("Mua");
 
     public void showPurchasePanel() {
-        necessity_purchase_panel.removeAll();
-
         JLabel title = new JLabel("Mua nhu yếu phẩm");
         title.setFont(content_title_font);
 
@@ -529,17 +523,14 @@ public class MainFrame extends JFrame implements ActionListener {
         necessity_purchase_panel.add(title);
         necessity_purchase_panel.add(none);
         necessity_purchase_panel.add(ct);
-
-        necessity_purchase_panel.repaint();
-        necessity_purchase_panel.revalidate();
     }
 
     private JTextField cost_field = new JTextField("Số tiền thanh toán");
     private JButton payment_accept_button = new JButton("Thanh toán");
+    public JLabel debt = new JLabel();
+    public JLabel cost = new JLabel();
 
     public void showPaymentPanel() {
-        payment_panel.removeAll();
-
         JPanel payment_title = new JPanel();
         payment_title.setBackground(Color.white);
         payment_title.setPreferredSize(new Dimension(720,100));
@@ -547,35 +538,12 @@ public class MainFrame extends JFrame implements ActionListener {
         payment_text_title.setFont(content_title_font);
         payment_title.add(payment_text_title);
 
-        JLabel debt = new JLabel();
+
         debt.setText("Số tiền cần thanh toán:");
         debt.setFont(new Font("Text",Font.BOLD,20));
 
-        JLabel cost = new JLabel();
         cost.setText("Nhập số tiền thanh toán (tối thiểu 20%):");
         cost.setFont(new Font("Text",Font.BOLD,20));
-
-        String money = "";
-
-        String sql = "SELECT *\n" +
-                "FROM DEBT\n" +
-                "WHERE [USER_ID] = ?";
-        try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
-            pre.setString(1, getId());
-            ResultSet rs = pre.executeQuery();
-
-            if (rs.next()) {
-                money = rs.getString(2);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
-        }
-
-        if (money != "") {
-            debt.setText("Số tiền cần thanh toán: " + money);
-            double m = Double.parseDouble(money)/5;
-            cost.setText("Nhập số tiền thanh toán (tối thiểu " + (int)m + "):");
-        }
 
         cost_field.setPreferredSize(new Dimension(180,30));
         cost_field.setForeground(new Color(153, 153, 153));
@@ -626,9 +594,6 @@ public class MainFrame extends JFrame implements ActionListener {
         payment_panel.add(payment_title);
         payment_panel.add(none);
         payment_panel.add(ct);
-
-        payment_panel.repaint();
-        payment_panel.revalidate();
     }
 
     private JPasswordField old_password_field = new JPasswordField();
@@ -637,8 +602,6 @@ public class MainFrame extends JFrame implements ActionListener {
     private JButton change_password_button = new JButton("Change");
 
     public void showAccountPanel() {
-        account_panel.removeAll();
-
         JPanel account_title = new JPanel();
         account_title.setBackground(Color.white);
         account_title.setPreferredSize(new Dimension(720,100));
@@ -727,27 +690,41 @@ public class MainFrame extends JFrame implements ActionListener {
         account_panel.add(account_title);
         account_panel.add(none);
         account_panel.add(ct);
-
-        account_panel.repaint();
-        account_panel.revalidate();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == information_button) {
-            showInformationPanel();
             switchPanel(information_panel);
         }
         if (e.getSource() == necessity_button) {
-            showNecessityPanel();
             switchPanel(necessity_panel);
         }
         if (e.getSource() == payment_button) {
-            showPaymentPanel();
+            String money = "";
+
+            String sql = "SELECT *\n" +
+                    "FROM DEBT\n" +
+                    "WHERE [USER_ID] = ?";
+            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                pre.setString(1, getId());
+                ResultSet rs = pre.executeQuery();
+
+                if (rs.next()) {
+                    money = rs.getString(2);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
+            }
+            if (money != "") {
+                debt.setText("Số tiền cần thanh toán: " + money);
+                double m = Double.parseDouble(money)/5;
+                cost.setText("Nhập số tiền thanh toán (tối thiểu " + (int)m + "):");
+            }
+            cost_field.setText("Số tiền thanh toán");
             switchPanel(payment_panel);
         }
         if (e.getSource() == account_button) {
-            showAccountPanel();
             switchPanel(account_panel);
         }
         if (e.getSource() == logout_button) {
@@ -774,6 +751,7 @@ public class MainFrame extends JFrame implements ActionListener {
         }
         if (e.getSource() == search_button || e.getSource() == type_filter_combo_box || e.getSource() == sort_combo_box || e.getSource() == time_filter_combo_box) {
             String search = search_bar.getText();
+            System.out.println(search);
             String nec_type = type_filter_combo_box.getSelectedItem().toString().trim();
             String sort_type = sort_combo_box.getSelectedItem().toString();
             String time_type = time_filter_combo_box.getSelectedItem().toString();
@@ -786,7 +764,6 @@ public class MainFrame extends JFrame implements ActionListener {
             necessity_content.revalidate();
         }
         if (e.getSource() == purchase_button) {
-            showPurchasePanel();
             switchPanel(necessity_purchase_panel);
         }
         if (e.getSource() == purchase_search_bar) {
@@ -919,17 +896,17 @@ public class MainFrame extends JFrame implements ActionListener {
             } catch (SQLException ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
-            showPurchasePanel();
+            JOptionPane.showMessageDialog(this, "Mua thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             switchPanel(necessity_purchase_panel);
         }
         if (e.getSource() == cost_field) {
             cost_field.setText("");
         }
         if (e.getSource() == payment_accept_button) {
-            String cost = cost_field.getText();
+            String cost_value = cost_field.getText();
             String id_bank = "";
             String balance = "";
-            String debt = "";
+            String debt_value = "";
             String sql = "SELECT PM.*\n" +
                     "FROM PROFILE P JOIN PAYMENT PM ON P.ID_BANK = PM.ID_BANK\n" +
                     "WHERE ID = ?";
@@ -952,37 +929,69 @@ public class MainFrame extends JFrame implements ActionListener {
                 ResultSet rs = pre.executeQuery();
 
                 if (rs.next()) {
-                    debt = rs.getString(2);
+                    debt_value = rs.getString(2);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
-            String nb = Integer.toString(Integer.parseInt(balance) - Integer.parseInt(cost));
-            sql = "UPDATE PAYMENT SET BALANCE = ? WHERE ID_BANK = ?";
-            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
-                pre.setString(1, nb);
-                pre.setString(2, id_bank);
-                pre.execute();
-            } catch (SQLException ex) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
+            int temp = Integer.parseInt(debt_value) / 5;
+            if (Integer.parseInt(cost_value) < temp) {
+                JOptionPane.showMessageDialog(this, "Vui lòng thanh toán tối thiểu " + temp, "Thông báo", JOptionPane.ERROR_MESSAGE);
             }
-            sql = "INSERT INTO PAYMENT_HISTORY VALUES(?, GETDATE(), ?)";
+            else {
+                if (Integer.parseInt(cost_value) > Integer.parseInt(debt_value)) {
+                    cost_value = debt_value;
+                }
+                String nb = Integer.toString(Integer.parseInt(balance) - Integer.parseInt(cost_value));
+                sql = "UPDATE PAYMENT SET BALANCE = ? WHERE ID_BANK = ?";
+                try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                    pre.setString(1, nb);
+                    pre.setString(2, id_bank);
+                    pre.execute();
+                } catch (SQLException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
+                }
+                sql = "INSERT INTO PAYMENT_HISTORY VALUES(?, GETDATE(), ?)";
+                try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                    pre.setString(1, getId());
+                    pre.setString(2, cost_value);
+                    pre.execute();
+                } catch (SQLException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
+                }
+                String nd = Integer.toString(Integer.parseInt(debt_value) - Integer.parseInt(cost_value));
+                sql = "UPDATE DEBT SET DEBT = ? WHERE USER_ID = ?";
+                try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
+                    pre.setString(1, nd);
+                    pre.setString(2, getId());
+                    pre.execute();
+                } catch (SQLException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
+                }
+
+                JOptionPane.showMessageDialog(this, "Thanh toán thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+            String money = "";
+
+            sql = "SELECT *\n" +
+                    "FROM DEBT\n" +
+                    "WHERE [USER_ID] = ?";
             try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
                 pre.setString(1, getId());
-                pre.setString(2, cost);
-                pre.execute();
+                ResultSet rs = pre.executeQuery();
+
+                if (rs.next()) {
+                    money = rs.getString(2);
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
             }
-            String nd = Integer.toString(Integer.parseInt(debt) - Integer.parseInt(cost));
-            sql = "UPDATE DEBT SET DEBT = ? WHERE USER_ID = ?";
-            try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
-                pre.setString(1, nd);
-                pre.setString(2, getId());
-                pre.execute();
-            } catch (SQLException ex) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
+            if (money != "") {
+                debt.setText("Số tiền cần thanh toán: " + money);
+                double m = Double.parseDouble(money)/5;
+                cost.setText("Nhập số tiền thanh toán (tối thiểu " + (int)m + "):");
             }
+            cost_field.setText("");
         }
         if (e.getSource() == change_password_button) {
             String a=null;
@@ -1010,9 +1019,18 @@ public class MainFrame extends JFrame implements ActionListener {
                     } catch (SQLException ex) {
                         Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, "Can not connect to database", ex);
                     }
-                    JOptionPane.showMessageDialog(null,"Thành công","Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Đổi mật khẩu thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                }
+                else {
+                    JOptionPane.showMessageDialog(null,"Mật khẩu mới không khớp nhau","Thông báo", JOptionPane.WARNING_MESSAGE);
                 }
             }
+            else {
+                JOptionPane.showMessageDialog(null,"Sai mật khẩu cũ","Thông báo", JOptionPane.ERROR_MESSAGE);
+            }
+            old_password_field.setText("");
+            new_password_field.setText("");
+            retype_new_password_field.setText("");
         }
     }
 }

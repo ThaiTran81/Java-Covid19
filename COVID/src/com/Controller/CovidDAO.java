@@ -36,9 +36,9 @@ public class CovidDAO {
         ds.setDatabaseName(db);
         ds.setServerName(sv);
         ds.setPortNumber(prt);
-        ds.setEncrypt(true);
-        ds.setIntegratedSecurity(true);
-        ds.setTrustServerCertificate(true);
+//        ds.setEncrypt(true);
+//        ds.setIntegratedSecurity(true);
+//        ds.setTrustServerCertificate(true);
 
         conn = ds.getConnection();
     }

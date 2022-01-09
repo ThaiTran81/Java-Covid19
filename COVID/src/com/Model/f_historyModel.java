@@ -18,6 +18,13 @@ public class f_historyModel {
         this.date = date;
     }
 
+    public f_historyModel(String username, String f_kind, String quarantine, Timestamp date) {
+        this.username = username;
+        this.f_kind = f_kind;
+        this.quarantine = quarantine;
+        this.date = date;
+    }
+
     public String getUsername() {
         return username;
     }

@@ -34,11 +34,7 @@ public class ManagedHistoryPanel extends JPanel {
         setData(id_value);
         String[][] data = getData();
 
-        if (data == null) {
-            this.add(new JLabel("Không có lịch sử."));
-        }
-
-        String[] columns = {"Trạng thái","Ngày thay đổi"};
+        String[] columns = {"Trạng thái", "Nơi điều trị", "Ngày thay đổi"};
         JTable table = new JTable(data, columns);
         JScrollPane sp = new JScrollPane(table);
         sp.setBounds(10,10,400,200);
@@ -48,7 +44,7 @@ public class ManagedHistoryPanel extends JPanel {
 
     public void setData(String id_value) {
         String sql = "SELECT *\n" +
-                "FROM F_HISTORY\n" +
+                "FROM F_HISTORY F JOIN QUARATINE Q ON F.ID_QUARATINE = Q.ID_QUARATINE\n" +
                 "WHERE USER_ID = ?\n" +
                 "ORDER BY F_DATE";
         try (Connection conn = new CovidDAO().getConnection(); PreparedStatement pre = conn.prepareStatement(sql)) {
@@ -58,8 +54,9 @@ public class ManagedHistoryPanel extends JPanel {
             while (rs.next()) {
                 String id = rs.getString(1);
                 String f_kind = rs.getString(2);
+                String qua = rs.getString(7);
                 java.sql.Timestamp date = rs.getTimestamp(3);
-                lst.add(new f_historyModel(id, f_kind, date));
+                lst.add(new f_historyModel(id, f_kind, qua, date));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -70,12 +67,13 @@ public class ManagedHistoryPanel extends JPanel {
         if (this.lst == null) {
             return null;
         }
-        String[][] data = new String[lst.size()][2];
+        String[][] data = new String[lst.size()][3];
         int i = 0;
 
         for (f_historyModel f: lst) {
             data[i][0] = f.getF_kind();
-            data[i][1] = f.getDate().toString();
+            data[i][1] = f.getQuarantine();
+            data[i][2] = f.getDate().toString();
             i++;
         }
 
