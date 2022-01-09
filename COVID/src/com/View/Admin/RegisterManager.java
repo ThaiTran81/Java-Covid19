@@ -39,7 +39,7 @@ public class RegisterManager extends JPanel implements ActionListener {
     private JComboBox district = new JComboBox();
     private JComboBox village = new JComboBox();
     private JLabel doblabel = new JLabel("DoB");
-    private JTextField dob = new JTextField();
+    private JTextField dob = new JTextField("2001-01-01");
 
     private int id_pro;
     private int id_dic;
