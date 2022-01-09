@@ -7,3 +7,4 @@ COVID\logs
 *.gz
 *.log
 COVID/logs/app.log
+*.log

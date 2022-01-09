@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 2022-01-09 21:00:11 INFO  main:19 - start
 2022-01-09 21:00:16 INFO  LoginController:38 - Authorize account 123456789
+=======
+2022-01-09 20:43:42 INFO  main:19 - start
+2022-01-09 20:43:48 INFO  LoginController:38 - Authorize account admin
+>>>>>>> 16f57ae8431ff45344195de3e648d77c28fc8ffe
